@@ -396,8 +396,10 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		return animateOn;
 	}
 
-	public void setAnimateOn(boolean animateOn) {
+	public void setAnimateOn(boolean animateOn) 
+	{
 		this.animateOn = animateOn;
+		this.layoutManager.setAnimateOn(this.animateOn);
 	}
 	
 	public class OpenButtonListener implements ActionListener

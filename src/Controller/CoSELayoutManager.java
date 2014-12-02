@@ -28,7 +28,7 @@ public class CoSELayoutManager
 	private CoSELayout layout;
 	private LGraph lRoot;
 	private CompoundNodeModel vRoot;
-	private boolean animateOn = true;
+	private boolean animateOn = false;
 	
 	public CoSELayoutManager()
 	{
@@ -188,5 +188,7 @@ public class CoSELayoutManager
 
 	public void setAnimateOn(boolean animateOn) {
 		this.animateOn = animateOn;
+		General generalOptions = LayoutOptionsPack.getInstance().getGeneral();
+		generalOptions.animationDuringLayout = this.animateOn;
 	}
 }
