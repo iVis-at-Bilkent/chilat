@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
 import javax.swing.Timer;
 
 import org.ivis.util.RectangleD;
@@ -49,6 +50,8 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	 * 
 	 */
 	private static final long serialVersionUID = -2707712944901661771L;
+	
+	private static ChilayLayoutAnimationToolMain singletonInstance;
 
 	private mxGraph graph;
 	private mxGraphComponent graphComponent;
@@ -58,14 +61,24 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	
 	private int inBetweenFrameCount = 10;
 	private int currentKeyFrameNumber = 0;
-	private boolean animateOn;
+	private boolean animateOn = false;
+
+
 	private Timer timer;
 	
 	private HashMap<String, Object> nodeStyle;
 	private HashMap<String, Object> compoundNodeStyle;
 	private HashMap<String, Object> edgeStyle;
+	
+	public static ChilayLayoutAnimationToolMain getInstance()
+	{
+		if (ChilayLayoutAnimationToolMain.singletonInstance == null) {
+			ChilayLayoutAnimationToolMain.singletonInstance = new ChilayLayoutAnimationToolMain();		
+		}
+		return ChilayLayoutAnimationToolMain.singletonInstance;
+	}
 
-	public ChilayLayoutAnimationToolMain() 
+	private ChilayLayoutAnimationToolMain() 
 	{
 		super("ChiLay Animation Tool");
 		this.setLayout(new BorderLayout());
@@ -84,9 +97,14 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		edgeStyle.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(Color.DARK_GRAY));
 		edgeStyle.put(mxConstants.STYLE_STROKEWIDTH, 2);
 		
-		JButton openButton = new JButton("Open");
-		openButton.addActionListener(new OpenButtonListener(this));
-		this.add(openButton,BorderLayout.PAGE_END);
+		JPanel menuAndToolbarPanel = new JPanel();
+		GridLayout menuAndToolbarLayout = new GridLayout(2, 1);
+		menuAndToolbarPanel.setLayout(menuAndToolbarLayout);
+		EditorToolBar toolBar = new EditorToolBar();
+		EditorMenuBar menuBar = new EditorMenuBar();
+		menuAndToolbarPanel.add(menuBar);
+		menuAndToolbarPanel.add(toolBar);
+		this.add(menuAndToolbarPanel,BorderLayout.PAGE_START);
 	}
 	
 	public void loadGraph(String path)
@@ -104,7 +122,6 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		}
 		this.layoutManager = new CoSELayoutManager();
 		this.layoutManager.createTopology(parser.getRootGraph(), parser.getEdges());
-		this.animateOn = this.layoutManager.isAnimateOn();
 		
 		try 
 		{
@@ -160,6 +177,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	public void runLayout()
 	{
 		this.layoutManager.runLayout();
+		this.animate();
 	}
 
 	public void createGraphNode(Object parent, NodeModel nodeToBeInserted, mxGraph graph  )
@@ -206,10 +224,9 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		}
 	}
 
-
 	public static void main(String[] args)
 	{
-		ChilayLayoutAnimationToolMain frame = new ChilayLayoutAnimationToolMain();
+		ChilayLayoutAnimationToolMain frame = ChilayLayoutAnimationToolMain.getInstance();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1024, 768);
 		frame.setVisible(true);
@@ -257,14 +274,9 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	@Override
 	public void keyPressed(KeyEvent arg0) 
 	{
-		if (arg0.getKeyCode() == 65) {
-
-			if (this.timer !=null) 
-			{
-				timer.stop();
-			}
+		if (arg0.getKeyCode() == 65) 
+		{
 			this.runLayout();
-			this.animate();
 		}
 		if (arg0.getKeyCode() == 67)
 		{
@@ -300,6 +312,11 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 
 	public void animate() 
 	{	
+		if (this.timer !=null) 
+		{
+			timer.stop();
+		}
+		
 		if (this.animateOn)
 		{
 			this.timer = new Timer(1000/60, this);
@@ -373,6 +390,14 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 			currentKeyFrameNumber = 0;
 			this.layoutManager.clearKeyFrames();
 		}
+	}
+	
+	public boolean isAnimateOn() {
+		return animateOn;
+	}
+
+	public void setAnimateOn(boolean animateOn) {
+		this.animateOn = animateOn;
 	}
 	
 	public class OpenButtonListener implements ActionListener
