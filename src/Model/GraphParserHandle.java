@@ -49,12 +49,7 @@ public class GraphParserHandle extends DefaultHandler
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException 
 	{
-		if (qName.equalsIgnoreCase(GRAPH)) 
-		{
-			/*CompoundNodeModel subGraph = new CompoundNodeModel(attributes.getValue("id"));
-			this.graphStack.push(subGraph);*/
-		}
-		else if (qName.equalsIgnoreCase(NODE)) 
+		if (qName.equalsIgnoreCase(NODE)) 
 		{
 			currentModel = new CompoundNodeModel(attributes.getValue("id"));
 			this.graphStack.push(((CompoundNodeModel)currentModel));
@@ -83,20 +78,7 @@ public class GraphParserHandle extends DefaultHandler
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException 
 	{
-		if (qName.equalsIgnoreCase(GRAPH)) 
-		{
-			//pop last graph
-			/*CompoundNodeModel subGraph = this.graphStack.pop();
-			if (!this.graphStack.isEmpty()) {
-				this.graphStack.peek().addChildren(subGraph);
-			}
-			else
-			{
-				this.rootGraph = subGraph;
-				this.rootGraph.setId("root");
-			}*/
-		}
-		else if (qName.equalsIgnoreCase(NODE)) 
+		if (qName.equalsIgnoreCase(NODE)) 
 		{
 			CompoundNodeModel subGraph = this.graphStack.pop();
 			subGraph.setParent((CompoundNodeModel)this.graphStack.peek());

@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.HashMap;
@@ -154,7 +155,14 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		if (this.graphComponent != null) {
 			this.remove(this.graphComponent);
 		}
-		this.graphComponent = new mxGraphComponent(this.graph);
+		
+		this.graphComponent = new mxGraphComponent(this.graph)
+		{ 
+			@Override public boolean isPanningEvent(MouseEvent event) 
+			{
+			   return true;
+			}
+		};
 		this.graphComponent.getViewport().setOpaque(true);
 		this.graphComponent.getViewport().setBackground(new Color(255, 255, 255));
 		this.graphComponent.getGraphHandler().setRemoveCellsFromParent(false);
@@ -371,7 +379,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 
 					cell.setGeometry(new mxGeometry(xNew, yNew, geometry.getWidth(), geometry.getHeight()));
 				}
-								
+					
 				this.graph.refresh();
 				this.graph.repaint();	
 			
