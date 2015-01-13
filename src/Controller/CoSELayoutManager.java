@@ -169,9 +169,7 @@ public class CoSELayoutManager
 					node.getAnimationStates().get(i).setX(newX);
 					node.getAnimationStates().get(i).setY(newY);
 				}
-
 			}
-
 		}
 	}
 	
