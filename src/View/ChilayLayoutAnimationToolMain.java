@@ -94,6 +94,8 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		
 		this.edgeStyle = new HashMap<String, Object>();		
 		edgeStyle.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(Color.DARK_GRAY));
+		// For undirected Graphs
+		edgeStyle.put(mxConstants.STYLE_ENDARROW, mxConstants.NONE);
 		edgeStyle.put(mxConstants.STYLE_STROKEWIDTH, 2);
 		
 		JPanel menuAndToolbarPanel = new JPanel();
@@ -183,6 +185,15 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	
 	public void runLayout()
 	{
+		if (this.timer != null) 
+		{
+			this.timer.stop();
+		}
+
+		currentKeyFrameNumber = 0;
+		interpolatedFrame = 0;
+		this.layoutManager.clearKeyFrames();
+		
 		this.layoutManager.runLayout();
 		this.animate();
 	}
@@ -343,14 +354,16 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 				cell.setGeometry(new mxGeometry(xNew, yNew, currentRect.getWidth(), currentRect.getHeight()));
 			}
 				
-			this.graph.refresh();
-			this.graph.repaint();	
+	
 			
 			if ( ( interpolatedFrame += animationSpeed) >= 1 ) 
 			{
 				currentKeyFrameNumber++;
 				interpolatedFrame = interpolatedFrame - 1;
 			}
+			
+			this.graph.refresh();
+			this.graph.repaint();
 		}
 		else
 		{
