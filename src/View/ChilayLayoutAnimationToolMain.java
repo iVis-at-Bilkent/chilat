@@ -11,19 +11,17 @@ import java.awt.event.MouseWheelListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.TimerTask;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FileDialog;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JToolBar;
 import javax.swing.Timer;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import org.ivis.util.RectangleD;
 
@@ -36,15 +34,12 @@ import Model.NodeModel;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.swing.handler.mxGraphHandler;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
 import com.mxgraph.util.mxConstants;
-import com.mxgraph.util.mxResources;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxGraph;
-import com.mxgraph.view.mxGraphView;
 import com.mxgraph.view.mxStylesheet;
-import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
+
 
 public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListener,KeyListener
 {
@@ -61,8 +56,10 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	private CoSELayoutManager layoutManager;
 	private GraphMLParser parser;
 	
-	private int inBetweenFrameCount = 10;
+	private float animationSpeed = 0.1f;
+	private float interpolatedFrame = 0;
 	private int currentKeyFrameNumber = 0;
+	
 	private boolean animateOn = false;
 
 
@@ -171,6 +168,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.graphComponent.addKeyListener(this);
 		this.graphComponent.addMouseWheelListener(new GraphMouseListener(this.graphComponent));
 		this.graphComponent.setDoubleBuffered(true);	
+		mxKeyboardHandler keyboardHandler = new mxKeyboardHandler(graphComponent);
 		this.add(graphComponent,BorderLayout.CENTER);
 		this.validate();
 	}
@@ -233,9 +231,10 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		}
 	}
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException
 	{
-		ChilayLayoutAnimationToolMain frame = ChilayLayoutAnimationToolMain.getInstance();
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        ChilayLayoutAnimationToolMain frame = ChilayLayoutAnimationToolMain.getInstance();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1024, 768);
 		frame.setVisible(true);
@@ -283,28 +282,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	@Override
 	public void keyPressed(KeyEvent arg0) 
 	{
-		if (arg0.getKeyCode() == 65) 
-		{
-			this.runLayout();
-		}
-		if (arg0.getKeyCode() == 67)
-		{
-			this.currentKeyFrameNumber++;
-			if (currentKeyFrameNumber > this.layoutManager.getTotalKeyFrameCount()) 
-			{
-				this.timer.stop();
-				currentKeyFrameNumber = 0;
-				this.layoutManager.clearKeyFrames();
-			}
-		}
-		if (arg0.getKeyCode() == 90)
-		{
-			this.graphComponent.zoomIn();
-		}
-		if (arg0.getKeyCode() == 88)
-		{
-			this.graphComponent.zoomOut();
-		}
+
 	}
 
 	@Override
@@ -350,53 +328,35 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	public void actionPerformed(ActionEvent arg0) 
 	{
 		Set<String> keys = this.idToViewNode.keySet();
-
+		
 		if (currentKeyFrameNumber < this.layoutManager.getTotalKeyFrameCount()-1) 
 		{
-			/*for (int i = 0; i <= inBetweenFrameCount; i++) 
-			{*/
-				for (String tmpKey : keys)
-				{
-					mxCell cell = idToViewNode.get(tmpKey);
-					RectangleD initialRect = this.layoutManager.getKeyFrameGeometry(tmpKey, currentKeyFrameNumber);
-					RectangleD finalRectangle = this.layoutManager.getKeyFrameGeometry(tmpKey, currentKeyFrameNumber+1);
-
-					/*double xNew = initialRect.getX() + (finalRectangle.getX()-initialRect.getX())*(i/(double)inBetweenFrameCount);
-					double yNew = initialRect.getY() + (finalRectangle.getY()-initialRect.getY())*(i/(double)inBetweenFrameCount);*/
-					double xNew = initialRect.getX();
-					double yNew = initialRect.getY();
-					RectangleD geometry = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber);
-					
-					/*if (this.layoutManager.getParent(tmpKey) != null)
-					{
-						String parentID = this.layoutManager.getParent(tmpKey).getId();
-						RectangleD initialParentRect = this.layoutManager.getKeyFrameGeometry(parentID, currentKeyFrameNumber);
-						RectangleD finalParentRect = this.layoutManager.getKeyFrameGeometry(parentID, currentKeyFrameNumber+1);
-						double xNewParent = initialParentRect.getX() + (finalParentRect.getX()-initialParentRect.getX())*(i/(double)inBetweenFrameCount);
-						double yNewParent = initialParentRect.getY() + (finalParentRect.getY()-initialParentRect.getY())*(i/(double)inBetweenFrameCount);
-						xNew = xNew - xNewParent;
-						yNew = yNew - yNewParent;
-					}*/
-
-					cell.setGeometry(new mxGeometry(xNew, yNew, geometry.getWidth(), geometry.getHeight()));
-				}
-					
-				this.graph.refresh();
-				this.graph.repaint();	
+			for (String tmpKey : keys)
+			{
+				mxCell cell = idToViewNode.get(tmpKey);
+				
+				RectangleD currentRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber);
+				RectangleD nextRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber+1);
+				
+				double xNew = currentRect.getX() + (nextRect.getX() - currentRect.getX()) * (interpolatedFrame);
+				double yNew = currentRect.getY() + (nextRect.getY() - currentRect.getY()) * (interpolatedFrame) ;
+				cell.setGeometry(new mxGeometry(xNew, yNew, currentRect.getWidth(), currentRect.getHeight()));
+			}
+				
+			this.graph.refresh();
+			this.graph.repaint();	
 			
-				try {
-					Thread.sleep(300);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			/*}*/
-			currentKeyFrameNumber++;
+			if ( ( interpolatedFrame += animationSpeed) >= 1 ) 
+			{
+				currentKeyFrameNumber++;
+				interpolatedFrame = interpolatedFrame - 1;
+			}
 		}
 		else
 		{
 			this.timer.stop();
 			currentKeyFrameNumber = 0;
+			interpolatedFrame = 0;
 			this.layoutManager.clearKeyFrames();
 		}
 	}
