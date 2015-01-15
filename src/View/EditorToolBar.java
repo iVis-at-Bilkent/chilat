@@ -10,7 +10,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
 
-public class EditorToolBar extends JToolBar implements ActionListener
+import Controller.EditorActions;
+
+public class EditorToolBar extends JToolBar
 {
 	JButton loadButton; 
 	JButton saveButton;
@@ -21,14 +23,14 @@ public class EditorToolBar extends JToolBar implements ActionListener
 	{
 		super();
 		
-		animationCheckBox = new JCheckBox("Animate During Layout");
-		animationCheckBox.addActionListener(this);
-	    loadButton = new JButton("Load");
-	    loadButton.addActionListener(this);
-	    saveButton = new JButton("Save");
-	    saveButton.addActionListener(this);
-	    performLayoutButton = new JButton("Perform Layout");
-	    performLayoutButton.addActionListener(this);
+		animationCheckBox = new JCheckBox(new EditorActions.AnimateOnLayoutCheckBoxAction());
+		animationCheckBox.setText("Animate During Layout");
+	    loadButton = new JButton(new EditorActions.LoadGraphAction());
+	    loadButton.setText("Load");
+	    saveButton = new JButton(new EditorActions.SaveGraphAction());
+	    saveButton.setText("Save");
+	    performLayoutButton = new JButton(new EditorActions.PerformLayoutAction());
+	    performLayoutButton.setText("Perform Layout");
 	    
 	    this.add(loadButton);
 	    this.addSeparator();
@@ -39,36 +41,5 @@ public class EditorToolBar extends JToolBar implements ActionListener
 	    this.add(animationCheckBox);
 	    
 	    this.setFloatable(false);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent arg0) 
-	{
-		if (arg0.getSource() instanceof JButton) 
-		{
-			if(((JButton)arg0.getSource()).getText().equals("Load"))
-			{
-				JFileChooser chooser = new JFileChooser();
-				chooser.setCurrentDirectory(new java.io.File("."));
-				chooser.setDialogTitle("Open File");
-				chooser.setAcceptAllFileFilterUsed(false);
-
-				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
-				{
-				  ChilayLayoutAnimationToolMain.getInstance().loadGraph(chooser.getSelectedFile().getAbsolutePath());
-				} 
-			}
-			else if(((JButton)arg0.getSource()).getText().equals("Perform Layout"))
-			{
-				ChilayLayoutAnimationToolMain.getInstance().runLayout();
-			}
-		}
-		else
-		{
-			if(((JCheckBox)arg0.getSource()).getText().equals("Animate During Layout"))
-			{
-				ChilayLayoutAnimationToolMain.getInstance().setAnimateOn(((JCheckBox)arg0.getSource()).isSelected());
-			}
-		}
 	}
 }

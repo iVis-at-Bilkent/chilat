@@ -41,7 +41,7 @@ import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
 
 
-public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListener,KeyListener
+public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListener
 {
 	/**
 	 * 
@@ -56,9 +56,13 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	private CoSELayoutManager layoutManager;
 	private GraphMLParser parser;
 	
-	private float animationSpeed = 0.1f;
+	private float animationSpeed = 0.05f;
 	private float interpolatedFrame = 0;
 	private int currentKeyFrameNumber = 0;
+	
+	private long passedTime = 0;
+	private long previousUpdateTime = 0;
+	private long animationStartTime = 0;
 	
 	private boolean animateOn = false;
 
@@ -167,7 +171,6 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.graphComponent.getViewport().setBackground(new Color(255, 255, 255));
 		this.graphComponent.getGraphHandler().setRemoveCellsFromParent(false);
 		this.graphComponent.setConnectable(false);
-		this.graphComponent.addKeyListener(this);
 		this.graphComponent.addMouseWheelListener(new GraphMouseListener(this.graphComponent));
 		this.graphComponent.setDoubleBuffered(true);	
 		mxKeyboardHandler keyboardHandler = new mxKeyboardHandler(graphComponent);
@@ -185,6 +188,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	
 	public void runLayout()
 	{
+		//TODO wrap these codes in a function 
 		if (this.timer != null) 
 		{
 			this.timer.stop();
@@ -193,6 +197,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		currentKeyFrameNumber = 0;
 		interpolatedFrame = 0;
 		this.layoutManager.clearKeyFrames();
+		//
 		
 		this.layoutManager.runLayout();
 		this.animate();
@@ -290,24 +295,6 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		
 	}
 
-	@Override
-	public void keyPressed(KeyEvent arg0) 
-	{
-
-	}
-
-	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public void animate() 
 	{	
 		if (this.timer !=null) 
@@ -317,7 +304,8 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		
 		if (this.animateOn)
 		{
-			this.timer = new Timer(1000/60, this);
+			this.animationStartTime = System.currentTimeMillis();
+			this.timer = new Timer(1000/240, this);
 			this.timer.start();
 		}
 		else
@@ -338,6 +326,15 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	@Override
 	public void actionPerformed(ActionEvent arg0) 
 	{
+		long currentTime = System.currentTimeMillis();
+		this.passedTime =  currentTime - this.previousUpdateTime;
+		this.previousUpdateTime = currentTime;
+		
+		float totalTime = (float)((currentTime - animationStartTime) * 0.8);
+		currentKeyFrameNumber = (int)(totalTime/this.layoutManager.getTotalKeyFrameCount());
+		float remainder = (totalTime/this.layoutManager.getTotalKeyFrameCount()) - currentKeyFrameNumber;
+		
+		
 		Set<String> keys = this.idToViewNode.keySet();
 		
 		if (currentKeyFrameNumber < this.layoutManager.getTotalKeyFrameCount()-1) 
@@ -349,21 +346,12 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 				RectangleD currentRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber);
 				RectangleD nextRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber+1);
 				
-				double xNew = currentRect.getX() + (nextRect.getX() - currentRect.getX()) * (interpolatedFrame);
-				double yNew = currentRect.getY() + (nextRect.getY() - currentRect.getY()) * (interpolatedFrame) ;
+				double xNew = currentRect.getX() + (nextRect.getX() - currentRect.getX()) * (remainder);
+				double yNew = currentRect.getY() + (nextRect.getY() - currentRect.getY()) * (remainder);
 				cell.setGeometry(new mxGeometry(xNew, yNew, currentRect.getWidth(), currentRect.getHeight()));
 			}
 				
-	
-			
-			if ( ( interpolatedFrame += animationSpeed) >= 1 ) 
-			{
-				currentKeyFrameNumber++;
-				interpolatedFrame = interpolatedFrame - 1;
-			}
-			
 			this.graph.refresh();
-			this.graph.repaint();
 		}
 		else
 		{
@@ -406,7 +394,6 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 			  this.animationToolMain.loadGraph(chooser.getSelectedFile().getAbsolutePath());
 			} 
 		}
-		
 	}
 	
 }
