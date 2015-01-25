@@ -3,6 +3,8 @@ package Controller;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 
@@ -25,6 +27,13 @@ public class EditorActions
 	@SuppressWarnings("serial")
 	public static class LoadGraphAction extends AbstractAction
 	{
+		public LoadGraphAction()
+		{
+			this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/open.gif")));
+			this.putValue(Action.SHORT_DESCRIPTION, "Load graph from a file");
+
+		}
+		
 		/**
 		 * 
 		 */
@@ -37,7 +46,7 @@ public class EditorActions
 		{
 			JFileChooser chooser = new JFileChooser();
 			chooser.setCurrentDirectory(new java.io.File(lastDirectory));
-			chooser.setDialogTitle("Open File");
+			chooser.setDialogTitle("Load File");
 			chooser.setAcceptAllFileFilterUsed(false);
 
 			if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
@@ -51,6 +60,11 @@ public class EditorActions
 	@SuppressWarnings("serial")
 	public static class SaveGraphAction extends AbstractAction
 	{
+		public SaveGraphAction()
+		{
+			this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/save.gif")));
+			this.putValue(Action.SHORT_DESCRIPTION, "Save graph to a file");
+		}
 		
 		/**
 		 * 
@@ -63,7 +77,12 @@ public class EditorActions
 	@SuppressWarnings("serial")
 	public static class PerformLayoutAction extends AbstractAction
 	{
-	
+		public PerformLayoutAction()
+		{
+			this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/layout-cose.gif")));
+			this.putValue(Action.SHORT_DESCRIPTION, "Perform layout");
+		}
+		
 		/**
 		 * 
 		 */
@@ -76,6 +95,11 @@ public class EditorActions
 	@SuppressWarnings("serial")
 	public static class AnimateOnLayoutCheckBoxAction extends AbstractAction
 	{
+		public AnimateOnLayoutCheckBoxAction()
+		{
+			this.putValue(Action.SHORT_DESCRIPTION, "Animate during layout");
+		}
+		
 		/**
 		 * 
 		 */

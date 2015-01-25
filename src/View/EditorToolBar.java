@@ -3,6 +3,7 @@ package View;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -24,20 +25,15 @@ public class EditorToolBar extends JToolBar
 		super();
 		
 		animationCheckBox = new JCheckBox(new EditorActions.AnimateOnLayoutCheckBoxAction());
-		animationCheckBox.setText("Animate During Layout");
+		animationCheckBox.setText("Animate on layout");
 	    loadButton = new JButton(new EditorActions.LoadGraphAction());
-	    loadButton.setText("Load");
 	    saveButton = new JButton(new EditorActions.SaveGraphAction());
-	    saveButton.setText("Save");
 	    performLayoutButton = new JButton(new EditorActions.PerformLayoutAction());
-	    performLayoutButton.setText("Perform Layout");
 	    
 	    this.add(loadButton);
-	    this.addSeparator();
 	    this.add(saveButton);
 	    this.addSeparator();
 	    this.add(performLayoutButton);
-	    this.addSeparator();
 	    this.add(animationCheckBox);
 	    
 	    this.setFloatable(false);

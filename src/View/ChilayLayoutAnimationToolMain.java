@@ -19,6 +19,8 @@ import java.awt.Rectangle;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -33,7 +35,9 @@ import Model.NodeModel;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
+import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.swing.handler.mxGraphHandler;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxUtils;
@@ -102,6 +106,35 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		edgeStyle.put(mxConstants.STYLE_ENDARROW, mxConstants.NONE);
 		edgeStyle.put(mxConstants.STYLE_STROKEWIDTH, 2);
 		
+		//Create mxGraph object
+		this.graph = new mxGraph();
+		this.graph.setDisconnectOnMove(false);
+		this.graph.setDropEnabled(false);
+		this.graph.setCellsDisconnectable(false);
+		
+		mxStylesheet styleSheet = this.graph.getStylesheet();
+		styleSheet.putCellStyle("CompoundStyle", compoundNodeStyle);
+		styleSheet.putCellStyle("NodeStyle", nodeStyle);
+		styleSheet.putCellStyle("EdgeStyle", edgeStyle);
+		
+		this.graphComponent = new mxGraphComponent(this.graph)
+		{ 
+			@Override public boolean isPanningEvent(MouseEvent event) 
+			{
+			   return true;
+			}
+						
+		};
+		
+		this.graphComponent.getViewport().setOpaque(true);
+		this.graphComponent.getViewport().setBackground(new Color(255, 255, 255));
+		this.graphComponent.getGraphHandler().setRemoveCellsFromParent(false);
+		this.graphComponent.setConnectable(false);
+		this.graphComponent.addMouseWheelListener(new GraphMouseListener(this.graphComponent));
+		this.graphComponent.setDoubleBuffered(false);	
+		this.graphComponent.setFoldingEnabled(false);
+		mxKeyboardHandler keyboardHandler = new mxKeyboardHandler(graphComponent);
+		
 		JPanel menuAndToolbarPanel = new JPanel();
 		GridLayout menuAndToolbarLayout = new GridLayout(2, 1);
 		menuAndToolbarPanel.setLayout(menuAndToolbarLayout);
@@ -109,7 +142,16 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		EditorMenuBar menuBar = new EditorMenuBar();
 		menuAndToolbarPanel.add(menuBar);
 		menuAndToolbarPanel.add(toolBar);
+		
+		JPanel tabbedPanePanel = new JPanel();
+		tabbedPanePanel.setLayout( new BorderLayout());
+		tabbedPanePanel.add(new EditorTabbedPane(), BorderLayout.PAGE_START);
+		
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabbedPanePanel, graphComponent);
+		splitPane.setDividerLocation(320);
+		
 		this.add(menuAndToolbarPanel,BorderLayout.PAGE_START);
+		this.add(splitPane,BorderLayout.CENTER);
 	}
 	
 	public void loadGraph(String path)
@@ -118,6 +160,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.currentKeyFrameNumber = 0;
 		idToViewNode = new HashMap<String, mxCell>();
 
+		//Read graph
 		parser = new GraphMLParser(path);
 		try {
 			parser.readGraphML();
@@ -125,57 +168,24 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
+		//Create layout manager
 		this.layoutManager = new CoSELayoutManager();
 		this.layoutManager.createTopology(parser.getRootGraph(), parser.getEdges());
-		
-		try 
-		{
-			parser.readGraphML();
-		} 
-		catch (Exception e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.layoutManager.setAnimateOn(this.animateOn);	
 
-		this.graph = new mxGraph();
-		mxStylesheet styleSheet = this.graph.getStylesheet();
-		styleSheet.putCellStyle("CompoundStyle", compoundNodeStyle);
-		styleSheet.putCellStyle("NodeStyle", nodeStyle);
-		styleSheet.putCellStyle("EdgeStyle", edgeStyle);
-		
+		//Create respective views from the model objects
+		((mxGraphModel)graph.getModel()).clear();
 		graph.getModel().beginUpdate();
 		try
 		{
-			createGraphNodes(graph.getCurrentRoot(), parser.getRootGraph(), graph);
+			createGraphNodes(this.graph.getCurrentRoot(), this.parser.getRootGraph(), this.graph);
 			createGraphEdges(graph, parser.getEdges());
 		}
 		finally
 		{
 			graph.getModel().endUpdate();
 		}
-		
-		
-		if (this.graphComponent != null) {
-			this.remove(this.graphComponent);
-		}
-		
-		this.graphComponent = new mxGraphComponent(this.graph)
-		{ 
-			@Override public boolean isPanningEvent(MouseEvent event) 
-			{
-			   return true;
-			}
-		};
-		this.graphComponent.getViewport().setOpaque(true);
-		this.graphComponent.getViewport().setBackground(new Color(255, 255, 255));
-		this.graphComponent.getGraphHandler().setRemoveCellsFromParent(false);
-		this.graphComponent.setConnectable(false);
-		this.graphComponent.addMouseWheelListener(new GraphMouseListener(this.graphComponent));
-		this.graphComponent.setDoubleBuffered(true);	
-		mxKeyboardHandler keyboardHandler = new mxKeyboardHandler(graphComponent);
-		this.add(graphComponent,BorderLayout.CENTER);
-		this.validate();
 	}
 	
 	public void createGraphNodes(Object parent, CompoundNodeModel rootGraph, mxGraph graph  )
@@ -249,7 +259,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException
 	{
-		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		//UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         ChilayLayoutAnimationToolMain frame = ChilayLayoutAnimationToolMain.getInstance();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1024, 768);
@@ -330,10 +340,9 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.passedTime =  currentTime - this.previousUpdateTime;
 		this.previousUpdateTime = currentTime;
 		
-		float totalTime = (float)((currentTime - animationStartTime) * 0.8);
+		float totalTime = (float)((currentTime - animationStartTime) * 1.0);
 		currentKeyFrameNumber = (int)(totalTime/this.layoutManager.getTotalKeyFrameCount());
 		float remainder = (totalTime/this.layoutManager.getTotalKeyFrameCount()) - currentKeyFrameNumber;
-		
 		
 		Set<String> keys = this.idToViewNode.keySet();
 		
@@ -348,7 +357,11 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 				
 				double xNew = currentRect.getX() + (nextRect.getX() - currentRect.getX()) * (remainder);
 				double yNew = currentRect.getY() + (nextRect.getY() - currentRect.getY()) * (remainder);
-				cell.setGeometry(new mxGeometry(xNew, yNew, currentRect.getWidth(), currentRect.getHeight()));
+				double wNew = currentRect.getWidth() + (nextRect.getWidth() - currentRect.getWidth()) * (remainder);
+				double hNew = currentRect.getHeight() + (nextRect.getHeight() - currentRect.getHeight()) * (remainder);
+				
+				
+				cell.setGeometry(new mxGeometry(xNew, yNew, wNew, hNew));
 			}
 				
 			this.graph.refresh();
@@ -369,7 +382,10 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	public void setAnimateOn(boolean animateOn) 
 	{
 		this.animateOn = animateOn;
-		this.layoutManager.setAnimateOn(this.animateOn);
+		
+		if (this.layoutManager != null) {
+			this.layoutManager.setAnimateOn(this.animateOn);	
+		}
 	}
 	
 	public class OpenButtonListener implements ActionListener
