@@ -10,8 +10,8 @@ public class EditorTabbedPane extends JTabbedPane
 	public EditorTabbedPane()
 	{
 		super();
-		this.addTab("General", new JPanel());
-		this.addTab("Layout", new JPanel());
+		this.addTab("General", new GeneralOptionsPanel());
+		this.addTab("Layout", new LayoutOptionsPanel());
 		this.addTab("Animation", new JPanel());
 	}
 }

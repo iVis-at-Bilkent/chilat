@@ -259,7 +259,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException
 	{
-		//UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+		UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         ChilayLayoutAnimationToolMain frame = ChilayLayoutAnimationToolMain.getInstance();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1024, 768);
