@@ -1,8 +1,10 @@
 package View;
 
 import java.awt.Dimension;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
@@ -16,8 +18,8 @@ public class GeneralOptionsPanel extends JPanel
 	{
 		//GUI components about layout quality
 		JPanel layoutQualityPanel = new JPanel();
-		layoutQualityPanel.setLayout(new GridLayout(3, 1));
-		layoutQualityPanel.setBorder(new TitledBorder("LayoutQuality"));
+		layoutQualityPanel.setLayout(new BoxLayout(layoutQualityPanel, BoxLayout.Y_AXIS));
+		layoutQualityPanel.setBorder(new TitledBorder("Layout Quality"));
 		ButtonGroup layoutQualityButtonGroup = new ButtonGroup();
 		JRadioButton draftButton = new JRadioButton("Draft");
 		JRadioButton defaultButton = new JRadioButton("Default");
@@ -31,16 +33,16 @@ public class GeneralOptionsPanel extends JPanel
 		
 		//GUI components about other components in this panel
 		JPanel otherOptionsPanel = new JPanel();
-		otherOptionsPanel.setLayout(new GridLayout(2, 1));
-		otherOptionsPanel.setBorder(new TitledBorder("OtherOptions"));
+		otherOptionsPanel.setLayout(new BoxLayout(otherOptionsPanel, BoxLayout.Y_AXIS));
+		otherOptionsPanel.setBorder(new TitledBorder("Other Options"));
 		JCheckBox incrementalLayoutCheckBox = new JCheckBox("Incremental Layout");
 		JCheckBox uniformLeafNodeSizesCheckBox = new JCheckBox("Uniform Leaf Node Sizes");
 		otherOptionsPanel.add(incrementalLayoutCheckBox);
+		otherOptionsPanel.add(Box.createRigidArea(new Dimension(0,5)));
 		otherOptionsPanel.add(uniformLeafNodeSizesCheckBox);
-
 		
-		//this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		this.setLayout(new GridLayout(2, 1));
+		//this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.setLayout(new GridLayout(2,1));
 		this.add(layoutQualityPanel);
 		this.add(otherOptionsPanel);
 

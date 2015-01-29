@@ -340,7 +340,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.passedTime =  currentTime - this.previousUpdateTime;
 		this.previousUpdateTime = currentTime;
 		
-		float totalTime = (float)((currentTime - animationStartTime) * 1.0);
+		float totalTime = (float)((currentTime - animationStartTime) * 0.8);
 		currentKeyFrameNumber = (int)(totalTime/this.layoutManager.getTotalKeyFrameCount());
 		float remainder = (totalTime/this.layoutManager.getTotalKeyFrameCount()) - currentKeyFrameNumber;
 		

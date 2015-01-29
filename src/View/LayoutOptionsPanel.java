@@ -2,6 +2,7 @@ package View;
 
 import java.awt.GridLayout;
 
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -33,9 +34,8 @@ public class LayoutOptionsPanel extends JPanel
 		forcePanel.add(compoundGravityPanel);
 		forcePanel.add(gravityRangePanel);
 		forcePanel.add(compoundGravityRangePanel);
-
 		
-		this.setLayout(new GridLayout(2, 1));
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.add(forcePanel);
 	}
 	
