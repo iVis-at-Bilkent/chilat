@@ -40,6 +40,7 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.handler.mxGraphHandler;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
 import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxStyleUtils;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
@@ -96,6 +97,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		compoundNodeStyle.put(mxConstants.STYLE_STROKEWIDTH, 3);
 
 		this.nodeStyle = new HashMap<String, Object>();
+		nodeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
 		nodeStyle.put(mxConstants.STYLE_FILLCOLOR, mxUtils.getHexColorString(new Color(48, 175, 230)));
 		nodeStyle.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(Color.BLACK));
 		nodeStyle.put(mxConstants.STYLE_STROKEWIDTH, 2);

@@ -28,8 +28,12 @@ public class GeneralOptionsPanel extends JPanel
 		layoutQualityButtonGroup.add(defaultButton);
 		layoutQualityButtonGroup.add(poorButton);
 		layoutQualityPanel.add(draftButton);
+		layoutQualityPanel.add(Box.createVerticalGlue());
 		layoutQualityPanel.add(defaultButton);
+		layoutQualityPanel.add(Box.createVerticalGlue());
+
 		layoutQualityPanel.add(poorButton);
+		layoutQualityPanel.add(Box.createHorizontalGlue());
 		
 		//GUI components about other components in this panel
 		JPanel otherOptionsPanel = new JPanel();
@@ -38,11 +42,11 @@ public class GeneralOptionsPanel extends JPanel
 		JCheckBox incrementalLayoutCheckBox = new JCheckBox("Incremental Layout");
 		JCheckBox uniformLeafNodeSizesCheckBox = new JCheckBox("Uniform Leaf Node Sizes");
 		otherOptionsPanel.add(incrementalLayoutCheckBox);
-		otherOptionsPanel.add(Box.createRigidArea(new Dimension(0,5)));
+		otherOptionsPanel.add(Box.createVerticalGlue());
 		otherOptionsPanel.add(uniformLeafNodeSizesCheckBox);
+		otherOptionsPanel.add(Box.createHorizontalGlue());
 		
-		//this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		this.setLayout(new GridLayout(2,1));
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.add(layoutQualityPanel);
 		this.add(otherOptionsPanel);
 

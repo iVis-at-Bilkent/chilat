@@ -2,6 +2,7 @@ package View;
 
 import java.awt.GridLayout;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
@@ -18,7 +19,7 @@ public class LayoutOptionsPanel extends JPanel
 	{
 		//GUI components about layout quality
 		JPanel forcePanel = new JPanel();
-		forcePanel.setLayout(new GridLayout(6, 1));
+		forcePanel.setLayout(new BoxLayout(forcePanel, BoxLayout.Y_AXIS));
 		forcePanel.setBorder(new TitledBorder("Force Tuning"));
 		
 		JPanel springForcePanel = createPanel("Spring");
@@ -37,6 +38,7 @@ public class LayoutOptionsPanel extends JPanel
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.add(forcePanel);
+		
 	}
 	
 	private JPanel createPanel(String label)

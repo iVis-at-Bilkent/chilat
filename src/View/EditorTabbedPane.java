@@ -1,17 +1,33 @@
 package View;
 
+import java.awt.Dimension;
+import java.awt.event.ActionListener;
+
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class EditorTabbedPane extends JTabbedPane
+public class EditorTabbedPane extends JTabbedPane implements ChangeListener
 {
 	public EditorTabbedPane()
 	{
 		super();
 		this.addTab("General", new GeneralOptionsPanel());
 		this.addTab("Layout", new LayoutOptionsPanel());
-		this.addTab("Animation", new JPanel());
+		this.addTab("Animation", new AnimationOptionsPanel());
+		this.addChangeListener(this);
 	}
+
+	@Override
+	public void stateChanged(ChangeEvent e) 
+	{
+		Dimension preferredSize = this.getSelectedComponent().getPreferredSize();
+		Dimension newSize = new Dimension(preferredSize.width, preferredSize.height + 35);
+		this.setPreferredSize(newSize);	
+	}
+	
 }
