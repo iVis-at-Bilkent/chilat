@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 
@@ -24,6 +25,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.TitledBorder;
 
 import org.ivis.util.RectangleD;
 
@@ -150,7 +152,9 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		tabbedPanePanel.add(new EditorTabbedPane(), BorderLayout.PAGE_START);
 		
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabbedPanePanel, graphComponent);
-		splitPane.setDividerLocation(320);
+		splitPane.setMinimumSize(new Dimension(500, 0));
+		splitPane.setDividerLocation(370);
+		splitPane.setBorder(new TitledBorder(" "));
 		
 		this.add(menuAndToolbarPanel,BorderLayout.PAGE_START);
 		this.add(splitPane,BorderLayout.CENTER);

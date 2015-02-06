@@ -20,6 +20,10 @@ public class EditorTabbedPane extends JTabbedPane implements ChangeListener
 		this.addTab("Layout", new LayoutOptionsPanel());
 		this.addTab("Animation", new AnimationOptionsPanel());
 		this.addChangeListener(this);
+		
+		//Temporary hack to trigger state changed event :/
+		this.setSelectedIndex(1);
+		this.setSelectedIndex(0);
 	}
 
 	@Override

@@ -31,7 +31,6 @@ public class EditorActions
 		{
 			this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/open.gif")));
 			this.putValue(Action.SHORT_DESCRIPTION, "Load graph from a file");
-
 		}
 		
 		/**
@@ -79,7 +78,8 @@ public class EditorActions
 	{
 		public PerformLayoutAction()
 		{
-			this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/layout-cose.gif")));
+			//this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/layout-cose.gif")));
+			this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/layout-cose-2.png")));
 			this.putValue(Action.SHORT_DESCRIPTION, "Perform layout");
 		}
 		
@@ -106,6 +106,64 @@ public class EditorActions
 		public void actionPerformed(ActionEvent e)
 		{
 			ChilayLayoutAnimationToolMain.getInstance().setAnimateOn(((JCheckBox)e.getSource()).isSelected());
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	public static class PlayPauseAction extends AbstractAction
+	{
+		boolean playOrPauseState = true; //true means play state, false means pause state
+		
+		public PlayPauseAction()
+		{
+			//Initial icon and description
+			this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/playIcon.png")));
+			this.putValue(Action.SHORT_DESCRIPTION, "Play Animation");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			
+			if (playOrPauseState) 
+			{
+				//Set next icon and description - pause
+				this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/stopIcon.png")));
+				this.putValue(Action.SHORT_DESCRIPTION, "Pause Animation");
+				
+				//TODO perform play call
+			}
+			else
+			{
+				//Set next icon and description - play
+				this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/playIcon.png")));
+				this.putValue(Action.SHORT_DESCRIPTION, "Pause Animation");
+				
+				//TODO perform pause call
+			}
+			
+			//Set next state
+			playOrPauseState = !playOrPauseState;
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	public static class ForwardAction extends AbstractAction
+	{		
+		public ForwardAction()
+		{
+			//Initial icon and description
+			this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/playIcon.png")));
+			this.putValue(Action.SHORT_DESCRIPTION, "Play Animation");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
 		}
 	}
 }

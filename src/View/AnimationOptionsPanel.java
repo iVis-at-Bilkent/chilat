@@ -8,12 +8,15 @@ import java.awt.GridLayout;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.border.TitledBorder;
+
+import Controller.EditorActions;
 
 public class AnimationOptionsPanel extends JPanel
 {
@@ -24,14 +27,23 @@ public class AnimationOptionsPanel extends JPanel
 
 	public AnimationOptionsPanel()
 	{
-		//GUI components about layout quality
+		super();
+		
+		//
 		JPanel animationPanel = new JPanel();
 		animationPanel.setLayout(new BoxLayout(animationPanel, BoxLayout.Y_AXIS));
 		animationPanel.setBorder(new TitledBorder("Animation"));
-		JCheckBox animationDuringLayoutCheckBox = new JCheckBox("Animation During Layout");
+		JCheckBox animationDuringLayoutCheckBox = new JCheckBox(new EditorActions.AnimateOnLayoutCheckBoxAction());
+		JButton performLayoutButton = new JButton(new EditorActions.PerformLayoutAction());
+		performLayoutButton.setText("Perform Layout");
+		
+		animationDuringLayoutCheckBox.setText("Animation During Layout");
 		animationPanel.add(animationDuringLayoutCheckBox);
 		animationPanel.add(Box.createHorizontalGlue());
+		animationPanel.add(performLayoutButton);
+		animationPanel.setAlignmentX(LEFT_ALIGNMENT);
 		
+		//
 		JPanel animationTypePanel = new JPanel();
 		animationTypePanel.setLayout(new BoxLayout(animationTypePanel, BoxLayout.Y_AXIS));
 		animationTypePanel.setBorder(new TitledBorder("Animation Type"));
@@ -43,20 +55,35 @@ public class AnimationOptionsPanel extends JPanel
 		animationTypePanel.add(keyFrameAnimationRadioButton);
 		animationTypePanel.add(realTimeAnimationRadioButton);
 		animationTypePanel.add(Box.createHorizontalGlue());
+		animationTypePanel.setAlignmentX(LEFT_ALIGNMENT);
 		
+		//
 		JPanel keyFrameAnimationOptionsPanel = new JPanel();
 		keyFrameAnimationOptionsPanel.setLayout(new BoxLayout(keyFrameAnimationOptionsPanel, BoxLayout.Y_AXIS));
 		keyFrameAnimationOptionsPanel.setBorder(new TitledBorder("Key Frame Animation Properties"));
-		JPanel animationCapturePeriodPanel = createPanel("Animation Capture Period");
+		JPanel animationCapturePeriodPanel = createPanel("Key Frame Capture Period");
+		JPanel animationSpeedPanel = createPanel("Animation Speed");
 		keyFrameAnimationOptionsPanel.add(animationCapturePeriodPanel);
-		keyFrameAnimationOptionsPanel.add(Box.createHorizontalGlue());
+		keyFrameAnimationOptionsPanel.add(animationSpeedPanel);
+		keyFrameAnimationOptionsPanel.setAlignmentX(LEFT_ALIGNMENT);
 		
+		//
+		JPanel realTimeAnimationPanel = new JPanel();
+		realTimeAnimationPanel.setLayout(new BoxLayout(realTimeAnimationPanel, BoxLayout.Y_AXIS));
+		realTimeAnimationPanel.setBorder(new TitledBorder("Real Time Animation Properties"));
+		JPanel simulationTimeStepPanel = createPanel("Simulation Timestep");
+		realTimeAnimationPanel.add(simulationTimeStepPanel);
+		realTimeAnimationPanel.setAlignmentX(LEFT_ALIGNMENT);
+		
+		//
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.add(animationPanel);
 		this.add(animationTypePanel);
-		this.add(Box.createHorizontalGlue());
 		this.add(keyFrameAnimationOptionsPanel);
-		this.add(Box.createVerticalGlue());
+		this.add(realTimeAnimationPanel);
+		this.add(new AnimationPlayBackPanel());
+		this.setAlignmentX(LEFT_ALIGNMENT);
+
 	}
 	
 	private JPanel createPanel(String label)
