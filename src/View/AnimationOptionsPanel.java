@@ -15,6 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeListener;
+
+import View.ChiAnimSliderPanels.AnimationSpeedSliderPanel;
 
 import Controller.EditorActions;
 
@@ -61,8 +64,8 @@ public class AnimationOptionsPanel extends JPanel
 		JPanel keyFrameAnimationOptionsPanel = new JPanel();
 		keyFrameAnimationOptionsPanel.setLayout(new BoxLayout(keyFrameAnimationOptionsPanel, BoxLayout.Y_AXIS));
 		keyFrameAnimationOptionsPanel.setBorder(new TitledBorder("Key Frame Animation Properties"));
-		JPanel animationCapturePeriodPanel = createPanel("Key Frame Capture Period");
-		JPanel animationSpeedPanel = createPanel("Animation Speed");
+		AnimationSpeedSliderPanel animationCapturePeriodPanel = new AnimationSpeedSliderPanel("Key Frame Capture Period",0,0,0);
+		AnimationSpeedSliderPanel animationSpeedPanel = new AnimationSpeedSliderPanel("Animation Speed", 10, 200, 100);
 		keyFrameAnimationOptionsPanel.add(animationCapturePeriodPanel);
 		keyFrameAnimationOptionsPanel.add(animationSpeedPanel);
 		keyFrameAnimationOptionsPanel.setAlignmentX(LEFT_ALIGNMENT);
@@ -71,7 +74,7 @@ public class AnimationOptionsPanel extends JPanel
 		JPanel realTimeAnimationPanel = new JPanel();
 		realTimeAnimationPanel.setLayout(new BoxLayout(realTimeAnimationPanel, BoxLayout.Y_AXIS));
 		realTimeAnimationPanel.setBorder(new TitledBorder("Real Time Animation Properties"));
-		JPanel simulationTimeStepPanel = createPanel("Simulation Timestep");
+		AnimationSpeedSliderPanel simulationTimeStepPanel = new AnimationSpeedSliderPanel("Simulation Timestep", 0, 0, 0);
 		realTimeAnimationPanel.add(simulationTimeStepPanel);
 		realTimeAnimationPanel.setAlignmentX(LEFT_ALIGNMENT);
 		
@@ -86,13 +89,4 @@ public class AnimationOptionsPanel extends JPanel
 
 	}
 	
-	private JPanel createPanel(String label)
-	{
-		JPanel newPanel = new JPanel(new GridLayout(1, 2));
-		JLabel newLabel = new JLabel(label);
-		JSlider newSlider = new JSlider();
-		newPanel.add(newLabel);
-		newPanel.add(newSlider);
-		return newPanel;
-	}
 }

@@ -63,15 +63,15 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	private CoSELayoutManager layoutManager;
 	private GraphMLParser parser;
 	
-	private float animationSpeed = 0.05f;
-	private float interpolatedFrame = 0;
+
+	//Animation specific consants
 	private int currentKeyFrameNumber = 0;
+	float animationTotalTime = 0.0f;
+	float interpolatedFrameRemainder = 0;
+	float animationSpeed = 0.1f; //Animation makes progress by 0.2 frame per update
 	
-	private long passedTime = 0;
-	private long previousUpdateTime = 0;
-	private long animationStartTime = 0;
-	
-	private boolean animateOn = false;
+	private boolean isAnimateOn = false;
+	private boolean isAnimationPaused = false;
 
 
 	private Timer timer;
@@ -178,7 +178,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		//Create layout manager
 		this.layoutManager = new CoSELayoutManager();
 		this.layoutManager.createTopology(parser.getRootGraph(), parser.getEdges());
-		this.layoutManager.setAnimateOn(this.animateOn);	
+		this.layoutManager.setAnimateOn(this.isAnimateOn);	
 
 		//Create respective views from the model objects
 		((mxGraphModel)graph.getModel()).clear();
@@ -211,7 +211,6 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		}
 
 		currentKeyFrameNumber = 0;
-		interpolatedFrame = 0;
 		this.layoutManager.clearKeyFrames();
 		//
 		
@@ -318,10 +317,12 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 			timer.stop();
 		}
 		
-		if (this.animateOn)
+		if (this.isAnimateOn)
 		{
-			this.animationStartTime = System.currentTimeMillis();
-			this.timer = new Timer(1000/240, this);
+			this.animationTotalTime = 0;
+			this.interpolatedFrameRemainder = 0;
+			this.currentKeyFrameNumber = 0;
+			this.timer = new Timer(1000/60, this);
 			this.timer.start();
 		}
 		else
@@ -334,22 +335,13 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 				cell.setGeometry(new mxGeometry(geometry.getX(), geometry.getY(), geometry.getWidth(), geometry.getHeight()));
 			}
 			this.graph.refresh();
-			this.graph.repaint();
 		}
 
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) 
-	{
-		long currentTime = System.currentTimeMillis();
-		this.passedTime =  currentTime - this.previousUpdateTime;
-		this.previousUpdateTime = currentTime;
-		
-		float totalTime = (float)((currentTime - animationStartTime) * 0.8);
-		currentKeyFrameNumber = (int)(totalTime/this.layoutManager.getTotalKeyFrameCount());
-		float remainder = (totalTime/this.layoutManager.getTotalKeyFrameCount()) - currentKeyFrameNumber;
-		
+	{	
 		Set<String> keys = this.idToViewNode.keySet();
 		
 		if (currentKeyFrameNumber < this.layoutManager.getTotalKeyFrameCount()-1) 
@@ -361,12 +353,11 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 				RectangleD currentRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber);
 				RectangleD nextRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber+1);
 				
-				double xNew = currentRect.getX() + (nextRect.getX() - currentRect.getX()) * (remainder);
-				double yNew = currentRect.getY() + (nextRect.getY() - currentRect.getY()) * (remainder);
-				double wNew = currentRect.getWidth() + (nextRect.getWidth() - currentRect.getWidth()) * (remainder);
-				double hNew = currentRect.getHeight() + (nextRect.getHeight() - currentRect.getHeight()) * (remainder);
-				
-				
+				double xNew = currentRect.getX() + (nextRect.getX() - currentRect.getX()) * (interpolatedFrameRemainder);
+				double yNew = currentRect.getY() + (nextRect.getY() - currentRect.getY()) * (interpolatedFrameRemainder);
+				double wNew = currentRect.getWidth() + (nextRect.getWidth() - currentRect.getWidth()) * (interpolatedFrameRemainder);
+				double hNew = currentRect.getHeight() + (nextRect.getHeight() - currentRect.getHeight()) * (interpolatedFrameRemainder);
+							
 				cell.setGeometry(new mxGeometry(xNew, yNew, wNew, hNew));
 			}
 				
@@ -375,23 +366,79 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		else
 		{
 			this.timer.stop();
-			currentKeyFrameNumber = 0;
-			interpolatedFrame = 0;
 			this.layoutManager.clearKeyFrames();
+		}		
+		
+		if (!isAnimationPaused) 
+		{
+			animationTotalTime += animationSpeed;
+			currentKeyFrameNumber = (int)(animationTotalTime);
+			interpolatedFrameRemainder = (animationTotalTime) - currentKeyFrameNumber;
 		}
+
 	}
 	
 	public boolean isAnimateOn() {
-		return animateOn;
+		return isAnimateOn;
 	}
 
 	public void setAnimateOn(boolean animateOn) 
 	{
-		this.animateOn = animateOn;
+		this.isAnimateOn = animateOn;
 		
 		if (this.layoutManager != null) {
-			this.layoutManager.setAnimateOn(this.animateOn);	
+			this.layoutManager.setAnimateOn(this.isAnimateOn);	
 		}
+	}
+	
+	public float getAnimationSpeed()
+	{
+		return this.animationSpeed;
+	}
+	
+	public void setAnimationSpeed(float animationSpeed)
+	{
+		this.animationSpeed = animationSpeed;
+	}
+	
+	public void pauseAnimation()
+	{
+		isAnimationPaused = true;
+	}
+	
+	public void resumeAnimation()
+	{
+		isAnimationPaused = false;
+	}
+	
+	public void stopAnimation()
+	{
+		this.timer.stop();
+		
+		Set<String> keys = this.idToViewNode.keySet();
+		for (String tmpKey : keys)
+		{
+			mxCell cell = idToViewNode.get(tmpKey);
+			RectangleD geometry = this.layoutManager.getKeyFrameGeometry(tmpKey, this.layoutManager.getTotalKeyFrameCount()-1);
+			cell.setGeometry(new mxGeometry(geometry.getX(), geometry.getY(), geometry.getWidth(), geometry.getHeight()));
+		}
+		this.graph.refresh();
+		
+		this.layoutManager.clearKeyFrames();
+	}
+	
+	public void fastForwardAnimation()
+	{
+		animationTotalTime += 2*animationSpeed;
+		currentKeyFrameNumber = (int)(animationTotalTime);
+		interpolatedFrameRemainder = (animationTotalTime) - currentKeyFrameNumber;
+	}
+	
+	public void rewindAnimation()
+	{
+		animationTotalTime -= 2*animationSpeed;
+		currentKeyFrameNumber = (int)(animationTotalTime);
+		interpolatedFrameRemainder = (animationTotalTime) - currentKeyFrameNumber;
 	}
 	
 	public class OpenButtonListener implements ActionListener

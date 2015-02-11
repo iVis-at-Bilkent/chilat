@@ -110,11 +110,11 @@ public class EditorActions
 	}
 	
 	@SuppressWarnings("serial")
-	public static class PlayPauseAction extends AbstractAction
+	public static class PlayPauseAnimationAction extends AbstractAction
 	{
 		boolean playOrPauseState = true; //true means play state, false means pause state
 		
-		public PlayPauseAction()
+		public PlayPauseAnimationAction()
 		{
 			//Initial icon and description
 			this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/playIcon.png")));
@@ -130,10 +130,10 @@ public class EditorActions
 			if (playOrPauseState) 
 			{
 				//Set next icon and description - pause
-				this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/stopIcon.png")));
+				this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/pauseIcon.png")));
 				this.putValue(Action.SHORT_DESCRIPTION, "Pause Animation");
 				
-				//TODO perform play call
+				ChilayLayoutAnimationToolMain.getInstance().resumeAnimation();
 			}
 			else
 			{
@@ -141,22 +141,21 @@ public class EditorActions
 				this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/playIcon.png")));
 				this.putValue(Action.SHORT_DESCRIPTION, "Pause Animation");
 				
-				//TODO perform pause call
+				ChilayLayoutAnimationToolMain.getInstance().pauseAnimation();
 			}
 			
 			//Set next state
 			playOrPauseState = !playOrPauseState;
 		}
 	}
-	
 	@SuppressWarnings("serial")
-	public static class ForwardAction extends AbstractAction
+	public static class ForwardAnimationAction extends AbstractAction
 	{		
-		public ForwardAction()
+		public ForwardAnimationAction()
 		{
 			//Initial icon and description
-			this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/playIcon.png")));
-			this.putValue(Action.SHORT_DESCRIPTION, "Play Animation");
+			this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/forwardIcon.png")));
+			this.putValue(Action.SHORT_DESCRIPTION, "Fast Forward Animation");
 		}
 		
 		/**
@@ -164,6 +163,45 @@ public class EditorActions
 		 */
 		public void actionPerformed(ActionEvent e)
 		{
+			ChilayLayoutAnimationToolMain.getInstance().fastForwardAnimation();
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	public static class RewindAnimationAction extends AbstractAction
+	{		
+		public RewindAnimationAction()
+		{
+			//Initial icon and description
+			this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/rewindIcon.png")));
+			this.putValue(Action.SHORT_DESCRIPTION, "Rewind Animation");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			ChilayLayoutAnimationToolMain.getInstance().rewindAnimation();
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	public static class StopAction extends AbstractAction
+	{		
+		public StopAction()
+		{
+			//Initial icon and description
+			this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/stopIcon.png")));
+			this.putValue(Action.SHORT_DESCRIPTION, "Stop Animation");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			ChilayLayoutAnimationToolMain.getInstance().stopAnimation();
 		}
 	}
 }
