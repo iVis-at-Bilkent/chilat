@@ -430,6 +430,14 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	public void fastForwardAnimation()
 	{
 		animationTotalTime += 2*animationSpeed;
+		
+		if (animationTotalTime >= this.layoutManager.getTotalKeyFrameCount()-1) 
+		{
+			animationTotalTime = this.layoutManager.getTotalKeyFrameCount()-1;
+			interpolatedFrameRemainder = 0;
+			return;
+		}
+		
 		currentKeyFrameNumber = (int)(animationTotalTime);
 		interpolatedFrameRemainder = (animationTotalTime) - currentKeyFrameNumber;
 	}
@@ -437,6 +445,14 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	public void rewindAnimation()
 	{
 		animationTotalTime -= 2*animationSpeed;
+		
+		if (animationTotalTime <= 0) 
+		{
+			animationTotalTime = 0;
+			interpolatedFrameRemainder = 0;
+			return;
+		}
+		
 		currentKeyFrameNumber = (int)(animationTotalTime);
 		interpolatedFrameRemainder = (animationTotalTime) - currentKeyFrameNumber;
 	}
