@@ -72,10 +72,12 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	
 	private boolean isAnimateOn = false;
 	private boolean isAnimationPaused = false;
+	private boolean isAnimationRunning = false; 
 
 
 	private Timer timer;
 	
+	//Maps that store information about the style of graph entities
 	private HashMap<String, Object> nodeStyle;
 	private HashMap<String, Object> compoundNodeStyle;
 	private HashMap<String, Object> edgeStyle;
@@ -202,20 +204,14 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		}
 	}
 	
-	public void runLayout()
-	{
-		//TODO wrap these codes in a function 
-		if (this.timer != null) 
-		{
-			this.timer.stop();
-		}
-
-		currentKeyFrameNumber = 0;
-		this.layoutManager.clearKeyFrames();
-		//
-		
+	public void performLayout()
+	{	
 		this.layoutManager.runLayout();
-		this.animate();
+		
+		if (!isAnimateOn) 
+		{
+			drawFinalLayoutState();
+		}
 	}
 
 	public void createGraphNode(Object parent, NodeModel nodeToBeInserted, mxGraph graph  )
@@ -319,22 +315,13 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		
 		if (this.isAnimateOn)
 		{
-			this.animationTotalTime = 0;
-			this.interpolatedFrameRemainder = 0;
-			this.currentKeyFrameNumber = 0;
+			isAnimationRunning = true;
 			this.timer = new Timer(1000/60, this);
 			this.timer.start();
 		}
 		else
 		{
-			Set<String> keys = this.idToViewNode.keySet();
-			for (String tmpKey : keys)
-			{
-				mxCell cell = idToViewNode.get(tmpKey);
-				Rectangle geometry = this.layoutManager.getFinalGeometry(tmpKey);
-				cell.setGeometry(new mxGeometry(geometry.getX(), geometry.getY(), geometry.getWidth(), geometry.getHeight()));
-			}
-			this.graph.refresh();
+			drawFinalLayoutState();
 		}
 
 	}
@@ -366,7 +353,6 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		else
 		{
 			this.timer.stop();
-			this.layoutManager.clearKeyFrames();
 		}		
 		
 		if (!isAnimationPaused) 
@@ -406,24 +392,56 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		isAnimationPaused = true;
 	}
 	
-	public void resumeAnimation()
+	public void resumeOrStartAnimation()
 	{
+		//If animation is not running currently, start it
+		if (!this.isAnimationRunning) 
+		{
+			this.animate();
+		}
 		isAnimationPaused = false;
 	}
 	
 	public void stopAnimation()
 	{
 		this.timer.stop();
-		
+		//Draw the final geometries of the graph entities
+		drawFinalLayoutState();
+		this.resetAnimationState();
+	}
+	
+	public void drawFinalLayoutState()
+	{
 		Set<String> keys = this.idToViewNode.keySet();
-		for (String tmpKey : keys)
+
+		if (isAnimateOn) 
 		{
-			mxCell cell = idToViewNode.get(tmpKey);
-			RectangleD geometry = this.layoutManager.getKeyFrameGeometry(tmpKey, this.layoutManager.getTotalKeyFrameCount()-1);
-			cell.setGeometry(new mxGeometry(geometry.getX(), geometry.getY(), geometry.getWidth(), geometry.getHeight()));
+			for (String tmpKey : keys)
+			{
+				mxCell cell = idToViewNode.get(tmpKey);
+				RectangleD geometry = this.layoutManager.getKeyFrameGeometry(tmpKey, this.layoutManager.getTotalKeyFrameCount()-1);
+				cell.setGeometry(new mxGeometry(geometry.getX(), geometry.getY(), geometry.getWidth(), geometry.getHeight()));
+			}
+		}
+		else
+		{
+			for (String tmpKey : keys)
+			{
+				mxCell cell = idToViewNode.get(tmpKey);
+				Rectangle geometry = this.layoutManager.getFinalGeometry(tmpKey);
+				cell.setGeometry(new mxGeometry(geometry.getX(), geometry.getY(), geometry.getWidth(), geometry.getHeight()));
+			}
 		}
 		this.graph.refresh();
-		
+
+	}
+	
+	public void resetAnimationState()
+	{
+		isAnimationRunning = false;
+		this.animationTotalTime = 0;
+		this.interpolatedFrameRemainder = 0;
+		this.currentKeyFrameNumber = 0;
 		this.layoutManager.clearKeyFrames();
 	}
 	

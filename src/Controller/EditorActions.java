@@ -88,7 +88,7 @@ public class EditorActions
 		 */
 		public void actionPerformed(ActionEvent e)
 		{
-			ChilayLayoutAnimationToolMain.getInstance().runLayout();
+			ChilayLayoutAnimationToolMain.getInstance().performLayout();
 		}
 	}
 	
@@ -133,7 +133,7 @@ public class EditorActions
 				this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/pauseIcon.png")));
 				this.putValue(Action.SHORT_DESCRIPTION, "Pause Animation");
 				
-				ChilayLayoutAnimationToolMain.getInstance().resumeAnimation();
+				ChilayLayoutAnimationToolMain.getInstance().resumeOrStartAnimation();
 			}
 			else
 			{

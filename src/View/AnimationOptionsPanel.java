@@ -17,8 +17,9 @@ import javax.swing.JSlider;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeListener;
 
-import View.ChiAnimSliderPanels.AnimationSpeedSliderPanel;
+import com.sun.org.apache.bcel.internal.generic.D2F;
 
+import View.ChiAnimSliderPanels.AnimationSpeedSliderPanel;
 import Controller.EditorActions;
 
 public class AnimationOptionsPanel extends JPanel
@@ -36,14 +37,12 @@ public class AnimationOptionsPanel extends JPanel
 		JPanel animationPanel = new JPanel();
 		animationPanel.setLayout(new BoxLayout(animationPanel, BoxLayout.Y_AXIS));
 		animationPanel.setBorder(new TitledBorder("Animation"));
-		JCheckBox animationDuringLayoutCheckBox = new JCheckBox(new EditorActions.AnimateOnLayoutCheckBoxAction());
-		JButton performLayoutButton = new JButton(new EditorActions.PerformLayoutAction());
-		performLayoutButton.setText("Perform Layout");
+		JCheckBox animationDuringLayoutCheckBox = new JCheckBox(new EditorActions.AnimateOnLayoutCheckBoxAction());		
+
 		
 		animationDuringLayoutCheckBox.setText("Animation During Layout");
 		animationPanel.add(animationDuringLayoutCheckBox);
 		animationPanel.add(Box.createHorizontalGlue());
-		animationPanel.add(performLayoutButton);
 		animationPanel.setAlignmentX(LEFT_ALIGNMENT);
 		
 		//
@@ -79,14 +78,26 @@ public class AnimationOptionsPanel extends JPanel
 		realTimeAnimationPanel.setAlignmentX(LEFT_ALIGNMENT);
 		
 		//
+		JPanel performLayoutPanel = new JPanel();
+		performLayoutPanel.setBorder(new TitledBorder(""));
+		performLayoutPanel.setLayout(new BoxLayout(performLayoutPanel, BoxLayout.Y_AXIS));
+		JButton performLayoutButton = new JButton(new EditorActions.PerformLayoutAction());
+		performLayoutButton.setMaximumSize(new Dimension(500, 50));
+		performLayoutButton.setText("Perform Layout");
+		performLayoutPanel.add(performLayoutButton);
+		
+		//
+		AnimationPlayBackPanel animationPlaybackPanel =  AnimationPlayBackPanel.getInstance();
+		
+		//
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.add(animationPanel);
 		this.add(animationTypePanel);
 		this.add(keyFrameAnimationOptionsPanel);
 		this.add(realTimeAnimationPanel);
-		this.add(new AnimationPlayBackPanel());
+		this.add(performLayoutPanel);
+		this.add(animationPlaybackPanel);
 		this.setAlignmentX(LEFT_ALIGNMENT);
-
 	}
 	
 }

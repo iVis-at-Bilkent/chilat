@@ -17,11 +17,7 @@ public class EditorMenuBar extends JMenuBar implements ActionListener
     private JMenu layoutMenu;
     // File Menu contents
     private JMenuItem saveItem;
-    private JMenuItem loadItem;
-    //Layout Menu contents
-    private JMenuItem coseLayoutItem;
-    private JMenuItem layoutPropertiesItem;
-    
+    private JMenuItem loadItem;   
     
 	public EditorMenuBar()
 	{
@@ -67,7 +63,7 @@ public class EditorMenuBar extends JMenuBar implements ActionListener
 		}
 		else if(((JMenuItem)arg0.getSource()).getText().equals("CoSE Layout"))
 		{
-			ChilayLayoutAnimationToolMain.getInstance().runLayout();
+			ChilayLayoutAnimationToolMain.getInstance().performLayout();
 		}
 	}
 }
