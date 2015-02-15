@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 
+import View.AnimationPlayBackPanel;
 import View.ChilayLayoutAnimationToolMain;
 
 
@@ -110,11 +111,9 @@ public class EditorActions
 	}
 	
 	@SuppressWarnings("serial")
-	public static class PlayPauseAnimationAction extends AbstractAction
+	public static class PlayAnimationAction extends AbstractAction
 	{
-		boolean playOrPauseState = true; //true means play state, false means pause state
-		
-		public PlayPauseAnimationAction()
+		public PlayAnimationAction()
 		{
 			//Initial icon and description
 			this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/playIcon.png")));
@@ -126,28 +125,31 @@ public class EditorActions
 		 */
 		public void actionPerformed(ActionEvent e)
 		{
-			
-			if (playOrPauseState) 
-			{
-				//Set next icon and description - pause
-				this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/pauseIcon.png")));
-				this.putValue(Action.SHORT_DESCRIPTION, "Pause Animation");
-				
-				ChilayLayoutAnimationToolMain.getInstance().resumeOrStartAnimation();
-			}
-			else
-			{
-				//Set next icon and description - play
-				this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/playIcon.png")));
-				this.putValue(Action.SHORT_DESCRIPTION, "Pause Animation");
-				
-				ChilayLayoutAnimationToolMain.getInstance().pauseAnimation();
-			}
-			
-			//Set next state
-			playOrPauseState = !playOrPauseState;
+			ChilayLayoutAnimationToolMain.getInstance().resumeOrStartAnimation();
 		}
 	}
+	
+	@SuppressWarnings("serial")
+	public static class PauseAnimationAction extends AbstractAction
+	{
+		public PauseAnimationAction()
+		{
+			//Initial icon and description
+			this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/pauseIcon.png")));
+			this.putValue(Action.SHORT_DESCRIPTION, "Pause Animation");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			ChilayLayoutAnimationToolMain.getInstance().pauseAnimation();
+		}
+	}
+	
+	
+	
 	@SuppressWarnings("serial")
 	public static class ForwardAnimationAction extends AbstractAction
 	{		
@@ -201,6 +203,7 @@ public class EditorActions
 		 */
 		public void actionPerformed(ActionEvent e)
 		{
+			AnimationPlayBackPanel.getInstance().updateGUIAnimationEnd();
 			ChilayLayoutAnimationToolMain.getInstance().stopAnimation();
 		}
 	}

@@ -39,12 +39,16 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.swing.handler.mxGraphHandler;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
+import com.mxgraph.swing.handler.mxRubberband;
 import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxStyleUtils;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxGraphView;
 import com.mxgraph.view.mxStylesheet;
 
 
@@ -59,6 +63,9 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 
 	private mxGraph graph;
 	private mxGraphComponent graphComponent;
+	private mxRubberband rubberBand;
+	private mxGraphOutline graphOutline;
+	
 	private HashMap<String, mxCell> idToViewNode;
 	private CoSELayoutManager layoutManager;
 	private GraphMLParser parser;
@@ -140,6 +147,9 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.graphComponent.setDoubleBuffered(false);	
 		this.graphComponent.setFoldingEnabled(false);
 		mxKeyboardHandler keyboardHandler = new mxKeyboardHandler(graphComponent);
+		this.rubberBand = new mxRubberband(graphComponent);
+		this.graphOutline = new mxGraphOutline(this.graphComponent);
+		graphOutline.DEFAULT_ZOOMHANDLE_FILL = Color.red;
 		
 		JPanel menuAndToolbarPanel = new JPanel();
 		GridLayout menuAndToolbarLayout = new GridLayout(2, 1);
@@ -153,13 +163,15 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		tabbedPanePanel.setLayout( new BorderLayout());
 		tabbedPanePanel.add(new EditorTabbedPane(), BorderLayout.PAGE_START);
 		
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabbedPanePanel, graphComponent);
-		splitPane.setMinimumSize(new Dimension(500, 0));
-		splitPane.setDividerLocation(370);
-		splitPane.setBorder(new TitledBorder(" "));
+		JSplitPane verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPanePanel, graphOutline);
+		
+		JSplitPane horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, verticalSplitPane, graphComponent);
+		horizontalSplitPane.setMinimumSize(new Dimension(500, 0));
+		horizontalSplitPane.setDividerLocation(370);
+		horizontalSplitPane.setBorder(new TitledBorder(" "));
 		
 		this.add(menuAndToolbarPanel,BorderLayout.PAGE_START);
-		this.add(splitPane,BorderLayout.CENTER);
+		this.add(horizontalSplitPane,BorderLayout.CENTER);
 	}
 	
 	public void loadGraph(String path)
@@ -261,6 +273,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException
 	{
 		UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+		//UIManager.setLookAndFeel ( new WebLookAndFeel () );
         ChilayLayoutAnimationToolMain frame = ChilayLayoutAnimationToolMain.getInstance();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1024, 768);
@@ -287,7 +300,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 			{
 				graphComponent.zoomOut();
 			}
-			
+						
 			/*double viewWidth = graphComponent.getGraph().getView().getGraphBounds().getWidth();
 			double viewHeight = graphComponent.getGraph().getView().getGraphBounds().getHeight();
 			double graphWidht = graphComponent.getWidth();
@@ -296,12 +309,8 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 			double wRatio = graphWidht / viewWidth;
 			double hRatio = graphHeight / viewHeight;
 			
-			graphComponent.zoom(Math.min(wRatio, hRatio));
-			System.out.println(wRatio);*/
-			/*System.out.println(mxResources.get("scale") + ": "
-					+ (int) (100 * graphComponent.getGraph().getView().getScale())
-					+ "%");
-			*/	
+			graphComponent.zoom(Math.min(wRatio, hRatio));*/
+
 		}
 		
 	}
@@ -316,6 +325,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		if (this.isAnimateOn)
 		{
 			isAnimationRunning = true;
+			AnimationPlayBackPanel.getInstance().updateGUIAnimationStart();
 			this.timer = new Timer(1000/60, this);
 			this.timer.start();
 		}
@@ -352,6 +362,11 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		}
 		else
 		{
+			isAnimationRunning = false;
+			this.animationTotalTime = 0;
+			this.interpolatedFrameRemainder = 0;
+			this.currentKeyFrameNumber = 0;
+			AnimationPlayBackPanel.getInstance().updateGUIAnimationEnd();
 			this.timer.stop();
 		}		
 		
