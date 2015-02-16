@@ -44,9 +44,13 @@ import com.mxgraph.swing.handler.mxGraphHandler;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
 import com.mxgraph.swing.handler.mxRubberband;
 import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxRectangle;
+import com.mxgraph.util.mxResources;
 import com.mxgraph.util.mxStyleUtils;
 import com.mxgraph.util.mxUtils;
+import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
 import com.mxgraph.view.mxStylesheet;
@@ -75,7 +79,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	private int currentKeyFrameNumber = 0;
 	float animationTotalTime = 0.0f;
 	float interpolatedFrameRemainder = 0;
-	float animationSpeed = 0.1f; //Animation makes progress by 0.2 frame per update
+	float animationSpeed = 0.1f; //Animation makes progress by 0.1 frame per update
 	
 	private boolean isAnimateOn = false;
 	private boolean isAnimationPaused = false;
@@ -104,6 +108,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		
 		this.compoundNodeStyle = new HashMap<String, Object>();
 		compoundNodeStyle.put(mxConstants.STYLE_FILLCOLOR, mxUtils.getHexColorString(Color.WHITE));
+		compoundNodeStyle.put(mxConstants.STYLE_OPACITY, 50);
 		compoundNodeStyle.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(Color.BLACK));
 		compoundNodeStyle.put(mxConstants.STYLE_STROKEWIDTH, 3);
 
@@ -143,12 +148,12 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.graphComponent.getViewport().setBackground(new Color(255, 255, 255));
 		this.graphComponent.getGraphHandler().setRemoveCellsFromParent(false);
 		this.graphComponent.setConnectable(false);
-		this.graphComponent.addMouseWheelListener(new GraphMouseListener(this.graphComponent));
 		this.graphComponent.setDoubleBuffered(false);	
 		this.graphComponent.setFoldingEnabled(false);
 		mxKeyboardHandler keyboardHandler = new mxKeyboardHandler(graphComponent);
 		this.rubberBand = new mxRubberband(graphComponent);
 		this.graphOutline = new mxGraphOutline(this.graphComponent);
+		this.graphOutline.addMouseWheelListener(new GraphMouseListener(this.graphComponent));
 		graphOutline.DEFAULT_ZOOMHANDLE_FILL = Color.red;
 		
 		JPanel menuAndToolbarPanel = new JPanel();
@@ -273,7 +278,6 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException
 	{
 		UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-		//UIManager.setLookAndFeel ( new WebLookAndFeel () );
         ChilayLayoutAnimationToolMain frame = ChilayLayoutAnimationToolMain.getInstance();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1024, 768);
@@ -283,6 +287,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	public class GraphMouseListener implements MouseWheelListener
 	{
 		mxGraphComponent graphComponent;
+		private double zoomScale = 1.0;
 		
 		public GraphMouseListener(mxGraphComponent component)
 		{
@@ -457,7 +462,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.animationTotalTime = 0;
 		this.interpolatedFrameRemainder = 0;
 		this.currentKeyFrameNumber = 0;
-		this.layoutManager.clearKeyFrames();
+		//this.layoutManager.clearKeyFrames();
 	}
 	
 	public void fastForwardAnimation()
