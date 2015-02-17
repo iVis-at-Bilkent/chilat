@@ -34,6 +34,7 @@ import Model.CompoundNodeModel;
 import Model.EdgeModel;
 import Model.GraphMLParser;
 import Model.NodeModel;
+import View.ChiLATConstants.ForceTuningParameterName;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
@@ -287,7 +288,6 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	public class GraphMouseListener implements MouseWheelListener
 	{
 		mxGraphComponent graphComponent;
-		private double zoomScale = 1.0;
 		
 		public GraphMouseListener(mxGraphComponent component)
 		{
@@ -493,6 +493,54 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		
 		currentKeyFrameNumber = (int)(animationTotalTime);
 		interpolatedFrameRemainder = (animationTotalTime) - currentKeyFrameNumber;
+	}
+	
+	public void setCoSEOption(ForceTuningParameterName chosenParameter, int value )
+	{
+		switch (chosenParameter) 
+		{
+		case SPRING_FORCE:
+			this.layoutManager.getCoseOptionsPack().springStrength = value;
+			break;
+		case REPULSION_FORCE:
+			this.layoutManager.getCoseOptionsPack().repulsionStrength = value;
+			break;
+		case GRAVITY_FORCE:
+			this.layoutManager.getCoseOptionsPack().gravityStrength = value;
+			break;
+		case COMP_GRAVITY_FORCE:
+			this.layoutManager.getCoseOptionsPack().compoundGravityStrength = value;
+			break;
+		case GRAVITY_RANGE:
+			this.layoutManager.getCoseOptionsPack().gravityRange = value;
+			break;
+		case COMP_GRAVITY_RANGE:
+			this.layoutManager.getCoseOptionsPack().compoundGravityRange = value;
+			break;
+		default:
+			break;
+		}
+	}
+	
+	public int getCoSEOption(ForceTuningParameterName chosenParameter)
+	{
+		switch (chosenParameter) 
+		{
+		case SPRING_FORCE:
+			return this.layoutManager.getCoseOptionsPack().springStrength;
+		case REPULSION_FORCE:
+			return this.layoutManager.getCoseOptionsPack().repulsionStrength;
+		case GRAVITY_FORCE:
+			return this.layoutManager.getCoseOptionsPack().gravityStrength;
+		case COMP_GRAVITY_FORCE:
+			return this.layoutManager.getCoseOptionsPack().compoundGravityStrength;
+		case GRAVITY_RANGE:
+			return this.layoutManager.getCoseOptionsPack().gravityRange;
+		case COMP_GRAVITY_RANGE:
+			return this.layoutManager.getCoseOptionsPack().compoundGravityRange;
+		default:
+			return -1;
+		}
 	}
 	
 	public class OpenButtonListener implements ActionListener

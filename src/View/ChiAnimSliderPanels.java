@@ -4,6 +4,10 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.ivis.layout.LayoutOptionsPack;
+
+import View.ChiLATConstants.ForceTuningParameterName;
+
 public class ChiAnimSliderPanels 
 {
 	public static class AnimationSpeedSliderPanel extends ChiAnimSliderPanel implements ChangeListener
@@ -22,4 +26,28 @@ public class ChiAnimSliderPanels
 			ChilayLayoutAnimationToolMain.getInstance().setAnimationSpeed(value);
 		}
 	}
+	
+	public static class ForceTuningSliderPanel extends ChiAnimSliderPanel implements ChangeListener
+	{
+		String label = "";
+		
+		ForceTuningParameterName chosenParameter;
+
+		public ForceTuningSliderPanel(String label, int initialValue, ForceTuningParameterName chosenParameter)
+		{
+			super(label, 0, 100, initialValue);
+			this.label = label;
+			this.slider.setToolTipText(label + initialValue );
+			this.slider.addChangeListener(this);
+			this.chosenParameter = chosenParameter;
+		}
+		
+		public void stateChanged(ChangeEvent event) 
+		{
+			int value = this.slider.getValue();
+			this.slider.setToolTipText(label + value );
+			ChilayLayoutAnimationToolMain.getInstance().setCoSEOption(chosenParameter, value);
+		}
+	}
+	
 }

@@ -13,6 +13,7 @@ import org.ivis.layout.LGraphManager;
 import org.ivis.layout.LNode;
 import org.ivis.layout.Layout;
 import org.ivis.layout.LayoutOptionsPack;
+import org.ivis.layout.LayoutOptionsPack.CoSE;
 import org.ivis.layout.LayoutOptionsPack.General;
 import org.ivis.layout.cose.CoSELayout;
 import org.ivis.util.RectangleD;
@@ -29,6 +30,8 @@ public class CoSELayoutManager
 	private LGraph lRoot;
 	private CompoundNodeModel vRoot;
 	private boolean animateOn = false;
+	private General generalOptions;
+	private CoSE coseOptions;
 	
 	public CoSELayoutManager()
 	{
@@ -39,7 +42,8 @@ public class CoSELayoutManager
 		this.layout = new CoSELayout();
 		
 		//Set animation on layout to true
-		General generalOptions = LayoutOptionsPack.getInstance().getGeneral();
+		generalOptions = LayoutOptionsPack.getInstance().getGeneral();
+		coseOptions = LayoutOptionsPack.getInstance().getCoSE();
 		generalOptions.animationDuringLayout = this.animateOn;
 	}
 	
@@ -186,7 +190,11 @@ public class CoSELayoutManager
 
 	public void setAnimateOn(boolean animateOn) {
 		this.animateOn = animateOn;
-		General generalOptions = LayoutOptionsPack.getInstance().getGeneral();
-		generalOptions.animationDuringLayout = this.animateOn;
+		this.generalOptions.animationDuringLayout = this.animateOn;
+	}
+	
+	public CoSE getCoseOptionsPack()
+	{
+		return this.coseOptions;
 	}
 }
