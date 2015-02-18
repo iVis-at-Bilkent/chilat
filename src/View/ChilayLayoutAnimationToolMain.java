@@ -234,6 +234,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		else
 		{
 			AnimationPlayBackPanel.getInstance().updateGUIAnimationStart();
+			AnimationPlayBackPanel.getInstance().getPlayPauseButton().changeToPauseButton();
 			this.animate();
 		}
 	}
