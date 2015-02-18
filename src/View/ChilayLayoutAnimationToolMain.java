@@ -224,11 +224,17 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	
 	public void performLayout()
 	{	
+		this.resetAnimationState();
 		this.layoutManager.runLayout();
 		
 		if (!isAnimateOn) 
 		{
 			drawFinalLayoutState();
+		}
+		else
+		{
+			AnimationPlayBackPanel.getInstance().updateGUIAnimationStart();
+			this.animate();
 		}
 	}
 
@@ -367,10 +373,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		}
 		else
 		{
-			isAnimationRunning = false;
-			this.animationTotalTime = 0;
-			this.interpolatedFrameRemainder = 0;
-			this.currentKeyFrameNumber = 0;
+			this.resetAnimationState();
 			AnimationPlayBackPanel.getInstance().updateGUIAnimationEnd();
 			this.timer.stop();
 		}		
@@ -428,6 +431,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		//Draw the final geometries of the graph entities
 		drawFinalLayoutState();
 		this.resetAnimationState();
+		AnimationPlayBackPanel.getInstance().updateGUIAnimationEnd();
 	}
 	
 	public void drawFinalLayoutState()
@@ -458,11 +462,11 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	
 	public void resetAnimationState()
 	{
-		isAnimationRunning = false;
+		this.isAnimationRunning = false;
 		this.animationTotalTime = 0;
 		this.interpolatedFrameRemainder = 0;
 		this.currentKeyFrameNumber = 0;
-		//this.layoutManager.clearKeyFrames();
+		this.isAnimationPaused = false;
 	}
 	
 	public void fastForwardAnimation()

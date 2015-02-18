@@ -50,4 +50,28 @@ public class ChiAnimSliderPanels
 		}
 	}
 	
+	@SuppressWarnings("serial")
+	public static class KeyframeCapturePeriodSliderPanel extends ChiAnimSliderPanel implements ChangeListener
+	{
+		String label = "";
+		
+		ForceTuningParameterName chosenParameter;
+
+		public KeyframeCapturePeriodSliderPanel(String label, int initialValue)
+		{
+			super(label, 1, 100, initialValue);
+			this.label = label;
+			this.slider.setToolTipText(label + initialValue );
+			this.slider.addChangeListener(this);
+		}
+		
+		public void stateChanged(ChangeEvent event) 
+		{
+			int value = this.slider.getValue();
+			LayoutOptionsPack.getInstance().getGeneral().animationPeriod = value;
+			this.slider.setToolTipText(label + value );
+
+		}
+	}
+	
 }

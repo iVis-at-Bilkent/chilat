@@ -59,7 +59,7 @@ public class AnimationPlayBackPanel extends JPanel
 		this.stopButton.setEnabled(true);
 	}
 	
-	public CircularAnimationControlButton getPlayPauseButton() 
+	public PlayPauseButton getPlayPauseButton() 
 	{
 		return playPauseButton;
 	}

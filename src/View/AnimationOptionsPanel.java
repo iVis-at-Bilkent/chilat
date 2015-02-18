@@ -17,9 +17,12 @@ import javax.swing.JSlider;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeListener;
 
+import org.ivis.layout.LayoutOptionsPack;
+
 import com.sun.org.apache.bcel.internal.generic.D2F;
 
 import View.ChiAnimSliderPanels.AnimationSpeedSliderPanel;
+import View.ChiAnimSliderPanels.KeyframeCapturePeriodSliderPanel;
 import Controller.EditorActions;
 
 public class AnimationOptionsPanel extends JPanel
@@ -51,6 +54,7 @@ public class AnimationOptionsPanel extends JPanel
 		animationTypePanel.setBorder(new TitledBorder("Animation Type"));
 		ButtonGroup animationTypeButtonGroup = new ButtonGroup();
 		JRadioButton keyFrameAnimationRadioButton = new JRadioButton("Key Frame Animation");
+		keyFrameAnimationRadioButton.setSelected(true);
 		JRadioButton realTimeAnimationRadioButton = new JRadioButton("Real Time Animation");
 		animationTypeButtonGroup.add(keyFrameAnimationRadioButton);
 		animationTypeButtonGroup.add(realTimeAnimationRadioButton);
@@ -63,7 +67,8 @@ public class AnimationOptionsPanel extends JPanel
 		JPanel keyFrameAnimationOptionsPanel = new JPanel();
 		keyFrameAnimationOptionsPanel.setLayout(new BoxLayout(keyFrameAnimationOptionsPanel, BoxLayout.Y_AXIS));
 		keyFrameAnimationOptionsPanel.setBorder(new TitledBorder("Key Frame Animation Properties"));
-		AnimationSpeedSliderPanel animationCapturePeriodPanel = new AnimationSpeedSliderPanel("Key Frame Capture Period",0,0,0);
+		KeyframeCapturePeriodSliderPanel animationCapturePeriodPanel = new KeyframeCapturePeriodSliderPanel("Key Frame Capture Period: ", 
+				LayoutOptionsPack.getInstance().getGeneral().animationPeriod);
 		AnimationSpeedSliderPanel animationSpeedPanel = new AnimationSpeedSliderPanel("Animation Speed", 10, 200, 100);
 		keyFrameAnimationOptionsPanel.add(animationCapturePeriodPanel);
 		keyFrameAnimationOptionsPanel.add(animationSpeedPanel);

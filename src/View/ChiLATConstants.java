@@ -11,4 +11,11 @@ public class ChiLATConstants
 		GRAVITY_RANGE,
 		COMP_GRAVITY_RANGE
 	};
+	
+	public static enum LayoutQualityParameterName
+	{
+		DRAFT,
+		DEFAULT,
+		POOR
+	};
 }

@@ -1,14 +1,19 @@
 package Controller;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JRadioButton;
+
+import org.ivis.layout.LayoutOptionsPack;
 
 import View.AnimationPlayBackPanel;
+import View.ChiLATConstants.LayoutQualityParameterName;
 import View.ChilayLayoutAnimationToolMain;
 
 
@@ -205,6 +210,93 @@ public class EditorActions
 		{
 			AnimationPlayBackPanel.getInstance().updateGUIAnimationEnd();
 			ChilayLayoutAnimationToolMain.getInstance().stopAnimation();
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	public static class LayoutQualityRadioButtonAction extends AbstractAction
+	{		
+		LayoutQualityParameterName chosenParameter;
+		
+		public LayoutQualityRadioButtonAction(LayoutQualityParameterName chosenParameter)
+		{
+			this.putValue(Action.SHORT_DESCRIPTION, "Layout Quality");
+			this.chosenParameter = chosenParameter;
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			JRadioButton radioButton = (JRadioButton) e.getSource();
+			
+			if (radioButton.isSelected())
+			{
+				switch (chosenParameter) 
+				{
+				case DRAFT:
+					LayoutOptionsPack.getInstance().getGeneral().layoutQuality = 2;
+					break;
+				case DEFAULT:
+					LayoutOptionsPack.getInstance().getGeneral().layoutQuality = 1;				
+					break;
+				case POOR:
+					LayoutOptionsPack.getInstance().getGeneral().layoutQuality = 0;
+					break;
+				default:
+					break;
+				}
+			}
+
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	public static class IncrementalLayoutCheckboxAction extends AbstractAction
+	{		
+		public IncrementalLayoutCheckboxAction()
+		{
+			//Initial icon and description
+			this.putValue(Action.SHORT_DESCRIPTION, "Incremental Layout");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			JCheckBox checkbox = (JCheckBox) e.getSource();
+			if (checkbox.isSelected()) 
+			{
+				LayoutOptionsPack.getInstance().getGeneral().incremental = true;
+			}
+			else
+				LayoutOptionsPack.getInstance().getGeneral().incremental = false;
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	public static class UniformLeafNodeSizesCheckboxAction extends AbstractAction
+	{		
+		public UniformLeafNodeSizesCheckboxAction()
+		{
+			//Initial icon and description
+			this.putValue(Action.SHORT_DESCRIPTION, "Uniform Leaf Node Sizes");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			JCheckBox checkbox = (JCheckBox) e.getSource();
+			if (checkbox.isSelected()) 
+			{
+				LayoutOptionsPack.getInstance().getGeneral().uniformLeafNodeSizes = true;
+			}
+			else
+				LayoutOptionsPack.getInstance().getGeneral().uniformLeafNodeSizes = false;
 		}
 	}
 }
