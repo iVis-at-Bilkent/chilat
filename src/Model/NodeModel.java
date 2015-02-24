@@ -7,21 +7,26 @@ import org.ivis.layout.LGraphObject;
 import org.ivis.layout.LNode;
 import org.ivis.layout.Updatable;
 import org.ivis.layout.cose.CoSEGraph;
+import org.ivis.layout.fd.FDLayoutNode;
 import org.ivis.util.RectangleD;
+
+import Util.Vector2D;
 
 public class NodeModel extends BaseModel implements Updatable
 {
 	private String nodeLabel;
 	private Rectangle bounds;
 	private CompoundNodeModel parent;
+	private Vector2D totalForceVector;
 	
-	protected ArrayList<RectangleD> animationStates;
+	protected ArrayList<AnimationState> animationStates;
 	
 	public NodeModel(String id)
 	{
 		super(id);
 		this.bounds = new Rectangle();
-		this.animationStates = new ArrayList<RectangleD>();
+		this.animationStates = new ArrayList<AnimationState>();
+		this.totalForceVector = new Vector2D();
 	}
 
 	public String getNodeLabel() {
@@ -60,11 +65,11 @@ public class NodeModel extends BaseModel implements Updatable
 		this.bounds.height = h;
 	}
 	
-	public ArrayList<RectangleD> getAnimationStates() {
+	public ArrayList<AnimationState> getAnimationStates() {
 		return animationStates;
 	}
 
-	public void setAnimationStates(ArrayList<RectangleD> animationStates) {
+	public void setAnimationStates(ArrayList<AnimationState> animationStates) {
 		this.animationStates = animationStates;
 	}
 
@@ -90,13 +95,15 @@ public class NodeModel extends BaseModel implements Updatable
         }
 
         //Update positions
-        LNode lNode = (LNode)lGraphObj;
+        FDLayoutNode lNode = (FDLayoutNode)lGraphObj;
         this.bounds.x = (int) lNode.getRect().x;
         this.bounds.y = (int) lNode.getRect().y;
         this.bounds.width = (int) lNode.getRect().width;
         this.bounds.height = (int) lNode.getRect().height;
-        //System.out.println(this.toString());
-        this.animationStates.add(new RectangleD(lNode.getRect().getX(), lNode.getRect().getY(), lNode.getRect().getWidth(), lNode.getRect().getHeight()));
+        this.totalForceVector.setX(lNode.displacementX);
+        this.totalForceVector.setY(lNode.displacementY);
+        
+        RectangleD nodeGeometry = new RectangleD(lNode.getRect().getX(), lNode.getRect().getY(), lNode.getRect().getWidth(), lNode.getRect().getHeight());
+        this.animationStates.add(new AnimationState(nodeGeometry, this.totalForceVector));
 	}
-
 }

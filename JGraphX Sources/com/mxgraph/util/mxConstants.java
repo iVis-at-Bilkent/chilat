@@ -1038,6 +1038,11 @@ public class mxConstants
 	 * SHAPE_HEXAGON
 	 */
 	public static final String SHAPE_HEXAGON = "hexagon";
+	
+	/**
+	 * Chilay Animation Tool node shape
+	 */
+	public static final String SHAPE_CHILAT_NODE_SHAPE = "chilatNode";
 
 	/**
 	 * ARROW_CLASSIC

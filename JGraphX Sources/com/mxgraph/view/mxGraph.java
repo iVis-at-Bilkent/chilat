@@ -26,6 +26,7 @@ import org.w3c.dom.Element;
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.canvas.mxICanvas;
 import com.mxgraph.canvas.mxImageCanvas;
+import com.mxgraph.model.ChiLATCell;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
@@ -2360,6 +2361,20 @@ public class mxGraph extends mxEventSource
 
 		return clones;
 	}
+	
+	/**
+	 * Creates and adds a new  vertex with an empty style.
+	 * This method creates ChiLATCell instead of ordinary cell object
+	 * to represent total force during layout animation.
+	 */
+	public Object insertChiLATVertex(Object parent, String id, Object value,
+			double x, double y, double width, double height)
+	{
+		Object vertex = createChiLATVertex(parent, id, value, x, y, width, height,
+				null, false);
+
+		return addCell(vertex, parent);
+	}
 
 	/**
 	 * Creates and adds a new vertex with an empty style.
@@ -2462,6 +2477,35 @@ public class mxGraph extends mxEventSource
 		geometry.setRelative(relative);
 
 		mxCell vertex = new mxCell(value, geometry, style);
+		vertex.setId(id);
+		vertex.setVertex(true);
+		vertex.setConnectable(true);
+
+		return vertex;
+	}
+	
+	/**
+	 * Hook method that creates the new vertex( ChiLATCell ) for insertVertex.
+	 * 
+	 * @param parent Cell that specifies the parent of the new vertex.
+	 * @param id Optional string that defines the Id of the new vertex.
+	 * @param value Object to be used as the user object.
+	 * @param x Integer that defines the x coordinate of the vertex.
+	 * @param y Integer that defines the y coordinate of the vertex.
+	 * @param width Integer that defines the width of the vertex.
+	 * @param height Integer that defines the height of the vertex.
+	 * @param style Optional string that defines the cell style.
+	 * @param relative Specifies if the geometry should be relative.
+	 * @return Returns the new vertex to be inserted.
+	 */
+	public Object createChiLATVertex(Object parent, String id, Object value,
+			double x, double y, double width, double height, String style,
+			boolean relative)
+	{
+		mxGeometry geometry = new mxGeometry(x, y, width, height);
+		geometry.setRelative(relative);
+
+		ChiLATCell vertex = new ChiLATCell(value, geometry, style);
 		vertex.setId(id);
 		vertex.setVertex(true);
 		vertex.setConnectable(true);

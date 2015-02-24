@@ -34,9 +34,11 @@ import Model.CompoundNodeModel;
 import Model.EdgeModel;
 import Model.GraphMLParser;
 import Model.NodeModel;
+import Util.Vector2D;
 import View.ChiLATConstants.ForceTuningParameterName;
 
-import com.mxgraph.model.mxCell;
+import com.mxgraph.model.ChiLATCell;
+import com.mxgraph.model.ChiLATCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
@@ -47,6 +49,7 @@ import com.mxgraph.swing.handler.mxRubberband;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
+import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxRectangle;
 import com.mxgraph.util.mxResources;
 import com.mxgraph.util.mxStyleUtils;
@@ -71,7 +74,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	private mxRubberband rubberBand;
 	private mxGraphOutline graphOutline;
 	
-	private HashMap<String, mxCell> idToViewNode;
+	private HashMap<String, ChiLATCell> idToViewNode;
 	private CoSELayoutManager layoutManager;
 	private GraphMLParser parser;
 	
@@ -114,7 +117,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		compoundNodeStyle.put(mxConstants.STYLE_STROKEWIDTH, 3);
 
 		this.nodeStyle = new HashMap<String, Object>();
-		nodeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
+		nodeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CHILAT_NODE_SHAPE);
 		nodeStyle.put(mxConstants.STYLE_FILLCOLOR, mxUtils.getHexColorString(new Color(48, 175, 230)));
 		nodeStyle.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(Color.BLACK));
 		nodeStyle.put(mxConstants.STYLE_STROKEWIDTH, 2);
@@ -184,7 +187,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	{
 		//Map for obtaining view nodes
 		this.currentKeyFrameNumber = 0;
-		idToViewNode = new HashMap<String, mxCell>();
+		idToViewNode = new HashMap<String, ChiLATCell>();
 
 		//Read graph
 		parser = new GraphMLParser(path);
@@ -242,7 +245,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	public void createGraphNode(Object parent, NodeModel nodeToBeInserted, mxGraph graph  )
 	{
 
-		mxCell newViewNode = (mxCell) graph.insertVertex(
+		ChiLATCell newViewNode = (ChiLATCell) graph.insertChiLATVertex(
 				parent, 
 				null, 
 				nodeToBeInserted.getLabel(), 
@@ -357,7 +360,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		{
 			for (String tmpKey : keys)
 			{
-				mxCell cell = idToViewNode.get(tmpKey);
+				ChiLATCell cell = idToViewNode.get(tmpKey);
 				
 				RectangleD currentRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber);
 				RectangleD nextRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber+1);
@@ -366,8 +369,23 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 				double yNew = currentRect.getY() + (nextRect.getY() - currentRect.getY()) * (interpolatedFrameRemainder);
 				double wNew = currentRect.getWidth() + (nextRect.getWidth() - currentRect.getWidth()) * (interpolatedFrameRemainder);
 				double hNew = currentRect.getHeight() + (nextRect.getHeight() - currentRect.getHeight()) * (interpolatedFrameRemainder);
-							
+				
+				Vector2D currentTotalForceVector = this.layoutManager.getTotalForce(tmpKey, this.currentKeyFrameNumber);
+				Vector2D nextTotalForceVector = this.layoutManager.getTotalForce(tmpKey, this.currentKeyFrameNumber);
+				
+				double currentTotalForce = currentTotalForceVector.length();
+				double nextTotalForce = nextTotalForceVector.length();
+				
+				currentTotalForceVector = currentTotalForceVector.normalize();
+				nextTotalForceVector = nextTotalForceVector.normalize();
+
+				double totalForceXNew = currentTotalForceVector.getX() + (nextTotalForceVector.getX() - currentTotalForceVector.getX()) * (interpolatedFrameRemainder);
+				double totalForceYNew = currentTotalForceVector.getY() + (nextTotalForceVector.getY() - currentTotalForceVector.getY()) * (interpolatedFrameRemainder);
+				double newTotalForce = currentTotalForce + (nextTotalForce - currentTotalForce) * (interpolatedFrameRemainder);
+				
 				cell.setGeometry(new mxGeometry(xNew, yNew, wNew, hNew));
+				cell.setTotalForce(newTotalForce);
+				cell.setTotalForceVector(new mxPoint(totalForceXNew, totalForceYNew));
 			}
 				
 			this.graph.refresh();
@@ -443,7 +461,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		{
 			for (String tmpKey : keys)
 			{
-				mxCell cell = idToViewNode.get(tmpKey);
+				ChiLATCell cell = idToViewNode.get(tmpKey);
 				RectangleD geometry = this.layoutManager.getKeyFrameGeometry(tmpKey, this.layoutManager.getTotalKeyFrameCount()-1);
 				cell.setGeometry(new mxGeometry(geometry.getX(), geometry.getY(), geometry.getWidth(), geometry.getHeight()));
 			}
@@ -452,7 +470,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		{
 			for (String tmpKey : keys)
 			{
-				mxCell cell = idToViewNode.get(tmpKey);
+				ChiLATCell cell = idToViewNode.get(tmpKey);
 				Rectangle geometry = this.layoutManager.getFinalGeometry(tmpKey);
 				cell.setGeometry(new mxGeometry(geometry.getX(), geometry.getY(), geometry.getWidth(), geometry.getHeight()));
 			}

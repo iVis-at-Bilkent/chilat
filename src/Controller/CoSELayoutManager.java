@@ -21,6 +21,7 @@ import org.ivis.util.RectangleD;
 import Model.CompoundNodeModel;
 import Model.EdgeModel;
 import Model.NodeModel;
+import Util.Vector2D;
 
 public class CoSELayoutManager 
 {
@@ -108,7 +109,12 @@ public class CoSELayoutManager
 	
 	public RectangleD getKeyFrameGeometry(String id, int index)
 	{
-		return this.l_To_v_Map.get(id).getAnimationStates().get(index);
+		return this.l_To_v_Map.get(id).getAnimationStates().get(index).getNodeGeometry();
+	}
+	
+	public Vector2D getTotalForce(String id, int index)
+	{
+		return this.l_To_v_Map.get(id).getAnimationStates().get(index).getTotalForceVector();
 	}
 	
 	public NodeModel getParent(String id)
@@ -166,12 +172,12 @@ public class CoSELayoutManager
 			{
 				for (int i = 0; i < this.getTotalKeyFrameCount(); i++) 
 				{
-					RectangleD parentRect = node.getParent().getAnimationStates().get(i);
-					RectangleD nodeRect = node.getAnimationStates().get(i);
+					RectangleD parentRect = node.getParent().getAnimationStates().get(i).getNodeGeometry();
+					RectangleD nodeRect = node.getAnimationStates().get(i).getNodeGeometry();
 					double newX = -parentRect.getX() + nodeRect.getX();
 					double newY = -parentRect.getY() + nodeRect.getY();
-					node.getAnimationStates().get(i).setX(newX);
-					node.getAnimationStates().get(i).setY(newY);
+					node.getAnimationStates().get(i).getNodeGeometry().setX(newX);
+					node.getAnimationStates().get(i).getNodeGeometry().setY(newY);
 				}
 			}
 		}

@@ -21,6 +21,7 @@ import java.util.Map;
 
 import javax.swing.CellRendererPane;
 
+import com.mxgraph.shape.ChiLATNodeShape;
 import com.mxgraph.shape.mxActorShape;
 import com.mxgraph.shape.mxArrowShape;
 import com.mxgraph.shape.mxCloudShape;
@@ -103,6 +104,7 @@ public class mxGraphics2DCanvas extends mxBasicCanvas
 		putShape(mxConstants.SHAPE_RHOMBUS, new mxRhombusShape());
 		putShape(mxConstants.SHAPE_SWIMLANE, new mxSwimlaneShape());
 		putShape(mxConstants.SHAPE_TRIANGLE, new mxTriangleShape());
+		putShape(mxConstants.SHAPE_CHILAT_NODE_SHAPE, new ChiLATNodeShape());
 		putTextShape(TEXT_SHAPE_DEFAULT, new mxDefaultTextShape());
 		putTextShape(TEXT_SHAPE_HTML, new mxHtmlTextShape());
 	}
