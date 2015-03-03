@@ -64,7 +64,7 @@ public class Vector2D
 	public Vector2D normalize() {
 		Vector2D v2 = new Vector2D();
 
-		double length = Math.sqrt( this.x*this.x + this.y*this.y );
+		double length = this.length();
 		if (length != 0) {
 			v2.x = this.x/length;
 			v2.y = this.y/length;

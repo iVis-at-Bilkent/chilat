@@ -43,5 +43,7 @@ public class ChiLATCell extends mxCell
 	{
 		this.totalForceVector.setX(totalForceVector.getX());
 		this.totalForceVector.setY(totalForceVector.getY());
+		/*double length = Math.sqrt(this.totalForceVector.getX()*this.totalForceVector.getX()+ this.totalForceVector.getY()*this.totalForceVector.getY());
+		System.out.println(this.totalForceVector.getX() + " " + this.totalForceVector.getY() + " " + length );*/
 	}
 }

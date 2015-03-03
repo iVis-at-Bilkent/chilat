@@ -42,7 +42,9 @@ public class ChiLATNodeShape extends mxRectangleShape
 		ChiLATCell cell = (ChiLATCell) state.getCell();
 		//normalized total force vector
 		mxPoint totalForceVector = cell.getTotalForceVector();
-		mxPoint topVertex = totalForceVector;
+		mxPoint topVertex = new mxPoint(totalForceVector);
+		
+		//System.out.println("HERE " + totalForceVector.toString());
 
 		//Translate the total force vector to the center of the node
 		mxPoint vertexB = this.rotateVector(topVertex, Math.PI/2);
@@ -61,7 +63,6 @@ public class ChiLATNodeShape extends mxRectangleShape
 		triangle.addPoint((int)vertexC.getX()+ x + w/2, (int)vertexC.getY() + y + h/2);
 		
 		canvas.getGraphics().draw(triangle);
-		
 	}
 	
 	public mxPoint rotateVector(mxPoint vector, double radians)

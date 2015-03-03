@@ -101,8 +101,8 @@ public class NodeModel extends BaseModel implements Updatable
         this.bounds.y = (int) lNode.getRect().y;
         this.bounds.width = (int) lNode.getRect().width;
         this.bounds.height = (int) lNode.getRect().height;
-        this.totalForceVector.setX(lNode.getTotalForceX());
-        this.totalForceVector.setY(lNode.getTotalForceY());
+        this.totalForceVector.setX(lNode.totalForceX);
+        this.totalForceVector.setY(lNode.totalForceY);
         
         RectangleD nodeGeometry = new RectangleD(lNode.getRect().getX(), lNode.getRect().getY(), lNode.getRect().getWidth(), lNode.getRect().getHeight());
         this.animationStates.add(new AnimationState(nodeGeometry, this.totalForceVector));
