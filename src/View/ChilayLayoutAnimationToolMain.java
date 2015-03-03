@@ -111,6 +111,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.setLayout(new BorderLayout());
 		
 		this.compoundNodeStyle = new HashMap<String, Object>();
+		compoundNodeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CHILAT_NODE_SHAPE);
 		compoundNodeStyle.put(mxConstants.STYLE_FILLCOLOR, mxUtils.getHexColorString(Color.WHITE));
 		compoundNodeStyle.put(mxConstants.STYLE_OPACITY, 50);
 		compoundNodeStyle.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(Color.BLACK));
@@ -133,6 +134,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.graph.setDisconnectOnMove(false);
 		this.graph.setDropEnabled(false);
 		this.graph.setCellsDisconnectable(false);
+		this.graph.setLabelsVisible(false);
 		
 		mxStylesheet styleSheet = this.graph.getStylesheet();
 		styleSheet.putCellStyle("CompoundStyle", compoundNodeStyle);
@@ -371,7 +373,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 				double hNew = currentRect.getHeight() + (nextRect.getHeight() - currentRect.getHeight()) * (interpolatedFrameRemainder);
 				
 				Vector2D currentTotalForceVector = this.layoutManager.getTotalForce(tmpKey, this.currentKeyFrameNumber);
-				Vector2D nextTotalForceVector = this.layoutManager.getTotalForce(tmpKey, this.currentKeyFrameNumber);
+				Vector2D nextTotalForceVector = this.layoutManager.getTotalForce(tmpKey, this.currentKeyFrameNumber+1);
 				
 				double currentTotalForce = currentTotalForceVector.length();
 				double nextTotalForce = nextTotalForceVector.length();
@@ -389,6 +391,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 			}
 				
 			this.graph.refresh();
+			this.graphComponent.refresh();
 		}
 		else
 		{

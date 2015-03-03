@@ -9,6 +9,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import com.mxgraph.model.ChiLATCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxIGraphModel;
@@ -720,7 +721,13 @@ public class mxGraphView extends mxEventSource
 						* (translate.getY() + state.getOrigin().getY()));
 				state.setWidth(scale * geo.getWidth());
 				state.setHeight(scale * geo.getHeight());
-
+				
+				/**
+				 * ChiLAT modification set scale of force arrows here !
+				 * */
+				ChiLATCell.WIDTH_SCALE = ChiLATCell.DEFAULT_WIDTH_SCALE * scale;
+				ChiLATCell.HEIGHT_SCALE = ChiLATCell.DEFAULT_HEIGHT_SCALE * scale;
+				
 				if (model.isVertex(state.getCell()))
 				{
 					updateVertexState(state, geo);
@@ -1074,6 +1081,12 @@ public class mxGraphView extends mxEventSource
 		rect.add(state.getLabelBounds());
 
 		state.setBoundingBox(rect);
+		
+		/**
+		 * ChiLAT modification set scale of force arrows here !
+		 * */
+		ChiLATCell.WIDTH_SCALE = ChiLATCell.DEFAULT_WIDTH_SCALE * scale;
+		ChiLATCell.HEIGHT_SCALE = ChiLATCell.DEFAULT_HEIGHT_SCALE * scale;
 
 		return rect;
 	}

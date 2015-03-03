@@ -6,8 +6,8 @@ import Util.Vector2D;
 
 public class AnimationState
 {
-	RectangleD nodeGeometry;
-	Vector2D totalForceVector;
+	private RectangleD nodeGeometry;
+	private Vector2D totalForceVector;
 	
 	public AnimationState(RectangleD nodeGeometry, Vector2D totalForceVector)
 	{
@@ -24,7 +24,10 @@ public class AnimationState
 	}
 
 	public void setNodeGeometry(RectangleD nodeGeometry) {
-		this.nodeGeometry = nodeGeometry;
+		this.nodeGeometry.x = nodeGeometry.x;
+		this.nodeGeometry.y = nodeGeometry.y;
+		this.nodeGeometry.width = nodeGeometry.width;
+		this.nodeGeometry.height = nodeGeometry.height;
 	}
 
 	public Vector2D getTotalForceVector() {
@@ -32,6 +35,7 @@ public class AnimationState
 	}
 
 	public void setTotalForceVector(Vector2D totalForceVector) {
-		this.totalForceVector = new Vector2D(totalForceVector.getX(), totalForceVector.getY());
+		this.totalForceVector.setX(totalForceVector.getX());
+		this.totalForceVector.setY(totalForceVector.getY());
 	}
 }

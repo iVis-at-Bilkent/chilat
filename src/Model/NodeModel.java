@@ -7,6 +7,7 @@ import org.ivis.layout.LGraphObject;
 import org.ivis.layout.LNode;
 import org.ivis.layout.Updatable;
 import org.ivis.layout.cose.CoSEGraph;
+import org.ivis.layout.cose.CoSENode;
 import org.ivis.layout.fd.FDLayoutNode;
 import org.ivis.util.RectangleD;
 
@@ -95,13 +96,13 @@ public class NodeModel extends BaseModel implements Updatable
         }
 
         //Update positions
-        FDLayoutNode lNode = (FDLayoutNode)lGraphObj;
+        CoSENode lNode = (CoSENode)lGraphObj;
         this.bounds.x = (int) lNode.getRect().x;
         this.bounds.y = (int) lNode.getRect().y;
         this.bounds.width = (int) lNode.getRect().width;
         this.bounds.height = (int) lNode.getRect().height;
-        this.totalForceVector.setX(lNode.displacementX);
-        this.totalForceVector.setY(lNode.displacementY);
+        this.totalForceVector.setX(lNode.getTotalForceX());
+        this.totalForceVector.setY(lNode.getTotalForceY());
         
         RectangleD nodeGeometry = new RectangleD(lNode.getRect().getX(), lNode.getRect().getY(), lNode.getRect().getWidth(), lNode.getRect().getHeight());
         this.animationStates.add(new AnimationState(nodeGeometry, this.totalForceVector));
