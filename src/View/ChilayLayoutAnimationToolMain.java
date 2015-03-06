@@ -385,9 +385,12 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 				double totalForceYNew = currentTotalForceVector.getY() + (nextTotalForceVector.getY() - currentTotalForceVector.getY()) * (interpolatedFrameRemainder);
 				double newTotalForce = currentTotalForce + (nextTotalForce - currentTotalForce) * (interpolatedFrameRemainder);
 				
+				Vector2D newForceVector = new Vector2D(totalForceXNew, totalForceYNew);
+				newForceVector = newForceVector.normalize();
+				
 				cell.setGeometry(new mxGeometry(xNew, yNew, wNew, hNew));
 				cell.setTotalForce(newTotalForce);
-				cell.setTotalForceVector(new mxPoint(totalForceXNew, totalForceYNew));
+				cell.setTotalForceVector(new mxPoint(newForceVector.getX(), newForceVector.getY()));
 			}
 				
 			this.graph.refresh();

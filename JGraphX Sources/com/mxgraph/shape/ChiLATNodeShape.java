@@ -1,6 +1,7 @@
 package com.mxgraph.shape;
 
 import java.awt.Color;
+import java.awt.GradientPaint;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -62,7 +63,10 @@ public class ChiLATNodeShape extends mxRectangleShape
 		triangle.addPoint((int)topVertex.getX()+ x + w/2, (int)topVertex.getY() + y + h/2);
 		triangle.addPoint((int)vertexC.getX()+ x + w/2, (int)vertexC.getY() + y + h/2);
 		
+		GradientPaint redtowhite = new GradientPaint(x+w/2,y+h/2,Color.RED,(int)topVertex.getX()+x+w/2, (int)topVertex.getY()+y+h/2,Color.WHITE);
 		canvas.getGraphics().draw(triangle);
+		canvas.getGraphics().setPaint(redtowhite);
+		canvas.getGraphics().fill(triangle);
 	}
 	
 	public mxPoint rotateVector(mxPoint vector, double radians)

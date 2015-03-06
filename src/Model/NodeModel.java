@@ -20,13 +20,13 @@ public class NodeModel extends BaseModel implements Updatable
 	private CompoundNodeModel parent;
 	private Vector2D totalForceVector;
 	
-	protected ArrayList<AnimationState> animationStates;
+	protected ArrayList<NodeState> animationStates;
 	
 	public NodeModel(String id)
 	{
 		super(id);
 		this.bounds = new Rectangle();
-		this.animationStates = new ArrayList<AnimationState>();
+		this.animationStates = new ArrayList<NodeState>();
 		this.totalForceVector = new Vector2D();
 	}
 
@@ -66,11 +66,11 @@ public class NodeModel extends BaseModel implements Updatable
 		this.bounds.height = h;
 	}
 	
-	public ArrayList<AnimationState> getAnimationStates() {
+	public ArrayList<NodeState> getAnimationStates() {
 		return animationStates;
 	}
 
-	public void setAnimationStates(ArrayList<AnimationState> animationStates) {
+	public void setAnimationStates(ArrayList<NodeState> animationStates) {
 		this.animationStates = animationStates;
 	}
 
@@ -105,6 +105,6 @@ public class NodeModel extends BaseModel implements Updatable
         this.totalForceVector.setY(lNode.totalForceY);
         
         RectangleD nodeGeometry = new RectangleD(lNode.getRect().getX(), lNode.getRect().getY(), lNode.getRect().getWidth(), lNode.getRect().getHeight());
-        this.animationStates.add(new AnimationState(nodeGeometry, this.totalForceVector));
+        this.animationStates.add(new NodeState(nodeGeometry, this.totalForceVector));
 	}
 }

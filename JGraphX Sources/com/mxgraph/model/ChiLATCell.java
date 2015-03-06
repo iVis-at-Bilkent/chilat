@@ -9,8 +9,8 @@ public class ChiLATCell extends mxCell
 	 */
 	private static final long serialVersionUID = -2746940854791812432L;
 	
-	public static double DEFAULT_WIDTH_SCALE = 10;
-	public static double DEFAULT_HEIGHT_SCALE = 20;
+	public static double DEFAULT_WIDTH_SCALE = 20;
+	public static double DEFAULT_HEIGHT_SCALE = 30;
 	
 	public static double HEIGHT_SCALE = DEFAULT_HEIGHT_SCALE;
 	public static double WIDTH_SCALE = DEFAULT_WIDTH_SCALE;
