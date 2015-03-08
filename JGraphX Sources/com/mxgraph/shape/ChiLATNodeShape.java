@@ -45,8 +45,6 @@ public class ChiLATNodeShape extends mxRectangleShape
 		mxPoint totalForceVector = cell.getTotalForceVector();
 		mxPoint topVertex = new mxPoint(totalForceVector);
 		
-		//System.out.println("HERE " + totalForceVector.toString());
-
 		//Translate the total force vector to the center of the node
 		mxPoint vertexB = this.rotateVector(topVertex, Math.PI/2);
 		vertexB.setX(vertexB.getX() * ChiLATCell.WIDTH_SCALE/2);
@@ -63,11 +61,44 @@ public class ChiLATNodeShape extends mxRectangleShape
 		triangle.addPoint((int)topVertex.getX()+ x + w/2, (int)topVertex.getY() + y + h/2);
 		triangle.addPoint((int)vertexC.getX()+ x + w/2, (int)vertexC.getY() + y + h/2);
 		
-		GradientPaint redtowhite = new GradientPaint(x+w/2,y+h/2,Color.RED,(int)topVertex.getX()+x+w/2, (int)topVertex.getY()+y+h/2,Color.WHITE);
+		double normalizedForce = cell.getNormalizedForce();
+		double fillStartX = x+w/2;
+		double fillStartY = y+h/2;
+				
+		double fillEndX = fillStartX + (((int)topVertex.getX()+x+w/2) - fillStartX) * normalizedForce;
+		double fillEndY = fillStartY + (((int)topVertex.getY()+y+h/2) - fillStartY) * normalizedForce;
+		GradientPaint redtowhite;
+		
+		/*if (Math.sqrt(Math.pow((fillEndX-fillStartX), 2) + Math.pow((fillEndY-fillStartY), 2)) > 2.0 )
+		{
+
+			redtowhite = new GradientPaint((int)fillStartX,(int)fillStartY,Color.RED,
+					(int)fillEndX,
+					(int)fillEndY,
+					Color.WHITE);
+		}
+		else
+		{
+			redtowhite = new GradientPaint((int)fillStartX,(int)fillStartY,Color.WHITE,
+					(int)fillEndX,
+					(int)fillEndY,
+					Color.WHITE);
+		}	
+		*/
+		
+		redtowhite = new GradientPaint((int)fillStartX,(int)fillStartY,Color.RED,
+				(int)fillEndX,
+				(int)fillEndY,
+				Color.WHITE);
+		
+		System.out.println( cell.getId() + " " + fillStartX + " " + fillStartY + " " + fillEndX + " " + fillEndY + " " + normalizedForce);
+
+		canvas.getGraphics().setPaint(Color.red);
 		canvas.getGraphics().draw(triangle);
 		canvas.getGraphics().setPaint(redtowhite);
 		canvas.getGraphics().fill(triangle);
 	}
+	
 	
 	public mxPoint rotateVector(mxPoint vector, double radians)
 	{

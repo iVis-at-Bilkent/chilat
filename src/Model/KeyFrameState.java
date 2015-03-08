@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class KeyFrameState 
 {
 	private ArrayList<NodeState> nodeStates;
-	
 	private double minTotalForce;
 	private double maxTotalForce;
 	

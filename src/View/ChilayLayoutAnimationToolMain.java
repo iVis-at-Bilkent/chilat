@@ -393,6 +393,11 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 				cell.setTotalForceVector(new mxPoint(newForceVector.getX(), newForceVector.getY()));
 			}
 				
+			
+			double[] minMaxTotalForceForThisKeyFrame = this.layoutManager.getMinMaxTotalForceForKeyFrame(currentKeyFrameNumber);
+			ChiLATCell.MIN_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame[0];
+			ChiLATCell.MAX_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame[1];
+			
 			this.graph.refresh();
 			this.graphComponent.refresh();
 		}

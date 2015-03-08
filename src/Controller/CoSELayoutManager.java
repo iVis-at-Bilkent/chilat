@@ -2,6 +2,7 @@ package Controller;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -21,12 +22,15 @@ import org.ivis.util.RectangleD;
 import Model.CompoundNodeModel;
 import Model.EdgeModel;
 import Model.NodeModel;
+import Model.NodeState;
 import Util.Vector2D;
 
 public class CoSELayoutManager 
 {
 	private HashMap<String, LNode> v_To_l_Map;
 	private HashMap<String, NodeModel> l_To_v_Map;
+	private ArrayList<double []> minMaxTotalForceList;
+	
 	private CoSELayout layout;
 	private LGraph lRoot;
 	private CompoundNodeModel vRoot;
@@ -38,6 +42,7 @@ public class CoSELayoutManager
 	{
 		this.v_To_l_Map = new HashMap<>();
 		this.l_To_v_Map = new HashMap<>();
+		this.minMaxTotalForceList = new ArrayList<double[]>();
 		
 		//init the layout
 		this.layout = new CoSELayout();
@@ -117,6 +122,11 @@ public class CoSELayoutManager
 		return this.l_To_v_Map.get(id).getAnimationStates().get(index).getTotalForceVector();
 	}
 	
+	public double[] getMinMaxTotalForceForKeyFrame(int keyFrameIndex)
+	{
+		return this.minMaxTotalForceList.get(keyFrameIndex);
+	}
+	
 	public NodeModel getParent(String id)
 	{
 		return this.l_To_v_Map.get(id);
@@ -183,11 +193,41 @@ public class CoSELayoutManager
 		}
 	}
 	
+	public void generateMinMaxTotalForceList()
+	{
+		for (int i = 0; i < this.getTotalKeyFrameCount(); i++) 
+		{
+			double [] minMax = new double[2];
+			minMax[0] = Integer.MAX_VALUE;
+			minMax[1] = Integer.MIN_VALUE;
+					
+			for (String key : this.l_To_v_Map.keySet()) 
+			{
+				NodeState tmpState = this.l_To_v_Map.get(key).getAnimationStates().get(i);
+				
+				//Maximum
+				if (minMax[1] < tmpState.getTotalForceVector().length()) 
+				{
+					minMax[1] = tmpState.getTotalForceVector().length();
+				}
+				
+				//Minimum
+				if (minMax[0] > tmpState.getTotalForceVector().length()) 
+				{
+					minMax[0] = tmpState.getTotalForceVector().length();
+				}
+			}
+			this.minMaxTotalForceList.add(minMax);
+		}
+	}
+	
 	public void runLayout()
 	{
 		this.clearKeyFrames();
 		this.layout.runLayout();
 		updateAllRelativePositions();
+		this.generateMinMaxTotalForceList();
+		
 	}
 
 	public boolean isAnimateOn() {

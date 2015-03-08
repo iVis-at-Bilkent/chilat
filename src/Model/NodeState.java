@@ -8,8 +8,6 @@ public class NodeState
 {
 	private RectangleD nodeGeometry;
 	private Vector2D totalForceVector;
-	private double minTotalForce;
-	private double maxTotalForce;
 	
 	public NodeState(RectangleD nodeGeometry, Vector2D totalForceVector)
 	{
@@ -19,8 +17,6 @@ public class NodeState
 				nodeGeometry.height);
 		
 		this.totalForceVector = new Vector2D(totalForceVector.getX(), totalForceVector.getY());
-		this.minTotalForce = 0;
-		this.maxTotalForce = 0;
 	}
 
 	public RectangleD getNodeGeometry() {
@@ -41,21 +37,5 @@ public class NodeState
 	public void setTotalForceVector(Vector2D totalForceVector) {
 		this.totalForceVector.setX(totalForceVector.getX());
 		this.totalForceVector.setY(totalForceVector.getY());
-	}
-
-	public double getMinTotalForce() {
-		return minTotalForce;
-	}
-
-	public void setMinTotalForce(double minTotalForce) {
-		this.minTotalForce = minTotalForce;
-	}
-
-	public double getMaxTotalForce() {
-		return maxTotalForce;
-	}
-
-	public void setMaxTotalForce(double maxTotalForce) {
-		this.maxTotalForce = maxTotalForce;
 	}
 }

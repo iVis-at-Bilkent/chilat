@@ -9,11 +9,14 @@ public class ChiLATCell extends mxCell
 	 */
 	private static final long serialVersionUID = -2746940854791812432L;
 	
-	public static double DEFAULT_WIDTH_SCALE = 20;
-	public static double DEFAULT_HEIGHT_SCALE = 30;
+	public static double DEFAULT_WIDTH_SCALE = 15;
+	public static double DEFAULT_HEIGHT_SCALE = 20;
 	
 	public static double HEIGHT_SCALE = DEFAULT_HEIGHT_SCALE;
 	public static double WIDTH_SCALE = DEFAULT_WIDTH_SCALE;
+	
+	public static double MIN_TOTAL_FORCE = 0;
+	public static double MAX_TOTAL_FORCE = 0;
 
 	private double totalForce;
 	private mxPoint totalForceVector;
@@ -24,6 +27,11 @@ public class ChiLATCell extends mxCell
 		
 		this.totalForceVector = new mxPoint(0, 0);
 		this.totalForce = 0;
+	}
+	
+	public double getNormalizedForce()
+	{
+		return (this.totalForce - MIN_TOTAL_FORCE) / (MAX_TOTAL_FORCE - MIN_TOTAL_FORCE);
 	}
 	
 	//Getter and Setters
@@ -43,7 +51,5 @@ public class ChiLATCell extends mxCell
 	{
 		this.totalForceVector.setX(totalForceVector.getX());
 		this.totalForceVector.setY(totalForceVector.getY());
-		/*double length = Math.sqrt(this.totalForceVector.getX()*this.totalForceVector.getX()+ this.totalForceVector.getY()*this.totalForceVector.getY());
-		System.out.println(this.totalForceVector.getX() + " " + this.totalForceVector.getY() + " " + length );*/
 	}
 }
