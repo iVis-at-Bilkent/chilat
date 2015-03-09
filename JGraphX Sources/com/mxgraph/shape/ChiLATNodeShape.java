@@ -65,34 +65,25 @@ public class ChiLATNodeShape extends mxRectangleShape
 		double fillStartX = x+w/2;
 		double fillStartY = y+h/2;
 				
-		double fillEndX = fillStartX + (((int)topVertex.getX()+x+w/2) - fillStartX) * normalizedForce;
-		double fillEndY = fillStartY + (((int)topVertex.getY()+y+h/2) - fillStartY) * normalizedForce;
+		double fillEndX = fillStartX + (topVertex.getX()+x+w/2 - fillStartX) * normalizedForce;
+		double fillEndY = fillStartY + (topVertex.getY()+y+h/2 - fillStartY) * normalizedForce;
 		GradientPaint redtowhite;
 		
-		/*if (Math.sqrt(Math.pow((fillEndX-fillStartX), 2) + Math.pow((fillEndY-fillStartY), 2)) > 2.0 )
+		if (fillEndX == fillStartX && fillEndY == fillStartY)
 		{
-
-			redtowhite = new GradientPaint((int)fillStartX,(int)fillStartY,Color.RED,
-					(int)fillEndX,
-					(int)fillEndY,
+			redtowhite = new GradientPaint((float)fillStartX,(float)fillStartY,Color.WHITE,
+					(float)fillEndX,
+					(float)fillEndY,
 					Color.WHITE);
 		}
 		else
 		{
-			redtowhite = new GradientPaint((int)fillStartX,(int)fillStartY,Color.WHITE,
-					(int)fillEndX,
-					(int)fillEndY,
+			redtowhite = new GradientPaint((float)fillStartX,(float)fillStartY,Color.RED,
+					(float)fillEndX,
+					(float)fillEndY,
 					Color.WHITE);
 		}	
-		*/
 		
-		redtowhite = new GradientPaint((int)fillStartX,(int)fillStartY,Color.RED,
-				(int)fillEndX,
-				(int)fillEndY,
-				Color.WHITE);
-		
-		System.out.println( cell.getId() + " " + fillStartX + " " + fillStartY + " " + fillEndX + " " + fillEndY + " " + normalizedForce);
-
 		canvas.getGraphics().setPaint(Color.red);
 		canvas.getGraphics().draw(triangle);
 		canvas.getGraphics().setPaint(redtowhite);

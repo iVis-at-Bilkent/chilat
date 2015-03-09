@@ -134,7 +134,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.graph.setDisconnectOnMove(false);
 		this.graph.setDropEnabled(false);
 		this.graph.setCellsDisconnectable(false);
-		this.graph.setLabelsVisible(false);
+		this.graph.setLabelsVisible(true);
 		
 		mxStylesheet styleSheet = this.graph.getStylesheet();
 		styleSheet.putCellStyle("CompoundStyle", compoundNodeStyle);
@@ -250,7 +250,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		ChiLATCell newViewNode = (ChiLATCell) graph.insertChiLATVertex(
 				parent, 
 				null, 
-				nodeToBeInserted.getLabel(), 
+				nodeToBeInserted.getId(), 
 				nodeToBeInserted.getBounds().getX(), 
 				nodeToBeInserted.getBounds().getY(), 
 				nodeToBeInserted.getBounds().getWidth(),
@@ -358,55 +358,59 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	{	
 		Set<String> keys = this.idToViewNode.keySet();
 		
-		if (currentKeyFrameNumber < this.layoutManager.getTotalKeyFrameCount()-1) 
+		if (!isAnimationPaused)
 		{
-			for (String tmpKey : keys)
+			if (currentKeyFrameNumber < this.layoutManager.getTotalKeyFrameCount()-1) 
 			{
-				ChiLATCell cell = idToViewNode.get(tmpKey);
-				
-				RectangleD currentRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber);
-				RectangleD nextRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber+1);
-				
-				double xNew = currentRect.getX() + (nextRect.getX() - currentRect.getX()) * (interpolatedFrameRemainder);
-				double yNew = currentRect.getY() + (nextRect.getY() - currentRect.getY()) * (interpolatedFrameRemainder);
-				double wNew = currentRect.getWidth() + (nextRect.getWidth() - currentRect.getWidth()) * (interpolatedFrameRemainder);
-				double hNew = currentRect.getHeight() + (nextRect.getHeight() - currentRect.getHeight()) * (interpolatedFrameRemainder);
-				
-				Vector2D currentTotalForceVector = this.layoutManager.getTotalForce(tmpKey, this.currentKeyFrameNumber);
-				Vector2D nextTotalForceVector = this.layoutManager.getTotalForce(tmpKey, this.currentKeyFrameNumber+1);
-				
-				double currentTotalForce = currentTotalForceVector.length();
-				double nextTotalForce = nextTotalForceVector.length();
-				
-				currentTotalForceVector = currentTotalForceVector.normalize();
-				nextTotalForceVector = nextTotalForceVector.normalize();
+				for (String tmpKey : keys)
+				{
+					ChiLATCell cell = idToViewNode.get(tmpKey);
+					
+					RectangleD currentRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber);
+					RectangleD nextRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber+1);
+					
+					double xNew = currentRect.getX() + (nextRect.getX() - currentRect.getX()) * (interpolatedFrameRemainder);
+					double yNew = currentRect.getY() + (nextRect.getY() - currentRect.getY()) * (interpolatedFrameRemainder);
+					double wNew = currentRect.getWidth() + (nextRect.getWidth() - currentRect.getWidth()) * (interpolatedFrameRemainder);
+					double hNew = currentRect.getHeight() + (nextRect.getHeight() - currentRect.getHeight()) * (interpolatedFrameRemainder);
+					
+					Vector2D currentTotalForceVector = this.layoutManager.getTotalForce(tmpKey, this.currentKeyFrameNumber);
+					Vector2D nextTotalForceVector = this.layoutManager.getTotalForce(tmpKey, this.currentKeyFrameNumber+1);
+					
+					double currentTotalForce = currentTotalForceVector.length();
+					double nextTotalForce = nextTotalForceVector.length();
+					
+					currentTotalForceVector = currentTotalForceVector.normalize();
+					nextTotalForceVector = nextTotalForceVector.normalize();
 
-				double totalForceXNew = currentTotalForceVector.getX() + (nextTotalForceVector.getX() - currentTotalForceVector.getX()) * (interpolatedFrameRemainder);
-				double totalForceYNew = currentTotalForceVector.getY() + (nextTotalForceVector.getY() - currentTotalForceVector.getY()) * (interpolatedFrameRemainder);
-				double newTotalForce = currentTotalForce + (nextTotalForce - currentTotalForce) * (interpolatedFrameRemainder);
+					double totalForceXNew = currentTotalForceVector.getX() + (nextTotalForceVector.getX() - currentTotalForceVector.getX()) * (interpolatedFrameRemainder);
+					double totalForceYNew = currentTotalForceVector.getY() + (nextTotalForceVector.getY() - currentTotalForceVector.getY()) * (interpolatedFrameRemainder);
+					double newTotalForce = currentTotalForce + (nextTotalForce - currentTotalForce) * (interpolatedFrameRemainder);
+					
+					Vector2D newForceVector = new Vector2D(totalForceXNew, totalForceYNew);
+					newForceVector = newForceVector.normalize();
+					
+					cell.setGeometry(new mxGeometry(xNew, yNew, wNew, hNew));
+					cell.setTotalForce(currentTotalForce);
+					cell.setTotalForceVector(new mxPoint(newForceVector.getX(), newForceVector.getY()));
+				}
+					
 				
-				Vector2D newForceVector = new Vector2D(totalForceXNew, totalForceYNew);
-				newForceVector = newForceVector.normalize();
+				double[] minMaxTotalForceForThisKeyFrame = this.layoutManager.getMinMaxTotalForceForKeyFrame(currentKeyFrameNumber);
+				ChiLATCell.MIN_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame[0];
+				ChiLATCell.MAX_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame[1];
 				
-				cell.setGeometry(new mxGeometry(xNew, yNew, wNew, hNew));
-				cell.setTotalForce(newTotalForce);
-				cell.setTotalForceVector(new mxPoint(newForceVector.getX(), newForceVector.getY()));
+				this.graph.refresh();
+				this.graphComponent.refresh();
 			}
-				
-			
-			double[] minMaxTotalForceForThisKeyFrame = this.layoutManager.getMinMaxTotalForceForKeyFrame(currentKeyFrameNumber);
-			ChiLATCell.MIN_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame[0];
-			ChiLATCell.MAX_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame[1];
-			
-			this.graph.refresh();
-			this.graphComponent.refresh();
+			else
+			{
+				this.resetAnimationState();
+				AnimationPlayBackPanel.getInstance().updateGUIAnimationEnd();
+				this.timer.stop();
+			}
 		}
-		else
-		{
-			this.resetAnimationState();
-			AnimationPlayBackPanel.getInstance().updateGUIAnimationEnd();
-			this.timer.stop();
-		}		
+		
 		
 		if (!isAnimationPaused) 
 		{

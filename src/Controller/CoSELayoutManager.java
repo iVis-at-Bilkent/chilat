@@ -150,6 +150,7 @@ public class CoSELayoutManager
 		{
 			this.l_To_v_Map.get(key).getAnimationStates().clear();
 		}
+		this.minMaxTotalForceList.clear();
 	}
 	
 	public void updateAllRelativePositions()
