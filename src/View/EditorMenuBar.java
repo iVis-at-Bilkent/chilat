@@ -24,10 +24,6 @@ public class EditorMenuBar extends JMenuBar implements ActionListener
 	    // File Menu
 	    fileMenu = new JMenu("File");
 	    this.add(fileMenu);
-	    
-	    // Layout Menu
-	    layoutMenu = new JMenu("Layout");
-	    this.add(layoutMenu);
 
 	    // File Menu contents
 	    saveItem = new JMenuItem("Save");
@@ -36,14 +32,6 @@ public class EditorMenuBar extends JMenuBar implements ActionListener
 	    loadItem.addActionListener(this);
 	    fileMenu.add(saveItem);
 	    fileMenu.add(loadItem);
-	    
-	    //Layout Menu contents
-	    JMenuItem coseLayoutItem = new JMenuItem("CoSE Layout");
-	    coseLayoutItem.addActionListener(this);
-	    JMenuItem layoutPropertiesItem = new JMenuItem("Layout Properties");
-	    layoutPropertiesItem.addActionListener(this);
-	    layoutMenu.add(coseLayoutItem);
-	    layoutMenu.add(layoutPropertiesItem);
 	}
 	
 	@Override

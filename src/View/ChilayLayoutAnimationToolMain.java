@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
@@ -39,6 +40,7 @@ import View.ChiLATConstants.ForceTuningParameterName;
 
 import com.mxgraph.model.ChiLATCell;
 import com.mxgraph.model.ChiLATCell;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
@@ -55,7 +57,9 @@ import com.mxgraph.util.mxResources;
 import com.mxgraph.util.mxStyleUtils;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
+import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxGraphSelectionModel;
 import com.mxgraph.view.mxGraphView;
 import com.mxgraph.view.mxStylesheet;
 
@@ -85,9 +89,9 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	float interpolatedFrameRemainder = 0;
 	float animationSpeed = 0.1f; //Animation makes progress by 0.1 frame per update
 	
-	private boolean isAnimateOn = false;
-	private boolean isAnimationPaused = false;
-	private boolean isAnimationRunning = false; 
+	private boolean isAnimateOn;
+	private boolean isAnimationPaused;
+	private boolean isAnimationRunning; 
 
 
 	private Timer timer;
@@ -136,10 +140,12 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.graph.setCellsDisconnectable(false);
 		this.graph.setLabelsVisible(true);
 		
+		
 		mxStylesheet styleSheet = this.graph.getStylesheet();
 		styleSheet.putCellStyle("CompoundStyle", compoundNodeStyle);
 		styleSheet.putCellStyle("NodeStyle", nodeStyle);
 		styleSheet.putCellStyle("EdgeStyle", edgeStyle);
+		
 		
 		this.graphComponent = new mxGraphComponent(this.graph)
 		{ 
@@ -149,6 +155,34 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 			}
 						
 		};
+		
+		final ForceVisualizationPopUpWindow	fVis = new ForceVisualizationPopUpWindow(0, 0);
+		fVis.setVisible(false);
+		//Mouse double click for node inspector
+		graphComponent.getGraphControl().addMouseListener(new MouseAdapter() 
+		{
+			@Override      
+			public void mousePressed(MouseEvent e) 
+			{
+				mxCell cell = (mxCell)graphComponent.getCellAt(e.getX(), e.getY());
+				mxCellState state = graphComponent.getGraph().getView().getState(cell);
+				String label = graph.getLabel(cell);
+				
+				if (cell != null && cell.isVertex()) 
+				{
+					graphComponent.getGraphControl().add(fVis);
+					fVis.setLocation((int)(state.getX()+state.getWidth() + 5), (int)state.getY());
+					fVis.updateSize();
+					fVis.setVisible(true);
+					
+				}
+				else
+				{
+					fVis.setVisible(false);
+					graphComponent.getGraphControl().remove(fVis);
+				}
+			}
+		});
 		
 		this.graphComponent.getViewport().setOpaque(true);
 		this.graphComponent.getViewport().setBackground(new Color(255, 255, 255));
@@ -163,11 +197,11 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		graphOutline.DEFAULT_ZOOMHANDLE_FILL = Color.red;
 		
 		JPanel menuAndToolbarPanel = new JPanel();
-		GridLayout menuAndToolbarLayout = new GridLayout(2, 1);
+		GridLayout menuAndToolbarLayout = new GridLayout(1, 1);
 		menuAndToolbarPanel.setLayout(menuAndToolbarLayout);
 		EditorToolBar toolBar = new EditorToolBar();
-		EditorMenuBar menuBar = new EditorMenuBar();
-		menuAndToolbarPanel.add(menuBar);
+		/*EditorMenuBar menuBar = new EditorMenuBar();
+		menuAndToolbarPanel.add(menuBar);*/
 		menuAndToolbarPanel.add(toolBar);
 		
 		JPanel tabbedPanePanel = new JPanel();
@@ -316,20 +350,30 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 			else
 			{
 				graphComponent.zoomOut();
-			}
-						
-			/*double viewWidth = graphComponent.getGraph().getView().getGraphBounds().getWidth();
-			double viewHeight = graphComponent.getGraph().getView().getGraphBounds().getHeight();
-			double graphWidht = graphComponent.getWidth();
-			double graphHeight = graphComponent.getHeight();
-			
-			double wRatio = graphWidht / viewWidth;
-			double hRatio = graphHeight / viewHeight;
-			
-			graphComponent.zoom(Math.min(wRatio, hRatio));*/
+			}		
 
 		}
 		
+	}
+	
+	public void zoomIn()
+	{
+		graphComponent.zoomIn();
+	}
+	
+	public void zoomOut()
+	{
+		graphComponent.zoomOut();
+	}
+	
+	public void zoomToFit()
+	{
+		mxGraphView view = graphComponent.getGraph().getView();
+		double viewWidth = graphComponent.getWidth();
+		double viewHeight = graphComponent.getHeight();
+		double actualWidth = this.graph.getGraphBounds().getWidth();
+		double actualHeight = this.graph.getGraphBounds().getHeight();
+		view.setScale(Math.min(viewWidth/actualWidth, viewHeight/actualHeight) * view.getScale()*0.95);
 	}
 
 	public void animate() 
@@ -358,67 +402,67 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	{	
 		Set<String> keys = this.idToViewNode.keySet();
 		
-		if (!isAnimationPaused)
+		if (currentKeyFrameNumber < this.layoutManager.getTotalKeyFrameCount()-1) 
 		{
-			if (currentKeyFrameNumber < this.layoutManager.getTotalKeyFrameCount()-1) 
+			for (String tmpKey : keys)
 			{
-				for (String tmpKey : keys)
-				{
-					ChiLATCell cell = idToViewNode.get(tmpKey);
-					
-					RectangleD currentRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber);
-					RectangleD nextRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber+1);
-					
-					double xNew = currentRect.getX() + (nextRect.getX() - currentRect.getX()) * (interpolatedFrameRemainder);
-					double yNew = currentRect.getY() + (nextRect.getY() - currentRect.getY()) * (interpolatedFrameRemainder);
-					double wNew = currentRect.getWidth() + (nextRect.getWidth() - currentRect.getWidth()) * (interpolatedFrameRemainder);
-					double hNew = currentRect.getHeight() + (nextRect.getHeight() - currentRect.getHeight()) * (interpolatedFrameRemainder);
-					
-					Vector2D currentTotalForceVector = this.layoutManager.getTotalForce(tmpKey, this.currentKeyFrameNumber);
-					Vector2D nextTotalForceVector = this.layoutManager.getTotalForce(tmpKey, this.currentKeyFrameNumber+1);
-					
-					double currentTotalForce = currentTotalForceVector.length();
-					double nextTotalForce = nextTotalForceVector.length();
-					
-					currentTotalForceVector = currentTotalForceVector.normalize();
-					nextTotalForceVector = nextTotalForceVector.normalize();
+				ChiLATCell cell = idToViewNode.get(tmpKey);
+				
+				RectangleD currentRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber);
+				RectangleD nextRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber+1);
+				
+				double xNew = currentRect.getX() + (nextRect.getX() - currentRect.getX()) * (interpolatedFrameRemainder);
+				double yNew = currentRect.getY() + (nextRect.getY() - currentRect.getY()) * (interpolatedFrameRemainder);
+				double wNew = currentRect.getWidth() + (nextRect.getWidth() - currentRect.getWidth()) * (interpolatedFrameRemainder);
+				double hNew = currentRect.getHeight() + (nextRect.getHeight() - currentRect.getHeight()) * (interpolatedFrameRemainder);
+				
+				Vector2D currentTotalForceVector = this.layoutManager.getTotalForce(tmpKey, this.currentKeyFrameNumber);
+				Vector2D nextTotalForceVector = this.layoutManager.getTotalForce(tmpKey, this.currentKeyFrameNumber+1);
+				
+				double currentTotalForce = currentTotalForceVector.length();
+				double nextTotalForce = nextTotalForceVector.length();
+				
+				currentTotalForceVector = currentTotalForceVector.normalize();
 
-					double totalForceXNew = currentTotalForceVector.getX() + (nextTotalForceVector.getX() - currentTotalForceVector.getX()) * (interpolatedFrameRemainder);
-					double totalForceYNew = currentTotalForceVector.getY() + (nextTotalForceVector.getY() - currentTotalForceVector.getY()) * (interpolatedFrameRemainder);
-					double newTotalForce = currentTotalForce + (nextTotalForce - currentTotalForce) * (interpolatedFrameRemainder);
-					
-					Vector2D newForceVector = new Vector2D(totalForceXNew, totalForceYNew);
-					newForceVector = newForceVector.normalize();
-					
-					cell.setGeometry(new mxGeometry(xNew, yNew, wNew, hNew));
-					cell.setTotalForce(currentTotalForce);
-					cell.setTotalForceVector(new mxPoint(newForceVector.getX(), newForceVector.getY()));
-				}
-					
+				double totalForceXNew = currentTotalForceVector.getX() + (nextTotalForceVector.getX() - currentTotalForceVector.getX()) * (interpolatedFrameRemainder);
+				double totalForceYNew = currentTotalForceVector.getY() + (nextTotalForceVector.getY() - currentTotalForceVector.getY()) * (interpolatedFrameRemainder);
 				
-				double[] minMaxTotalForceForThisKeyFrame = this.layoutManager.getMinMaxTotalForceForKeyFrame(currentKeyFrameNumber);
-				ChiLATCell.MIN_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame[0];
-				ChiLATCell.MAX_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame[1];
+				Vector2D newForceVector = new Vector2D(totalForceXNew, totalForceYNew);
+				newForceVector = newForceVector.normalize();
 				
-				this.graph.refresh();
-				this.graphComponent.refresh();
+				cell.setGeometry(new mxGeometry(xNew, yNew, wNew, hNew));
+				cell.setTotalForce(currentTotalForce);
+				cell.setTotalForceVector(new mxPoint(newForceVector.getX(), newForceVector.getY()));
 			}
-			else
-			{
-				this.resetAnimationState();
-				AnimationPlayBackPanel.getInstance().updateGUIAnimationEnd();
-				this.timer.stop();
-			}
+				
+			
+			double[] minMaxTotalForceForThisKeyFrame = this.layoutManager.getMinMaxTotalForceForKeyFrame(currentKeyFrameNumber);
+			ChiLATCell.MIN_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame[0];
+			ChiLATCell.MAX_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame[1];
+			
+			this.graph.refresh();
+			this.graphComponent.refresh();
 		}
-		
+		else
+		{
+			this.resetAnimationState();
+			AnimationPlayBackPanel.getInstance().updateGUIAnimationEnd();
+			this.timer.stop();
+		}
 		
 		if (!isAnimationPaused) 
 		{
 			animationTotalTime += animationSpeed;
 			currentKeyFrameNumber = (int)(animationTotalTime);
 			interpolatedFrameRemainder = (animationTotalTime) - currentKeyFrameNumber;
-		}
 
+			/*if (this.graph.getGraphBounds().getWidth() > this.graphComponent.getWidth() ||
+				this.graph.getGraphBounds().getHeight() > this.graphComponent.getHeight()) 
+			{
+				this.zoomToFit();
+			}*/
+		}
+		
 	}
 	
 	public boolean isAnimateOn() {
@@ -606,4 +650,6 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	}
 	
 }
+
+
 

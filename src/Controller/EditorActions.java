@@ -299,4 +299,56 @@ public class EditorActions
 				LayoutOptionsPack.getInstance().getGeneral().uniformLeafNodeSizes = false;
 		}
 	}
+	
+	@SuppressWarnings("serial")
+	public static class ZoomAction extends AbstractAction
+	{
+		public static int ZOOM_IN = 0;
+		public static int ZOOM_OUT = 1;
+		public static int ZOOM_FIT = 2;
+		
+		private int zoomPolicy;
+		
+		public ZoomAction(int zoomPolicy)
+		{
+			this.zoomPolicy = zoomPolicy;
+			
+			if (zoomPolicy == ZOOM_IN) 
+			{
+				this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/zoom-in.gif")));
+				this.putValue(Action.SHORT_DESCRIPTION, "Zoom In");
+			}
+			else if(zoomPolicy == ZOOM_OUT)
+			{
+				this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/zoom-out.gif")));
+				this.putValue(Action.SHORT_DESCRIPTION, "Zoom Out");
+			}
+			else if (zoomPolicy == ZOOM_FIT) 
+			{
+				this.putValue(SMALL_ICON, new ImageIcon(this.getClass().getResource("/Icons/zoom-fit.gif")));
+				this.putValue(Action.SHORT_DESCRIPTION, "Zoom to Fit");
+			}
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			ChilayLayoutAnimationToolMain chiLATMain = ChilayLayoutAnimationToolMain.getInstance();
+			if (zoomPolicy == ZOOM_IN) 
+			{
+				chiLATMain.zoomIn();
+			}
+			else if(zoomPolicy == ZOOM_OUT)
+			{
+				chiLATMain.zoomOut();
+			}
+			else if (zoomPolicy == ZOOM_FIT) 
+			{
+				chiLATMain.zoomToFit();
+			}
+		}
+	}
+	
 }
