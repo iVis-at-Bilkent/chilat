@@ -29,7 +29,7 @@ public class CoSELayoutManager
 {
 	private HashMap<String, LNode> v_To_l_Map;
 	private HashMap<String, NodeModel> l_To_v_Map;
-	private ArrayList<double []> minMaxTotalForceList;
+	private ArrayList<Vector2D[]> minMaxTotalForceList;
 	
 	private CoSELayout layout;
 	private LGraph lRoot;
@@ -38,11 +38,16 @@ public class CoSELayoutManager
 	private General generalOptions;
 	private CoSE coseOptions;
 	
+	//Index for maximum and minimum values of total force and other forces
+	private int TOTAL_FORCE_INDEX = 0;
+	private int OTHER_FORCE_INDEX = 1;
+
+	
 	public CoSELayoutManager()
 	{
 		this.v_To_l_Map = new HashMap<>();
 		this.l_To_v_Map = new HashMap<>();
-		this.minMaxTotalForceList = new ArrayList<double[]>();
+		this.minMaxTotalForceList = new ArrayList<Vector2D[]>();
 		
 		//init the layout
 		this.layout = new CoSELayout();
@@ -117,14 +122,34 @@ public class CoSELayoutManager
 		return this.l_To_v_Map.get(id).getAnimationStates().get(index).getNodeGeometry();
 	}
 	
-	public Vector2D getTotalForce(String id, int index)
+	public Vector2D getTotalForceVector(String id, int index)
 	{
 		return this.l_To_v_Map.get(id).getAnimationStates().get(index).getTotalForceVector();
 	}
 	
-	public double[] getMinMaxTotalForceForKeyFrame(int keyFrameIndex)
+	public Vector2D	getRepulsionForceVector(String id, int index)
 	{
-		return this.minMaxTotalForceList.get(keyFrameIndex);
+		return this.l_To_v_Map.get(id).getAnimationStates().get(index).getRepulsionForceVector();
+	}
+	
+	public Vector2D getSpringForceVector(String id, int index)
+	{
+		return this.l_To_v_Map.get(id).getAnimationStates().get(index).getSpringForceVector();
+	}
+	
+	public Vector2D getGravityForceVector(String id, int index)
+	{
+		return this.l_To_v_Map.get(id).getAnimationStates().get(index).getGravityForceVector();
+	}
+	
+	public Vector2D getMinMaxTotalForceForKeyFrame(int keyFrameIndex)
+	{
+		return this.minMaxTotalForceList.get(keyFrameIndex)[TOTAL_FORCE_INDEX];
+	}
+	
+	public Vector2D getMinMaxOtherForceForKeyFrame(int keyFrameIndex)
+	{
+		return this.minMaxTotalForceList.get(keyFrameIndex)[OTHER_FORCE_INDEX];
 	}
 	
 	public NodeModel getParent(String id)
@@ -198,30 +223,66 @@ public class CoSELayoutManager
 	{
 		for (int i = 0; i < this.getTotalKeyFrameCount(); i++) 
 		{
-			double [] minMax = new double[2];
-			minMax[0] = Integer.MAX_VALUE;
-			minMax[1] = Integer.MIN_VALUE;
-					
-			for (String key : this.l_To_v_Map.keySet()) 
-			{
-				NodeState tmpState = this.l_To_v_Map.get(key).getAnimationStates().get(i);
-				
-				//Maximum
-				if (minMax[1] < tmpState.getTotalForceVector().length()) 
-				{
-					minMax[1] = tmpState.getTotalForceVector().length();
-				}
-				
-				//Minimum
-				if (minMax[0] > tmpState.getTotalForceVector().length()) 
-				{
-					minMax[0] = tmpState.getTotalForceVector().length();
-				}
-			}
+			Vector2D [] minMax = new Vector2D[2];
+			minMax[TOTAL_FORCE_INDEX] = getMinMaxTotalForceValues(i);
+			minMax[OTHER_FORCE_INDEX] = getMinMaxOtherForces(i);
 			this.minMaxTotalForceList.add(minMax);
 		}
 	}
 	
+	public Vector2D getMinMaxTotalForceValues(int keyFrameIndex)
+	{
+		//x attribute is minimum, y attribute is maximum
+		Vector2D minMax = new Vector2D(Integer.MAX_VALUE, Integer.MIN_VALUE);
+		
+		for (String key : this.l_To_v_Map.keySet()) 
+		{
+			NodeState tmpState = this.l_To_v_Map.get(key).getAnimationStates().get(keyFrameIndex);
+			
+			//Maximum
+			if (minMax.getY() < tmpState.getTotalForceVector().length()) 
+			{
+				minMax.setY(tmpState.getTotalForceVector().length());
+			}
+			
+			//Minimum
+			if (minMax.getX() > tmpState.getTotalForceVector().length()) 
+			{
+				minMax.setX(tmpState.getTotalForceVector().length());
+			}
+		}
+		return minMax;
+	}
+	
+	public Vector2D getMinMaxOtherForces(int keyFrameIndex)
+	{
+		//x attribute is minimum, y attribute is maximum
+		Vector2D minMax = new Vector2D(Integer.MAX_VALUE, Integer.MIN_VALUE);
+
+		for (String key : this.l_To_v_Map.keySet()) 
+		{
+			NodeState tmpState = this.l_To_v_Map.get(key).getAnimationStates().get(keyFrameIndex);
+			
+			double repulsionForceMagnitude = tmpState.getRepulsionForceVector().length();
+			double springForceMagnitude = tmpState.getSpringForceVector().length();
+			double gravityForceMagnitude = tmpState.getGravityForceVector().length();
+
+			
+			//Maximum
+			if (minMax.getY() < Math.max(repulsionForceMagnitude, Math.max(springForceMagnitude, gravityForceMagnitude))) 
+			{
+				minMax.setY(tmpState.getTotalForceVector().length());
+			}
+			
+			//Minimum
+			if (minMax.getX() < Math.min(repulsionForceMagnitude, Math.min(springForceMagnitude, gravityForceMagnitude)))
+			{
+				minMax.setX(tmpState.getTotalForceVector().length());
+			}
+		}
+		return minMax;
+	}
+		
 	public void runLayout()
 	{
 		this.clearKeyFrames();

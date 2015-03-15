@@ -13,12 +13,13 @@ import org.ivis.util.RectangleD;
 
 import Util.Vector2D;
 
+
 public class NodeModel extends BaseModel implements Updatable
 {
 	private String nodeLabel;
 	private Rectangle bounds;
 	private CompoundNodeModel parent;
-	private Vector2D totalForceVector;
+	
 	
 	protected ArrayList<NodeState> animationStates;
 	
@@ -27,7 +28,6 @@ public class NodeModel extends BaseModel implements Updatable
 		super(id);
 		this.bounds = new Rectangle();
 		this.animationStates = new ArrayList<NodeState>();
-		this.totalForceVector = new Vector2D();
 	}
 
 	public String getNodeLabel() {
@@ -95,16 +95,17 @@ public class NodeModel extends BaseModel implements Updatable
             return;
         }
 
-        //Update positions
+        //Update node information
         CoSENode lNode = (CoSENode)lGraphObj;
         this.bounds.x = (int) lNode.getRect().x;
         this.bounds.y = (int) lNode.getRect().y;
         this.bounds.width = (int) lNode.getRect().width;
         this.bounds.height = (int) lNode.getRect().height;
-        this.totalForceVector.setX(lNode.totalForceX);
-        this.totalForceVector.setY(lNode.totalForceY);
         
+        Vector2D springForceVector = new Vector2D(lNode.springForceX, lNode.springForceY);
+        Vector2D repulsionForceVector = new Vector2D(lNode.repulsionForceX, lNode.repulsionForceY);
+        Vector2D gravityForceVector = new Vector2D(lNode.gravitationForceX, lNode.gravitationForceY);
         RectangleD nodeGeometry = new RectangleD(lNode.getRect().getX(), lNode.getRect().getY(), lNode.getRect().getWidth(), lNode.getRect().getHeight());
-        this.animationStates.add(new NodeState(nodeGeometry, this.totalForceVector));
+        this.animationStates.add(new NodeState(nodeGeometry, springForceVector,repulsionForceVector,gravityForceVector));
 	}
 }

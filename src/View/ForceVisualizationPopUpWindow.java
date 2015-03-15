@@ -19,23 +19,33 @@ import javax.swing.border.TitledBorder;
 
 import Util.Vector2D;
 
-public class ForceVisualizationPopUpWindow extends JPanel {
-	private double scale = 1.0;
+import com.mxgraph.model.ChiLATCell;
+
+
+public class ForceVisualizationPopUpWindow extends JPanel 
+{
 	final int W = 200;
-	final int H = 100;
+	final int H = 210;
+	final int CIRCLE_RADIUS = 100;
+	
+	JLabel totalForceLabel;
+	JLabel springforceLabel;
+	JLabel repulsionForceLabel;
+	JLabel gravityForceLabel;
 
 	public ForceVisualizationPopUpWindow(int x, int y) {
 		super();
-		JLabel springforce = new JLabel("Spring Force: " + x);
-		JLabel repulsionForce = new JLabel("Repulsion Force: " + x);
-		JLabel gravityForce = new JLabel("Gravity Force: " + x);
 
+		this.totalForceLabel = new JLabel();
+		this.springforceLabel = new JLabel();
+		this.repulsionForceLabel = new JLabel();
+		this.gravityForceLabel = new JLabel();
+		
 		this.setLocation(x, y);
-		// this.setSize(new Dimension((int)(W*scale), (int)(H*scale)));
-
-		this.add(springforce);
-		this.add(repulsionForce);
-		this.add(gravityForce);
+		this.add(totalForceLabel);
+		this.add(springforceLabel);
+		this.add(repulsionForceLabel);
+		this.add(gravityForceLabel);
 		this.add(Box.createVerticalGlue());
 		this.add(new ForceVisualizationCirclePanel(null, null, null));
 
@@ -47,9 +57,16 @@ public class ForceVisualizationPopUpWindow extends JPanel {
 
 	}
 
-	public void updateSize() {
+	public void updateContents(ChiLATCell cell) 
+	{
 		this.setSize(this.getPreferredSize());
-		this.setSize(150, 210);
+		this.setSize(W, H);
+		
+		totalForceLabel.setText("Total Force " + cell.getTotalForce());
+		repulsionForceLabel.setText("Repulsion Force " + cell.getRepulsionForce());
+		springforceLabel.setText("Spring Force " + cell.getSpringForce());
+		gravityForceLabel.setText("Gravity Force " + cell.getGravityForce());
+
 	}
 
 
@@ -77,8 +94,7 @@ public class ForceVisualizationPopUpWindow extends JPanel {
 			
 			super.paint(g);
 			
-			int radius = 100;
-			g.drawOval(getWidth()/2-radius/2, getHeight()/2-radius/2, radius, radius);
+			g.drawOval(getWidth()/2-CIRCLE_RADIUS/2, getHeight()/2-CIRCLE_RADIUS/2, CIRCLE_RADIUS, CIRCLE_RADIUS);
 		}
 		
 		public void drawArrowEnd()

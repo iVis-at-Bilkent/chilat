@@ -7,16 +7,22 @@ import Util.Vector2D;
 public class NodeState
 {
 	private RectangleD nodeGeometry;
-	private Vector2D totalForceVector;
+	private Vector2D springForceVector;
+	private Vector2D repulsionForceVector;
+	private Vector2D gravityForceVector;
 	
-	public NodeState(RectangleD nodeGeometry, Vector2D totalForceVector)
+	
+	public NodeState(RectangleD nodeGeometry, Vector2D springForceVector, Vector2D repulsionForceVector, Vector2D gravityForceVector)
 	{
 		this.nodeGeometry = new RectangleD(nodeGeometry.x,
 				nodeGeometry.y, 
 				nodeGeometry.width,
 				nodeGeometry.height);
 		
-		this.totalForceVector = new Vector2D(totalForceVector.getX(), totalForceVector.getY());
+		this.springForceVector = springForceVector;
+		this.repulsionForceVector = repulsionForceVector;
+		this.gravityForceVector = gravityForceVector;
+		
 	}
 
 	public RectangleD getNodeGeometry() {
@@ -30,12 +36,21 @@ public class NodeState
 		this.nodeGeometry.height = nodeGeometry.height;
 	}
 
-	public Vector2D getTotalForceVector() {
-		return totalForceVector;
+	public Vector2D getTotalForceVector() 
+	{
+		return new Vector2D(this.springForceVector.getX() + this.repulsionForceVector.getX() + this.gravityForceVector.getX(),
+							this.springForceVector.getY() + this.repulsionForceVector.getY() + this.gravityForceVector.getY());
 	}
 
-	public void setTotalForceVector(Vector2D totalForceVector) {
-		this.totalForceVector.setX(totalForceVector.getX());
-		this.totalForceVector.setY(totalForceVector.getY());
+	public Vector2D getSpringForceVector() {
+		return springForceVector;
+	}
+
+	public Vector2D getRepulsionForceVector() {
+		return repulsionForceVector;
+	}
+
+	public Vector2D getGravityForceVector() {
+		return gravityForceVector;
 	}
 }

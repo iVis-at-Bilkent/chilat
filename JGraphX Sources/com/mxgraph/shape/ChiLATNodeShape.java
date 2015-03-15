@@ -2,9 +2,13 @@ package com.mxgraph.shape;
 
 import java.awt.Color;
 import java.awt.GradientPaint;
+import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Shape;
+
+import Util.Vector2D;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.model.ChiLATCell;
@@ -42,20 +46,17 @@ public class ChiLATNodeShape extends mxRectangleShape
 		*/
 		ChiLATCell cell = (ChiLATCell) state.getCell();
 		//normalized total force vector
-		mxPoint totalForceVector = cell.getTotalForceVector();
-		mxPoint topVertex = new mxPoint(totalForceVector);
+		Vector2D totalForceVector = cell.getTotalForceVector();
+		Vector2D topVertex = new Vector2D(totalForceVector);
 		
 		//Translate the total force vector to the center of the node
-		mxPoint vertexB = this.rotateVector(topVertex, Math.PI/2);
-		vertexB.setX(vertexB.getX() * ChiLATCell.WIDTH_SCALE/2);
-		vertexB.setY(vertexB.getY() * ChiLATCell.WIDTH_SCALE/2);
+		Vector2D vertexB = topVertex.rotateVector(Math.PI/2);
+		vertexB = vertexB.scale(ChiLATCell.WIDTH_SCALE/2);
 
-		mxPoint vertexC = this.rotateVector(topVertex, -Math.PI/2);
-		vertexC.setX(vertexC.getX() * ChiLATCell.WIDTH_SCALE/2);
-		vertexC.setY(vertexC.getY() * ChiLATCell.WIDTH_SCALE/2);
+		Vector2D vertexC = topVertex.rotateVector(-Math.PI/2);
+		vertexC = vertexC.scale(ChiLATCell.WIDTH_SCALE/2);
 		
-		topVertex.setX(topVertex.getX() * ChiLATCell.HEIGHT_SCALE);
-		topVertex.setY(topVertex.getY() * ChiLATCell.HEIGHT_SCALE);
+		topVertex = topVertex.scale(ChiLATCell.HEIGHT_SCALE);
 
 		triangle.addPoint((int)vertexB.getX()+ x + w/2, (int)vertexB.getY() + y + h/2);
 		triangle.addPoint((int)topVertex.getX()+ x + w/2, (int)topVertex.getY() + y + h/2);
@@ -84,10 +85,17 @@ public class ChiLATNodeShape extends mxRectangleShape
 					Color.WHITE);
 		}	
 		
-		canvas.getGraphics().setPaint(Color.red);
-		canvas.getGraphics().draw(triangle);
-		canvas.getGraphics().setPaint(redtowhite);
-		canvas.getGraphics().fill(triangle);
+		// Set anti aliasing on !
+		Graphics2D g = (Graphics2D) canvas.getGraphics();
+		RenderingHints renderingHints = new RenderingHints(
+				RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHints(renderingHints);
+		
+		g.setPaint(Color.red);
+		g.draw(triangle);
+		g.setPaint(redtowhite);
+		g.fill(triangle);
 	}
 	
 	
