@@ -10,14 +10,17 @@ public class ChiLATCell extends mxCell
 	 */
 	private static final long serialVersionUID = -2746940854791812432L;
 	
-	public static double DEFAULT_WIDTH_SCALE = 15;
-	public static double DEFAULT_HEIGHT_SCALE = 20;
+	public static double DEFAULT_WIDTH_SCALE = 20;
+	public static double DEFAULT_HEIGHT_SCALE = 30;
 	
 	public static double HEIGHT_SCALE = DEFAULT_HEIGHT_SCALE;
 	public static double WIDTH_SCALE = DEFAULT_WIDTH_SCALE;
 	
 	public static double MIN_TOTAL_FORCE = 0;
 	public static double MAX_TOTAL_FORCE = 0;
+	public static double MIN_OF_ALL_OTHER_FORCES = 0;
+	public static double MAX_OF_ALL_OTHER_FORCES = 0;
+	
 
 
 	private Vector2D totalForceVector;
@@ -40,11 +43,41 @@ public class ChiLATCell extends mxCell
 		this.gravityForceVector = new Vector2D(0, 0);
 		
 		this.totalForce = 0;
+		this.springForce = 0;
+		this.repulsionForce = 0;
+		this.gravityForce = 0;
 	}
+	
 	//Getter and Setters
-	public double getNormalizedForce()
+	public double getNormalizedTotalForce()
 	{
-		return (this.totalForce - MIN_TOTAL_FORCE) / (MAX_TOTAL_FORCE - MIN_TOTAL_FORCE);
+		return 	getNormalizedForce(this.totalForce, MIN_TOTAL_FORCE, MAX_TOTAL_FORCE);
+	}
+	
+	public double getNormalizedSpringForce()
+	{
+		return 	getNormalizedForce(this.springForce, MIN_OF_ALL_OTHER_FORCES, MAX_OF_ALL_OTHER_FORCES);
+	}
+	
+	public double getNormalizedRepulsionForce()
+	{
+		return 	getNormalizedForce(this.repulsionForce, MIN_OF_ALL_OTHER_FORCES, MAX_OF_ALL_OTHER_FORCES);
+	}
+	
+	public double getNormalizedGravityForce()
+	{
+		return 	getNormalizedForce(this.gravityForce, MIN_OF_ALL_OTHER_FORCES, MAX_OF_ALL_OTHER_FORCES);
+	}
+	
+	public double getNormalizedForce(double force, double min, double max)
+	{
+		if (min == 0 && max == 0) 
+		{
+			return 0;
+		}
+		
+		return (force - min) / (max - min);
+
 	}
 
 	//Getter and Setters

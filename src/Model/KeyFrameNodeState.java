@@ -4,7 +4,7 @@ import org.ivis.util.RectangleD;
 
 import Util.Vector2D;
 
-public class NodeState
+public class KeyFrameNodeState
 {
 	private RectangleD nodeGeometry;
 	private Vector2D springForceVector;
@@ -12,7 +12,7 @@ public class NodeState
 	private Vector2D gravityForceVector;
 	
 	
-	public NodeState(RectangleD nodeGeometry, Vector2D springForceVector, Vector2D repulsionForceVector, Vector2D gravityForceVector)
+	public KeyFrameNodeState(RectangleD nodeGeometry, Vector2D springForceVector, Vector2D repulsionForceVector, Vector2D gravityForceVector)
 	{
 		this.nodeGeometry = new RectangleD(nodeGeometry.x,
 				nodeGeometry.y, 
@@ -43,14 +43,14 @@ public class NodeState
 	}
 
 	public Vector2D getSpringForceVector() {
-		return springForceVector;
+		return this.springForceVector;
 	}
 
 	public Vector2D getRepulsionForceVector() {
-		return repulsionForceVector;
+		return this.repulsionForceVector;
 	}
 
 	public Vector2D getGravityForceVector() {
-		return gravityForceVector;
+		return this.gravityForceVector;
 	}
 }

@@ -22,7 +22,7 @@ import org.ivis.util.RectangleD;
 import Model.CompoundNodeModel;
 import Model.EdgeModel;
 import Model.NodeModel;
-import Model.NodeState;
+import Model.KeyFrameNodeState;
 import Util.Vector2D;
 
 public class CoSELayoutManager 
@@ -237,7 +237,7 @@ public class CoSELayoutManager
 		
 		for (String key : this.l_To_v_Map.keySet()) 
 		{
-			NodeState tmpState = this.l_To_v_Map.get(key).getAnimationStates().get(keyFrameIndex);
+			KeyFrameNodeState tmpState = this.l_To_v_Map.get(key).getAnimationStates().get(keyFrameIndex);
 			
 			//Maximum
 			if (minMax.getY() < tmpState.getTotalForceVector().length()) 
@@ -261,13 +261,12 @@ public class CoSELayoutManager
 
 		for (String key : this.l_To_v_Map.keySet()) 
 		{
-			NodeState tmpState = this.l_To_v_Map.get(key).getAnimationStates().get(keyFrameIndex);
+			KeyFrameNodeState tmpState = this.l_To_v_Map.get(key).getAnimationStates().get(keyFrameIndex);
 			
 			double repulsionForceMagnitude = tmpState.getRepulsionForceVector().length();
 			double springForceMagnitude = tmpState.getSpringForceVector().length();
 			double gravityForceMagnitude = tmpState.getGravityForceVector().length();
 
-			
 			//Maximum
 			if (minMax.getY() < Math.max(repulsionForceMagnitude, Math.max(springForceMagnitude, gravityForceMagnitude))) 
 			{

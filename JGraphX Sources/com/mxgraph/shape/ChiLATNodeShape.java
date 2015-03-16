@@ -62,7 +62,7 @@ public class ChiLATNodeShape extends mxRectangleShape
 		triangle.addPoint((int)topVertex.getX()+ x + w/2, (int)topVertex.getY() + y + h/2);
 		triangle.addPoint((int)vertexC.getX()+ x + w/2, (int)vertexC.getY() + y + h/2);
 		
-		double normalizedForce = cell.getNormalizedForce();
+		double normalizedForce = cell.getNormalizedTotalForce();
 		double fillStartX = x+w/2;
 		double fillStartY = y+h/2;
 				

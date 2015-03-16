@@ -8,9 +8,10 @@ package Util;
  *  ========================================================
  */
 
+import java.io.Serializable;
 import java.lang.Math;
 
-public class Vector2D 
+public class Vector2D implements Serializable
 {
 	protected double x;
 	protected double y;

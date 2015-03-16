@@ -325,10 +325,11 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException
 	{
 		UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        ChilayLayoutAnimationToolMain frame = ChilayLayoutAnimationToolMain.getInstance();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(1024, 768);
-		frame.setVisible(true);
+        ChilayLayoutAnimationToolMain chiLATMain = ChilayLayoutAnimationToolMain.getInstance();
+		chiLATMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		chiLATMain.setSize(1024, 768);
+		chiLATMain.setVisible(true);
+        chiLATMain.loadGraph(chiLATMain.getClass().getResource("/SampleGraphs/badlayout2c.graphml").getPath());
 	}
 	
 	public class GraphMouseListener implements MouseWheelListener
@@ -419,23 +420,23 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 						interpolatedFrameRemainder);
 				
 				//Fetch total force vectors for current key frame and next keyframe
-				Vector2D currentTotalForceVector = this.layoutManager.getTotalForceVector(tmpKey, this.currentKeyFrameNumber);
-				Vector2D nextTotalForceVector = this.layoutManager.getTotalForceVector(tmpKey, this.currentKeyFrameNumber+1);
+				Vector2D currentTotalForceVector = new Vector2D(this.layoutManager.getTotalForceVector(tmpKey, this.currentKeyFrameNumber));
+				Vector2D nextTotalForceVector = new Vector2D(this.layoutManager.getTotalForceVector(tmpKey, this.currentKeyFrameNumber+1));
 				
-				Vector2D currentRepulsionForceVector = this.layoutManager.getRepulsionForceVector(tmpKey, this.currentKeyFrameNumber);
-				Vector2D nextRepulsionForceVector = this.layoutManager.getRepulsionForceVector(tmpKey, this.currentKeyFrameNumber+1);
+				Vector2D currentRepulsionForceVector = new Vector2D(this.layoutManager.getRepulsionForceVector(tmpKey, this.currentKeyFrameNumber));
+				Vector2D nextRepulsionForceVector = new Vector2D(this.layoutManager.getRepulsionForceVector(tmpKey, this.currentKeyFrameNumber+1));
 				
-				Vector2D currentSpringForceVector = this.layoutManager.getSpringForceVector(tmpKey, this.currentKeyFrameNumber);
-				Vector2D nextSpringForceVector = this.layoutManager.getSpringForceVector(tmpKey, this.currentKeyFrameNumber+1);
+				Vector2D currentSpringForceVector = new Vector2D(this.layoutManager.getSpringForceVector(tmpKey, this.currentKeyFrameNumber));
+				Vector2D nextSpringForceVector = new Vector2D(this.layoutManager.getSpringForceVector(tmpKey, this.currentKeyFrameNumber+1));
 				
-				Vector2D currentGravityForceVector = this.layoutManager.getGravityForceVector(tmpKey, this.currentKeyFrameNumber);
-				Vector2D nextGravityForceVector = this.layoutManager.getGravityForceVector(tmpKey, this.currentKeyFrameNumber+1);
+				Vector2D currentGravityForceVector = new Vector2D(this.layoutManager.getGravityForceVector(tmpKey, this.currentKeyFrameNumber));
+				Vector2D nextGravityForceVector = new Vector2D(this.layoutManager.getGravityForceVector(tmpKey, this.currentKeyFrameNumber+1));
 				
 				//Store magnitude of the force vectors
 				double currentTotalForce = currentTotalForceVector.length();
-				double currentRepulsionForce = currentTotalForceVector.length();
-				double currentSpringForce = currentTotalForceVector.length();
-				double currentGravityForce = currentTotalForceVector.length();
+				double currentRepulsionForce = currentRepulsionForceVector.length();
+				double currentSpringForce = currentSpringForceVector.length();
+				double currentGravityForce = currentGravityForceVector.length();
 				
 				//Normalize force vectors
 				currentTotalForceVector = currentTotalForceVector.normalize();
@@ -468,9 +469,12 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 				
 			
 			Vector2D minMaxTotalForceForThisKeyFrame = this.layoutManager.getMinMaxTotalForceForKeyFrame(currentKeyFrameNumber);
+			Vector2D minMaxAllOtherForces = this.layoutManager.getMinMaxOtherForceForKeyFrame(currentKeyFrameNumber);
 			ChiLATCell.MIN_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame.getX();
 			ChiLATCell.MAX_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame.getY();
-			
+			ChiLATCell.MIN_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getX();
+			ChiLATCell.MAX_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getY();
+									
 			this.graph.refresh();
 			this.graphComponent.refresh();
 		}

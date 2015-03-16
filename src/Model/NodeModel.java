@@ -21,13 +21,13 @@ public class NodeModel extends BaseModel implements Updatable
 	private CompoundNodeModel parent;
 	
 	
-	protected ArrayList<NodeState> animationStates;
+	protected ArrayList<KeyFrameNodeState> animationStates;
 	
 	public NodeModel(String id)
 	{
 		super(id);
 		this.bounds = new Rectangle();
-		this.animationStates = new ArrayList<NodeState>();
+		this.animationStates = new ArrayList<KeyFrameNodeState>();
 	}
 
 	public String getNodeLabel() {
@@ -66,11 +66,11 @@ public class NodeModel extends BaseModel implements Updatable
 		this.bounds.height = h;
 	}
 	
-	public ArrayList<NodeState> getAnimationStates() {
+	public ArrayList<KeyFrameNodeState> getAnimationStates() {
 		return animationStates;
 	}
 
-	public void setAnimationStates(ArrayList<NodeState> animationStates) {
+	public void setAnimationStates(ArrayList<KeyFrameNodeState> animationStates) {
 		this.animationStates = animationStates;
 	}
 
@@ -105,7 +105,8 @@ public class NodeModel extends BaseModel implements Updatable
         Vector2D springForceVector = new Vector2D(lNode.springForceX, lNode.springForceY);
         Vector2D repulsionForceVector = new Vector2D(lNode.repulsionForceX, lNode.repulsionForceY);
         Vector2D gravityForceVector = new Vector2D(lNode.gravitationForceX, lNode.gravitationForceY);
+                
         RectangleD nodeGeometry = new RectangleD(lNode.getRect().getX(), lNode.getRect().getY(), lNode.getRect().getWidth(), lNode.getRect().getHeight());
-        this.animationStates.add(new NodeState(nodeGeometry, springForceVector,repulsionForceVector,gravityForceVector));
+        this.animationStates.add(new KeyFrameNodeState(nodeGeometry, springForceVector,repulsionForceVector,gravityForceVector));
 	}
 }
