@@ -77,7 +77,6 @@ public class ChiLATCell extends mxCell
 		}
 		
 		return (force - min) / (max - min);
-
 	}
 
 	//Getter and Setters

@@ -268,15 +268,16 @@ public class CoSELayoutManager
 			double gravityForceMagnitude = tmpState.getGravityForceVector().length();
 
 			//Maximum
-			if (minMax.getY() < Math.max(repulsionForceMagnitude, Math.max(springForceMagnitude, gravityForceMagnitude))) 
+			double min,max= 0;
+			if (minMax.getY() < (max=Math.max(repulsionForceMagnitude, Math.max(springForceMagnitude, gravityForceMagnitude)))) 
 			{
-				minMax.setY(tmpState.getTotalForceVector().length());
+				minMax.setY(max);
 			}
 			
 			//Minimum
-			if (minMax.getX() < Math.min(repulsionForceMagnitude, Math.min(springForceMagnitude, gravityForceMagnitude)))
+			if (minMax.getX() > (min=Math.min(repulsionForceMagnitude, Math.min(springForceMagnitude, gravityForceMagnitude))))
 			{
-				minMax.setX(tmpState.getTotalForceVector().length());
+				minMax.setX(min);
 			}
 		}
 		return minMax;

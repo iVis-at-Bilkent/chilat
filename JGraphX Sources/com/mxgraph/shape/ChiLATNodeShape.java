@@ -83,7 +83,7 @@ public class ChiLATNodeShape extends mxRectangleShape
 					(float)fillEndX,
 					(float)fillEndY,
 					Color.WHITE);
-		}	
+		}
 		
 		// Set anti aliasing on !
 		Graphics2D g = (Graphics2D) canvas.getGraphics();
@@ -95,6 +95,8 @@ public class ChiLATNodeShape extends mxRectangleShape
 		g.setPaint(Color.red);
 		g.draw(triangle);
 		g.setPaint(redtowhite);
+		/*double totalForceScale = 1-cell.getNormalizedTotalForce();
+		g.setColor(new Color(255,(int)(255*totalForceScale), (int)(255*totalForceScale)));*/
 		g.fill(triangle);
 	}
 	

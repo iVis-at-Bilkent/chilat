@@ -138,8 +138,8 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.graph.setDisconnectOnMove(false);
 		this.graph.setDropEnabled(false);
 		this.graph.setCellsDisconnectable(false);
-		this.graph.setLabelsVisible(true);
-		
+		this.graph.setLabelsVisible(true);	
+		this.graph.setKeepEdgesInBackground(true);
 		
 		mxStylesheet styleSheet = this.graph.getStylesheet();
 		styleSheet.putCellStyle("CompoundStyle", compoundNodeStyle);
@@ -190,6 +190,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.graphComponent.setConnectable(false);
 		this.graphComponent.setDoubleBuffered(false);	
 		this.graphComponent.setFoldingEnabled(false);
+		
 		mxKeyboardHandler keyboardHandler = new mxKeyboardHandler(graphComponent);
 		this.rubberBand = new mxRubberband(graphComponent);
 		this.graphOutline = new mxGraphOutline(this.graphComponent);
@@ -496,6 +497,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 			{
 				this.zoomToFit();
 			}*/
+			this.zoomToFit();
 		}
 		
 	}

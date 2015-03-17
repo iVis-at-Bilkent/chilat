@@ -1,12 +1,16 @@
 package View;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Polygon;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.text.DecimalFormat;
 
 import javax.swing.Box;
@@ -28,21 +32,23 @@ import com.mxgraph.model.ChiLATCell;
 public class ForceVisualizationPopUpWindow extends JPanel 
 {
 	final int W = 180;
-	final int H = 230;
-	final int CIRCLE_RADIUS = 60;
+	final int H = 260;
+	final int CIRCLE_RADIUS = 70;
+	final int ARROW_HEIGHT = 5;
+	final int ARROW_WIDTH = 2;
 	
 	private JLabel totalForceLabel;
 	private JLabel springForceLabel;
 	private JLabel repulsionForceLabel;
 	private JLabel gravityForceLabel;
 	private JPanel labelsPanel;
+	private JPanel mainContainerPanel;
 	
 	private ForceVisualizationCirclePanel circlePanel;
 	
 	public ForceVisualizationPopUpWindow(int x, int y) 
 	{
-		super();
-		
+		super();	
 		
 		this.setLocation(x, y);
 		this.circlePanel = new ForceVisualizationCirclePanel();
@@ -54,8 +60,13 @@ public class ForceVisualizationPopUpWindow extends JPanel
 		this.setBorder(forceVisPanelBorder);
 		this.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
-		this.add(labelsPanel);
-		this.add(circlePanel);
+		mainContainerPanel = new JPanel();
+		mainContainerPanel.setLayout(new BoxLayout(mainContainerPanel, BoxLayout.Y_AXIS));
+		mainContainerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
+		mainContainerPanel.add(labelsPanel);
+		mainContainerPanel.add(circlePanel);
+		this.add(mainContainerPanel);
 
 		this.setSize(W,H);
 		this.setVisible(true);
@@ -71,7 +82,6 @@ public class ForceVisualizationPopUpWindow extends JPanel
 		this.gravityForceLabel.setText("" + formatter.format(selectedCell.getGravityForce()));
 		this.circlePanel.updateContents(selectedCell);
 		this.revalidate();
-		
 	}
 	
 	public JPanel createForceLabelsPanel()
@@ -88,7 +98,6 @@ public class ForceVisualizationPopUpWindow extends JPanel
 		labelPanel.add(createLabelPanel("Repulsion Force:", repulsionForceLabel));
 		labelPanel.add(createLabelPanel("Gravity Force:", gravityForceLabel));
 		labelPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-
 
 		return labelPanel;
 	}
@@ -141,16 +150,43 @@ public class ForceVisualizationPopUpWindow extends JPanel
 			double springForceScale = selectedCell.getNormalizedSpringForce() * CIRCLE_RADIUS;
 			double repulsionForceScale = selectedCell.getNormalizedRepulsionForce() * CIRCLE_RADIUS;
 			double gravityForceScale = selectedCell.getNormalizedGravityForce() * CIRCLE_RADIUS;
-				
-			System.out.println(selectedCell.getSpringForce() + " " + selectedCell.getRepulsionForce() + " " + selectedCell.getGravityForce() + " " + ChiLATCell.MIN_OF_ALL_OTHER_FORCES + " " + ChiLATCell.MAX_OF_ALL_OTHER_FORCES);
+			double totalForceScale = 1-selectedCell.getNormalizedTotalForce();
+					
+			final float [] dash_line = {8.0f};
+			Stroke forceLineStroke = new BasicStroke(4.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_ROUND,10.0f, dash_line, 0.0f);
 			
 			g.drawOval(getWidth()/2 - CIRCLE_RADIUS, getHeight()/2 - CIRCLE_RADIUS, 2*CIRCLE_RADIUS, 2*CIRCLE_RADIUS);
-			g.setColor(Color.BLUE);
-			g.drawLine(getWidth()/2, getHeight()/2, (int)(circleCenter.add(springForceVector.scale(springForceScale))).getX(), (int)(circleCenter.add(springForceVector.scale(springForceScale))).getY());
-			g.setColor(Color.YELLOW);
-			g.drawLine(getWidth()/2, getHeight()/2, (int)(circleCenter.add(repulsionForceVector.scale(repulsionForceScale))).getX(), (int)(circleCenter.add(repulsionForceVector.scale(repulsionForceScale))).getY());
-			g.setColor(Color.GREEN);
-			g.drawLine(getWidth()/2, getHeight()/2, (int)(circleCenter.add(gravityForceVector.scale(gravityForceScale))).getX(), (int)(circleCenter.add(gravityForceVector.scale(gravityForceScale))).getY());
+			//g.setStroke(forceLineStroke);
+			drawArrowAndLine(Color.BLUE, g, springForceVector, springForceScale);
+			drawArrowAndLine(Color.YELLOW, g, repulsionForceVector, repulsionForceScale);
+			drawArrowAndLine(Color.GREEN, g, gravityForceVector, gravityForceScale);
+
+		}
+		
+		public void drawArrowAndLine(Color color, Graphics g, Vector2D direction, double forceScaleFactor)
+		{
+			g.setColor(color);
+			Vector2D circleCenter = new Vector2D(getWidth()/2, getHeight()/2);
+			Vector2D arrowStart = circleCenter.add(direction.scale(forceScaleFactor));
+			
+			g.drawLine((int)circleCenter.getX(), 
+					   (int)circleCenter.getY(), 
+					   (int)arrowStart.getX(), 
+					   (int)arrowStart.getY());
+			
+			Vector2D arrowHeight = arrowStart.normalize().scale(2);
+			Vector2D arrowWidth = arrowStart.normalize().scale(2);
+			Vector2D arrowEnd = arrowStart.add(arrowHeight);
+			Vector2D sideVertexA = arrowStart.add(arrowWidth.rotateVector(Math.PI/2));
+			Vector2D sideVertexB = arrowStart.add(arrowWidth.rotateVector(-Math.PI/2));
+			
+			Polygon triangle = new Polygon();
+			triangle.addPoint((int)arrowEnd.getX(), (int)arrowEnd.getY());
+			triangle.addPoint((int)sideVertexA.getX(), (int)sideVertexA.getY());
+			triangle.addPoint((int)sideVertexB.getX(), (int)sideVertexB.getY());
+			
+			g.drawPolygon(triangle);
+			
 
 		}
 	}
