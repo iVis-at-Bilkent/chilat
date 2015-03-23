@@ -1,5 +1,7 @@
 package View;
 
+import java.text.DecimalFormat;
+
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -15,6 +17,10 @@ public class ChiAnimSliderPanels
 		public AnimationSpeedSliderPanel(String label, int minSlider,int maxSlider, int initialValue)
 		{
 			super(label, minSlider, maxSlider, initialValue);
+			float value = (((float)this.slider.getValue())/1000);
+			DecimalFormat formatter = new DecimalFormat();
+			formatter.setMaximumFractionDigits(2);
+			this.textLabel.setText(""+ formatter.format(value));
 			this.slider.setToolTipText("Animation progress at each update: " + (float)initialValue/1000 + " frames" );
 			this.slider.addChangeListener(this);
 		}
@@ -23,6 +29,9 @@ public class ChiAnimSliderPanels
 		{
 			float value = (((float)this.slider.getValue())/1000);
 			this.slider.setToolTipText("Animation progress at each update: " + value + " frames" );
+			DecimalFormat formatter = new DecimalFormat();
+			formatter.setMaximumFractionDigits(2);
+			this.textLabel.setText(""+ formatter.format(value));
 			ChilayLayoutAnimationToolMain.getInstance().setAnimationSpeed(value);
 		}
 	}
@@ -46,6 +55,7 @@ public class ChiAnimSliderPanels
 		{
 			int value = this.slider.getValue();
 			this.slider.setToolTipText(label + value );
+			this.textLabel.setText(""+value);
 			ChilayLayoutAnimationToolMain.getInstance().setCoSEOption(chosenParameter, value);
 		}
 	}
@@ -70,6 +80,7 @@ public class ChiAnimSliderPanels
 			int value = this.slider.getValue();
 			LayoutOptionsPack.getInstance().getGeneral().animationPeriod = value;
 			this.slider.setToolTipText(label + value );
+			this.textLabel.setText(""+value);
 
 		}
 	}

@@ -45,6 +45,7 @@ public class ForceVisualizationPopUpWindow extends JPanel
 	private JPanel mainContainerPanel;
 	
 	private ForceVisualizationCirclePanel circlePanel;
+	private ChiLATCell selectedCell;
 	
 	public ForceVisualizationPopUpWindow(int x, int y) 
 	{
@@ -73,17 +74,27 @@ public class ForceVisualizationPopUpWindow extends JPanel
 
 	}
 
-	public void updateContents(ChiLATCell selectedCell) 
+	public void setSelectedCell(ChiLATCell selectedCell)
+	{
+		this.selectedCell = selectedCell;
+	}
+	public void updateContents() 
 	{
 		DecimalFormat formatter = new DecimalFormat();
-		this.totalForceLabel.setText(""+formatter.format(selectedCell.getTotalForce()));
-		this.repulsionForceLabel.setText(""+formatter.format(selectedCell.getRepulsionForce()));
-		this.springForceLabel.setText("" + formatter.format(selectedCell.getSpringForce()));
-		this.gravityForceLabel.setText("" + formatter.format(selectedCell.getGravityForce()));
-		this.circlePanel.updateContents(selectedCell);
+		this.totalForceLabel.setText(""+formatter.format(this.selectedCell.getTotalForce()));
+		this.repulsionForceLabel.setText(""+formatter.format(this.selectedCell.getRepulsionForce()));
+		this.springForceLabel.setText("" + formatter.format(this.selectedCell.getSpringForce()));
+		this.gravityForceLabel.setText("" + formatter.format(this.selectedCell.getGravityForce()));
+		this.circlePanel.updateContents(this.selectedCell);
 		this.revalidate();
 	}
 	
+	@Override
+	public void paint(Graphics g0)
+	{	
+		this.updateContents();
+		super.paint(g0);
+	}
 	public JPanel createForceLabelsPanel()
 	{
 		this.totalForceLabel = new JLabel();

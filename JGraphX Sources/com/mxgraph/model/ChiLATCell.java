@@ -21,6 +21,8 @@ public class ChiLATCell extends mxCell
 	public static double MIN_OF_ALL_OTHER_FORCES = 0;
 	public static double MAX_OF_ALL_OTHER_FORCES = 0;
 	
+	public static boolean IS_FORCE_DETAILS_VISIBLE = false;
+	
 
 
 	private Vector2D totalForceVector;

@@ -1,18 +1,26 @@
 package View;
 
+import java.awt.Component;
+import java.awt.Dimension;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import Controller.EditorActions;
 
 @SuppressWarnings("serial")
-public class AnimationPlayBackPanel extends JPanel
+public class AnimationPlayBackPanel extends JPanel implements ChangeListener
 {	
 	
 	private CircularAnimationControlButton stopButton, forwardButton, rewindButton;
 	private PlayPauseButton playPauseButton;
+	private JSlider animationTimeLine;
 	private static AnimationPlayBackPanel singletonInstance;
 	
 	public static AnimationPlayBackPanel getInstance()
@@ -28,18 +36,28 @@ public class AnimationPlayBackPanel extends JPanel
 	private AnimationPlayBackPanel()
 	{
 		super();
+		JPanel layoutAnimationButtonsPanel = new JPanel();
 		this.setBorder(new TitledBorder("Animation Control"));
-		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		layoutAnimationButtonsPanel.setLayout(new BoxLayout(layoutAnimationButtonsPanel, BoxLayout.X_AXIS));
 		rewindButton = new CircularAnimationControlButton(new EditorActions.RewindAnimationAction());
 		forwardButton = new CircularAnimationControlButton(new EditorActions.ForwardAnimationAction());
 		stopButton = new CircularAnimationControlButton(new EditorActions.StopAction());
 		playPauseButton = new PlayPauseButton(new EditorActions.PlayAnimationAction());
-		this.add(Box.createHorizontalGlue());
-		this.add(rewindButton);
-		this.add(stopButton);
-		this.add(playPauseButton);
-		this.add(forwardButton);
-		this.add(Box.createHorizontalGlue());
+		animationTimeLine = new JSlider(JSlider.HORIZONTAL, 0);
+		this.animationTimeLine.addChangeListener(this);
+		layoutAnimationButtonsPanel.add(Box.createHorizontalGlue());
+		layoutAnimationButtonsPanel.add(rewindButton);
+		layoutAnimationButtonsPanel.add(stopButton);
+		layoutAnimationButtonsPanel.add(playPauseButton);
+		layoutAnimationButtonsPanel.add(forwardButton);
+		layoutAnimationButtonsPanel.add(Box.createHorizontalGlue());
+		
+		//
+
+
+		this.add(animationTimeLine);
+		this.add(layoutAnimationButtonsPanel);
 
 		this.setAlignmentX(LEFT_ALIGNMENT);
 	}
@@ -57,6 +75,11 @@ public class AnimationPlayBackPanel extends JPanel
 		this.rewindButton.setEnabled(true);
 		this.forwardButton.setEnabled(true);
 		this.stopButton.setEnabled(true);
+	}
+	
+	public void updateAnimationTimeLine(float value)
+	{
+		this.animationTimeLine.setValue((int)value);
 	}
 	
 	public PlayPauseButton getPlayPauseButton() 
@@ -77,6 +100,24 @@ public class AnimationPlayBackPanel extends JPanel
 
 	public CircularAnimationControlButton getRewindButton() {
 		return rewindButton;
+	}
+
+
+	public void setAnimationTimelineBounds(int totalKeyFrameCount) 
+	{
+		this.animationTimeLine.setValue(0);
+		this.animationTimeLine.setMinimum(0);
+		this.animationTimeLine.setMaximum(totalKeyFrameCount);
+	}
+
+
+	@Override
+	//TODO refactor this to editor actions
+	public void stateChanged(ChangeEvent arg0)
+	{
+		ChilayLayoutAnimationToolMain.getInstance().animationTotalTime = this.animationTimeLine.getValue();
+		ChilayLayoutAnimationToolMain.getInstance().currentKeyFrameNumber = (int)(ChilayLayoutAnimationToolMain.getInstance().animationTotalTime);
+		ChilayLayoutAnimationToolMain.getInstance().interpolatedFrameRemainder = (ChilayLayoutAnimationToolMain.getInstance().animationTotalTime) - ChilayLayoutAnimationToolMain.getInstance().currentKeyFrameNumber;
 	}
 	
 	

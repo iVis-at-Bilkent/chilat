@@ -84,7 +84,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	
 
 	//Animation specific consants
-	private int currentKeyFrameNumber = 0;
+	int currentKeyFrameNumber = 0;
 	float animationTotalTime = 0.0f;
 	float interpolatedFrameRemainder = 0;
 	float animationSpeed = 0.1f; //Animation makes progress by 0.1 frame per update
@@ -92,6 +92,8 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	private boolean isAnimateOn;
 	private boolean isAnimationPaused;
 	private boolean isAnimationRunning; 
+	
+	private boolean isForceDetailsVisible; 
 
 
 	private Timer timer;
@@ -172,7 +174,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 				{
 					graphComponent.getGraphControl().add(fVis);
 					fVis.setLocation((int)(state.getX()+state.getWidth() + 5), (int)state.getY());
-					fVis.updateContents((ChiLATCell) cell);
+					fVis.setSelectedCell((ChiLATCell) cell);
 					fVis.setVisible(true);
 					
 				}
@@ -209,15 +211,19 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		tabbedPanePanel.setLayout( new BorderLayout());
 		tabbedPanePanel.add(new EditorTabbedPane(), BorderLayout.PAGE_START);
 		
+		JSplitPane animationPanelSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, graphComponent, AnimationPlayBackPanel.getInstance());
+		animationPanelSplitPane.setDividerLocation(1024);
+		
 		JSplitPane verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPanePanel, graphOutline);
 		
-		JSplitPane horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, verticalSplitPane, graphComponent);
-		horizontalSplitPane.setMinimumSize(new Dimension(500, 0));
-		horizontalSplitPane.setDividerLocation(370);
-		horizontalSplitPane.setBorder(new TitledBorder(" "));
+		JSplitPane overViewWindowSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, verticalSplitPane, animationPanelSplitPane);
+		overViewWindowSplitPane.setMinimumSize(new Dimension(500, 0));
+		overViewWindowSplitPane.setDividerLocation(370);
+		overViewWindowSplitPane.setBorder(new TitledBorder(" "));
+		
 		
 		this.add(menuAndToolbarPanel,BorderLayout.PAGE_START);
-		this.add(horizontalSplitPane,BorderLayout.CENTER);
+		this.add(overViewWindowSplitPane,BorderLayout.CENTER);
 	}
 	
 	public void loadGraph(String path)
@@ -266,6 +272,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	{	
 		this.resetAnimationState();
 		this.layoutManager.runLayout();
+		AnimationPlayBackPanel.getInstance().setAnimationTimelineBounds(this.layoutManager.getTotalKeyFrameCount());
 		
 		if (!isAnimateOn) 
 		{
@@ -475,14 +482,17 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 			ChiLATCell.MAX_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame.getY();
 			ChiLATCell.MIN_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getX();
 			ChiLATCell.MAX_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getY();
+			
+			AnimationPlayBackPanel.getInstance().updateAnimationTimeLine(animationTotalTime);
 									
 			this.graph.refresh();
 			this.graphComponent.refresh();
 		}
 		else
 		{
-			this.resetAnimationState();
 			AnimationPlayBackPanel.getInstance().updateGUIAnimationEnd();
+			AnimationPlayBackPanel.getInstance().updateAnimationTimeLine(this.layoutManager.getTotalKeyFrameCount());
+			this.resetAnimationState();
 			this.timer.stop();
 		}
 		
@@ -497,9 +507,9 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 			{
 				this.zoomToFit();
 			}*/
-			this.zoomToFit();
 		}
-		
+		this.zoomToFit();
+	
 	}
 	
 	public boolean isAnimateOn() {
@@ -545,8 +555,10 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.timer.stop();
 		//Draw the final geometries of the graph entities
 		drawFinalLayoutState();
-		this.resetAnimationState();
 		AnimationPlayBackPanel.getInstance().updateGUIAnimationEnd();
+		AnimationPlayBackPanel.getInstance().updateAnimationTimeLine(this.layoutManager.getTotalKeyFrameCount());
+		this.resetAnimationState();
+
 	}
 	
 	public void drawFinalLayoutState()

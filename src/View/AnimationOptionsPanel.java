@@ -75,33 +75,20 @@ public class AnimationOptionsPanel extends JPanel
 		keyFrameAnimationOptionsPanel.setAlignmentX(LEFT_ALIGNMENT);
 		
 		//
-		JPanel realTimeAnimationPanel = new JPanel();
+		/*JPanel realTimeAnimationPanel = new JPanel();
 		realTimeAnimationPanel.setLayout(new BoxLayout(realTimeAnimationPanel, BoxLayout.Y_AXIS));
 		realTimeAnimationPanel.setBorder(new TitledBorder("Real Time Animation Properties"));
 		AnimationSpeedSliderPanel simulationTimeStepPanel = new AnimationSpeedSliderPanel("Simulation Timestep", 0, 0, 0);
 		realTimeAnimationPanel.add(simulationTimeStepPanel);
-		realTimeAnimationPanel.setAlignmentX(LEFT_ALIGNMENT);
-		
-		//
-		JPanel performLayoutPanel = new JPanel();
-		performLayoutPanel.setBorder(new TitledBorder(""));
-		performLayoutPanel.setLayout(new BoxLayout(performLayoutPanel, BoxLayout.Y_AXIS));
-		JButton performLayoutButton = new JButton(new EditorActions.PerformLayoutAction());
-		performLayoutButton.setMaximumSize(new Dimension(500, 50));
-		performLayoutButton.setText("Perform Layout");
-		performLayoutPanel.add(performLayoutButton);
-		
-		//
-		AnimationPlayBackPanel animationPlaybackPanel =  AnimationPlayBackPanel.getInstance();
+		realTimeAnimationPanel.setAlignmentX(LEFT_ALIGNMENT);*/
+
 		
 		//
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.add(animationPanel);
 		this.add(animationTypePanel);
 		this.add(keyFrameAnimationOptionsPanel);
-		this.add(realTimeAnimationPanel);
-		this.add(performLayoutPanel);
-		this.add(animationPlaybackPanel);
+		//this.add(realTimeAnimationPanel);
 		this.setAlignmentX(LEFT_ALIGNMENT);
 	}
 	
