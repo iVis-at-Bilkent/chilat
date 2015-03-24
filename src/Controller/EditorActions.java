@@ -277,6 +277,44 @@ public class EditorActions
 	}
 	
 	@SuppressWarnings("serial")
+	public static class AutoZoomToFitCheckboxAction extends AbstractAction
+	{		
+		public AutoZoomToFitCheckboxAction()
+		{
+			//Initial icon and description
+			this.putValue(Action.SHORT_DESCRIPTION, "Automatically zoom to fit during layout");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			JCheckBox checkbox = (JCheckBox) e.getSource();
+			ChilayLayoutAnimationToolMain.getInstance().setAutoFitDuringLayout(checkbox.isSelected());
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	public static class ForceDetailsVisibleChecboxAction extends AbstractAction
+	{		
+		public ForceDetailsVisibleChecboxAction()
+		{
+			//Initial icon and description
+			this.putValue(Action.SHORT_DESCRIPTION, "Set force details visible during animation");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			JCheckBox checkbox = (JCheckBox) e.getSource();
+			ChilayLayoutAnimationToolMain.getInstance().setForceDetailsVisible(checkbox.isSelected());
+		}
+	}
+	
+	@SuppressWarnings("serial")
 	public static class UniformLeafNodeSizesCheckboxAction extends AbstractAction
 	{		
 		public UniformLeafNodeSizesCheckboxAction()
