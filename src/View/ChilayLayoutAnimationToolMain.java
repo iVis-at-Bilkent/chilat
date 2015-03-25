@@ -174,6 +174,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 					
 					if (cell != null && cell.isVertex()) 
 					{
+						
 						graphComponent.getGraphControl().add(fVis);
 						fVis.setLocation((int)(state.getX()+state.getWidth() + 5), (int)state.getY());
 						fVis.setSelectedCell((ChiLATCell) cell);

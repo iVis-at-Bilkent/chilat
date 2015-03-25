@@ -71,8 +71,8 @@ public class ChiLATNodeShape extends mxRectangleShape
 			double fillEndX = fillStartX + (topVertex.getX()+x+w/2 - fillStartX) * normalizedForce;
 			double fillEndY = fillStartY + (topVertex.getY()+y+h/2 - fillStartY) * normalizedForce;
 			GradientPaint redtowhite;
-			
-			if (fillEndX == fillStartX && fillEndY == fillStartY)
+		
+			if (Math.floor(fillEndX) == fillStartX && Math.floor(fillEndY) == fillStartY)
 			{
 				redtowhite = new GradientPaint((float)fillStartX,(float)fillStartY,Color.WHITE,
 						(float)fillEndX,
