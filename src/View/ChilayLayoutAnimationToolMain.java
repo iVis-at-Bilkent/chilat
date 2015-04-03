@@ -203,7 +203,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.rubberBand = new mxRubberband(graphComponent);
 		this.graphOutline = new mxGraphOutline(this.graphComponent);
 		this.graphOutline.addMouseWheelListener(new GraphMouseListener(this.graphComponent));
-		graphOutline.DEFAULT_ZOOMHANDLE_FILL = Color.red;
+		//graphOutline.DEFAULT_ZOOMHANDLE_FILL = Color.red;
 		
 		JPanel menuAndToolbarPanel = new JPanel();
 		GridLayout menuAndToolbarLayout = new GridLayout(1, 1);
