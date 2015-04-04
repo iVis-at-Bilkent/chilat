@@ -49,17 +49,31 @@ public class AnimationOptionsPanel extends JPanel
 		animationPanel.setAlignmentX(LEFT_ALIGNMENT);
 		
 		//
+		JPanel duringAnimationOptionsPanel = new JPanel();
+		duringAnimationOptionsPanel.setLayout(new BoxLayout(duringAnimationOptionsPanel, BoxLayout.Y_AXIS));
+		duringAnimationOptionsPanel.setBorder(new TitledBorder("During Layout"));
+		JCheckBox forceDetailsVisibleCheckbox = new JCheckBox(new EditorActions.ForceDetailsVisibleChecboxAction());
+		forceDetailsVisibleCheckbox.setText("Force Details Visible");
+		JCheckBox zoomToFitCheckbox = new JCheckBox(new EditorActions.AutoZoomToFitCheckboxAction());
+		zoomToFitCheckbox.setText("Zoom to Fit During Layout");
+		duringAnimationOptionsPanel.add(forceDetailsVisibleCheckbox);
+		duringAnimationOptionsPanel.add(zoomToFitCheckbox);
+		duringAnimationOptionsPanel.add(Box.createHorizontalGlue());
+		duringAnimationOptionsPanel.setAlignmentX(LEFT_ALIGNMENT);
+
+		
+		//
 		JPanel animationTypePanel = new JPanel();
 		animationTypePanel.setLayout(new BoxLayout(animationTypePanel, BoxLayout.Y_AXIS));
 		animationTypePanel.setBorder(new TitledBorder("Animation Type"));
 		ButtonGroup animationTypeButtonGroup = new ButtonGroup();
 		JRadioButton keyFrameAnimationRadioButton = new JRadioButton("Key Frame Animation");
 		keyFrameAnimationRadioButton.setSelected(true);
-		//JRadioButton realTimeAnimationRadioButton = new JRadioButton("Real Time Animation");
+		JRadioButton realTimeAnimationRadioButton = new JRadioButton("Real Time Animation");
 		animationTypeButtonGroup.add(keyFrameAnimationRadioButton);
-		//animationTypeButtonGroup.add(realTimeAnimationRadioButton);
+		animationTypeButtonGroup.add(realTimeAnimationRadioButton);
 		animationTypePanel.add(keyFrameAnimationRadioButton);
-		//animationTypePanel.add(realTimeAnimationRadioButton);
+		animationTypePanel.add(realTimeAnimationRadioButton);
 		animationTypePanel.add(Box.createHorizontalGlue());
 		animationTypePanel.setAlignmentX(LEFT_ALIGNMENT);
 		
@@ -75,20 +89,22 @@ public class AnimationOptionsPanel extends JPanel
 		keyFrameAnimationOptionsPanel.setAlignmentX(LEFT_ALIGNMENT);
 		
 		//
-		/*JPanel realTimeAnimationPanel = new JPanel();
+		JPanel realTimeAnimationPanel = new JPanel();
 		realTimeAnimationPanel.setLayout(new BoxLayout(realTimeAnimationPanel, BoxLayout.Y_AXIS));
 		realTimeAnimationPanel.setBorder(new TitledBorder("Real Time Animation Properties"));
 		AnimationSpeedSliderPanel simulationTimeStepPanel = new AnimationSpeedSliderPanel("Simulation Timestep", 0, 0, 0);
 		realTimeAnimationPanel.add(simulationTimeStepPanel);
-		realTimeAnimationPanel.setAlignmentX(LEFT_ALIGNMENT);*/
+		realTimeAnimationPanel.setAlignmentX(LEFT_ALIGNMENT);
+		
 
 		
 		//
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.add(duringAnimationOptionsPanel);
 		this.add(animationPanel);
 		this.add(animationTypePanel);
 		this.add(keyFrameAnimationOptionsPanel);
-		//this.add(realTimeAnimationPanel);
+		this.add(realTimeAnimationPanel);
 		this.setAlignmentX(LEFT_ALIGNMENT);
 	}
 	

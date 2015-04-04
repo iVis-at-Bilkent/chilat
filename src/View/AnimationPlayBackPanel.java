@@ -37,7 +37,7 @@ public class AnimationPlayBackPanel extends JPanel implements ChangeListener
 	{
 		super();
 		JPanel layoutAnimationButtonsPanel = new JPanel();
-		this.setBorder(new TitledBorder("Animation Control"));
+		this.setBorder(new TitledBorder("Animation Controls"));
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		layoutAnimationButtonsPanel.setLayout(new BoxLayout(layoutAnimationButtonsPanel, BoxLayout.X_AXIS));
 		rewindButton = new CircularAnimationControlButton(new EditorActions.RewindAnimationAction());
