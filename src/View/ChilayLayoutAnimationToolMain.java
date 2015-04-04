@@ -113,7 +113,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 
 	private ChilayLayoutAnimationToolMain() 
 	{
-		super("ChiLay Animation Tool");
+		super("ChiLAT");
 		this.setLayout(new BorderLayout());
 		
 		this.compoundNodeStyle = new HashMap<String, Object>();
@@ -202,7 +202,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		this.rubberBand = new mxRubberband(graphComponent);
 		this.graphOutline = new mxGraphOutline(this.graphComponent);
 		this.graphOutline.addMouseWheelListener(new GraphMouseListener(this.graphComponent));
-		graphOutline.DEFAULT_ZOOMHANDLE_FILL = Color.red;
+		//graphOutline.DEFAULT_ZOOMHANDLE_FILL = Color.red;
 		
 		JPanel menuAndToolbarPanel = new JPanel();
 		GridLayout menuAndToolbarLayout = new GridLayout(1, 1);
@@ -217,18 +217,22 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		tabbedPanePanel.add(new EditorTabbedPane(), BorderLayout.PAGE_START);
 		
 		JSplitPane animationPanelSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, graphComponent, AnimationPlayBackPanel.getInstance());
-		animationPanelSplitPane.setDividerLocation(1024);
-		
 		JSplitPane verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPanePanel, graphOutline);
-		
 		JSplitPane overViewWindowSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, verticalSplitPane, animationPanelSplitPane);
-		overViewWindowSplitPane.setMinimumSize(new Dimension(500, 0));
-		overViewWindowSplitPane.setDividerLocation(370);
-		overViewWindowSplitPane.setBorder(new TitledBorder(" "));
 		
 		
 		this.add(menuAndToolbarPanel,BorderLayout.PAGE_START);
 		this.add(overViewWindowSplitPane,BorderLayout.CENTER);
+		
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Toolkit t = Toolkit.getDefaultToolkit();
+		this.setLocation(0,0);
+		this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		this.setVisible(true);
+		this.loadGraph(this.getClass().getResource("/SampleGraphs/badlayout2c.graphml").getPath());
+		
+		animationPanelSplitPane.setDividerLocation(0.8);
+		verticalSplitPane.setDividerLocation(0.6);
 	}
 	
 	public void loadGraph(String path)
@@ -339,10 +343,6 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	{
 		UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         ChilayLayoutAnimationToolMain chiLATMain = ChilayLayoutAnimationToolMain.getInstance();
-		chiLATMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		chiLATMain.setSize(1024, 768);
-		chiLATMain.setVisible(true);
-        chiLATMain.loadGraph(chiLATMain.getClass().getResource("/SampleGraphs/badlayout2c.graphml").getPath());
 	}
 	
 	public class GraphMouseListener implements MouseWheelListener
