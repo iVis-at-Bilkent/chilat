@@ -50,14 +50,14 @@ import com.mxgraph.view.mxGraphView;
 import com.mxgraph.view.mxStylesheet;
 
 
-public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListener
+public class ChiLATMain extends JFrame implements ActionListener
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2707712944901661771L;
 	
-	private static ChilayLayoutAnimationToolMain singletonInstance;
+	private static ChiLATMain singletonInstance;
 
 	private mxGraph graph;
 	private mxGraphComponent graphComponent;
@@ -89,15 +89,15 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	private HashMap<String, Object> compoundNodeStyle;
 	private HashMap<String, Object> edgeStyle;
 	
-	public static ChilayLayoutAnimationToolMain getInstance()
+	public static ChiLATMain getInstance()
 	{
-		if (ChilayLayoutAnimationToolMain.singletonInstance == null) {
-			ChilayLayoutAnimationToolMain.singletonInstance = new ChilayLayoutAnimationToolMain();		
+		if (ChiLATMain.singletonInstance == null) {
+			ChiLATMain.singletonInstance = new ChiLATMain();		
 		}
-		return ChilayLayoutAnimationToolMain.singletonInstance;
+		return ChiLATMain.singletonInstance;
 	}
 
-	private ChilayLayoutAnimationToolMain() 
+	private ChiLATMain() 
 	{
 		super("ChiLAT");
 		this.setLayout(new BorderLayout());
@@ -144,7 +144,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 						
 		};
 		
-		final ForceVisualizationPopUpWindow	fVis = new ForceVisualizationPopUpWindow(0, 0);
+		final ForceVisualizationPopUpWindow	fVis = new ForceVisualizationPopUpWindow();
 		fVis.setVisible(false);
 		//Mouse double click for node inspector
 		graphComponent.getGraphControl().addMouseListener(new MouseAdapter() 
@@ -218,6 +218,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		
 		animationPanelSplitPane.setDividerLocation(0.8);
 		verticalSplitPane.setDividerLocation(0.6);
+		overViewWindowSplitPane.setDividerLocation(0.21);
 	}
 	
 	public void loadGraph(String path)
@@ -327,7 +328,7 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException
 	{
 		UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-        ChilayLayoutAnimationToolMain chiLATMain = ChilayLayoutAnimationToolMain.getInstance();
+        ChiLATMain chiLATMain = ChiLATMain.getInstance();
 	}
 	
 	public class GraphMouseListener implements MouseWheelListener
@@ -641,6 +642,9 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 		case COMP_GRAVITY_RANGE:
 			this.layoutManager.getCoseOptionsPack().compoundGravityRange = value;
 			break;
+		case IDEAL_EDGE_LENGTH:
+			this.layoutManager.getCoseOptionsPack().idealEdgeLength = value;
+			break;
 		default:
 			break;
 		}
@@ -662,6 +666,8 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 			return this.layoutManager.getCoseOptionsPack().gravityRange;
 		case COMP_GRAVITY_RANGE:
 			return this.layoutManager.getCoseOptionsPack().compoundGravityRange;
+		case IDEAL_EDGE_LENGTH:
+			return this.layoutManager.getCoseOptionsPack().idealEdgeLength;
 		default:
 			return -1;
 		}
@@ -669,9 +675,9 @@ public class ChilayLayoutAnimationToolMain extends JFrame implements ActionListe
 	
 	public class OpenButtonListener implements ActionListener
 	{
-		ChilayLayoutAnimationToolMain animationToolMain;
+		ChiLATMain animationToolMain;
 		
-		public OpenButtonListener(ChilayLayoutAnimationToolMain other)
+		public OpenButtonListener(ChiLATMain other)
 		{
 			this.animationToolMain = other;
 		}

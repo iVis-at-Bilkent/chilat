@@ -46,12 +46,12 @@ public class EditorMenuBar extends JMenuBar implements ActionListener
 
 			if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
 			{
-			  ChilayLayoutAnimationToolMain.getInstance().loadGraph(chooser.getSelectedFile().getAbsolutePath());
+			  ChiLATMain.getInstance().loadGraph(chooser.getSelectedFile().getAbsolutePath());
 			} 
 		}
 		else if(((JMenuItem)arg0.getSource()).getText().equals("CoSE Layout"))
 		{
-			ChilayLayoutAnimationToolMain.getInstance().performLayout();
+			ChiLATMain.getInstance().performLayout();
 		}
 	}
 }

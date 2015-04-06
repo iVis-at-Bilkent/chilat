@@ -12,13 +12,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 @SuppressWarnings("serial")
-public class ChiAnimSliderPanel extends JPanel
+public class ChiLATSliderPanel extends JPanel
 {
 	JLabel sliderLabel;
 	JSlider slider;
 	JLabel textLabel;
 	
-	public ChiAnimSliderPanel(String label, int minSlider, int maxSlider, int initialValue)
+	public ChiLATSliderPanel(String label, int minSlider, int maxSlider, int initialValue)
 	{
 		super();
 		this.setLayout(new GridLayout(1, 2));

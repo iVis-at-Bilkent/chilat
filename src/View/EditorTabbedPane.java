@@ -17,7 +17,7 @@ public class EditorTabbedPane extends JTabbedPane implements ChangeListener
 	{
 		super();
 		this.addTab("General", new GeneralOptionsPanel());
-		this.addTab("CoSE Layout", new LayoutOptionsPanel());
+		this.addTab("Layout", new LayoutOptionsPane());
 		this.addTab("Animation", new AnimationOptionsPanel());
 		this.addChangeListener(this);
 		

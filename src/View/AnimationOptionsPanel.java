@@ -21,8 +21,8 @@ import org.ivis.layout.LayoutOptionsPack;
 
 import com.sun.org.apache.bcel.internal.generic.D2F;
 
-import View.ChiAnimSliderPanels.AnimationSpeedSliderPanel;
-import View.ChiAnimSliderPanels.KeyframeCapturePeriodSliderPanel;
+import View.ChiLATSliderPanels.AnimationSpeedSliderPanel;
+import View.ChiLATSliderPanels.KeyframeCapturePeriodSliderPanel;
 import Controller.EditorActions;
 
 public class AnimationOptionsPanel extends JPanel

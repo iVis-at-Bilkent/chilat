@@ -5,20 +5,29 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSpinner;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.LayoutQueue;
+import javax.swing.text.NumberFormatter;
 
 import org.ivis.layout.LayoutOptionsPack;
 
 import View.ChiLATConstants;
-import View.ChiAnimSliderPanels.ForceTuningSliderPanel;
+import View.ChiLATSliderPanels.ForceTuningSliderPanel;
 import View.ChiLATConstants.ForceTuningParameterName;
 import View.ChiLATConstants.LayoutQualityParameterName;
 import Controller.EditorActions;
@@ -49,7 +58,7 @@ public class GeneralOptionsPanel extends JPanel
 
 		layoutQualityPanel.add(poorButton);
 		layoutQualityPanel.add(Box.createHorizontalGlue());
-		layoutQualityPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		layoutQualityPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		
 		//GUI components about other components in this panel
@@ -60,11 +69,20 @@ public class GeneralOptionsPanel extends JPanel
 		incrementalLayoutCheckBox.setText("Incremental Layout");
 		JCheckBox uniformLeafNodeSizesCheckBox = new JCheckBox(new UniformLeafNodeSizesCheckboxAction());
 		uniformLeafNodeSizesCheckBox.setText("Uniform Leaf Node Sizes");
+		
+		ChiLATSpinner idealEdgeLengthSpinnerPanel = new ChiLATSpinner(
+				LayoutOptionsPack.getInstance().getCoSE().idealEdgeLength,
+				0, 
+				Integer.MAX_VALUE, 
+				1, 
+				"Ideal Edge Length", 
+				ForceTuningParameterName.IDEAL_EDGE_LENGTH);
+		
 		otherOptionsPanel.add(incrementalLayoutCheckBox);
-		otherOptionsPanel.add(Box.createVerticalGlue());
 		otherOptionsPanel.add(uniformLeafNodeSizesCheckBox);
+		otherOptionsPanel.add(idealEdgeLengthSpinnerPanel);
 		otherOptionsPanel.add(Box.createHorizontalGlue());
-		otherOptionsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		otherOptionsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 						
 		defaultButton.doClick();
 		
@@ -90,11 +108,14 @@ public class GeneralOptionsPanel extends JPanel
 		forcePanel.add(repulsionPanel);
 		forcePanel.add(gravityPanel);
 		forcePanel.add(gravityRangePanel);
+		forcePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.add(layoutQualityPanel);
 		this.add(forcePanel);
 		this.add(otherOptionsPanel);
 		this.add(Box.createHorizontalGlue());
+		this.setAlignmentX(Component.LEFT_ALIGNMENT);
+
 	}
 }

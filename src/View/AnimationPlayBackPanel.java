@@ -37,8 +37,11 @@ public class AnimationPlayBackPanel extends JPanel implements ChangeListener
 	{
 		super();
 		JPanel layoutAnimationButtonsPanel = new JPanel();
-		this.setBorder(new TitledBorder("Animation Controls"));
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		JPanel animationControlsPanel = new JPanel();
+		animationControlsPanel.setBorder(new TitledBorder("Animation Controls"));
+		animationControlsPanel.setLayout(new BoxLayout(animationControlsPanel, BoxLayout.Y_AXIS));
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		
 		layoutAnimationButtonsPanel.setLayout(new BoxLayout(layoutAnimationButtonsPanel, BoxLayout.X_AXIS));
 		rewindButton = new CircularAnimationControlButton(new EditorActions.RewindAnimationAction());
 		forwardButton = new CircularAnimationControlButton(new EditorActions.ForwardAnimationAction());
@@ -65,9 +68,13 @@ public class AnimationPlayBackPanel extends JPanel implements ChangeListener
 		performLayoutPanel.add(Box.createHorizontalGlue());
 		
 		//
-		this.add(animationTimeLine);
-		this.add(layoutAnimationButtonsPanel);
-		this.add(performLayoutPanel);
+		animationControlsPanel.add(animationTimeLine);
+		animationControlsPanel.add(layoutAnimationButtonsPanel);
+		animationControlsPanel.add(performLayoutPanel);
+		
+		ForceVisualizationPopUpWindow fVis = new ForceVisualizationPopUpWindow();
+		//this.add(fVis);
+		this.add(animationControlsPanel);
 		
 
 		this.setAlignmentX(LEFT_ALIGNMENT);
@@ -126,9 +133,9 @@ public class AnimationPlayBackPanel extends JPanel implements ChangeListener
 	//TODO refactor this to editor actions
 	public void stateChanged(ChangeEvent arg0)
 	{
-		ChilayLayoutAnimationToolMain.getInstance().animationTotalTime = this.animationTimeLine.getValue();
-		ChilayLayoutAnimationToolMain.getInstance().currentKeyFrameNumber = (int)(ChilayLayoutAnimationToolMain.getInstance().animationTotalTime);
-		ChilayLayoutAnimationToolMain.getInstance().interpolatedFrameRemainder = (ChilayLayoutAnimationToolMain.getInstance().animationTotalTime) - ChilayLayoutAnimationToolMain.getInstance().currentKeyFrameNumber;
+		ChiLATMain.getInstance().animationTotalTime = this.animationTimeLine.getValue();
+		ChiLATMain.getInstance().currentKeyFrameNumber = (int)(ChiLATMain.getInstance().animationTotalTime);
+		ChiLATMain.getInstance().interpolatedFrameRemainder = (ChiLATMain.getInstance().animationTotalTime) - ChiLATMain.getInstance().currentKeyFrameNumber;
 	}
 	
 	
