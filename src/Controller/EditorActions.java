@@ -14,7 +14,7 @@ import org.ivis.layout.LayoutOptionsPack;
 
 import View.AnimationPlayBackPanel;
 import View.ChiLATConstants.LayoutQualityParameterName;
-import View.ChilayLayoutAnimationToolMain;
+import View.ChiLATMain;
 
 
 public class EditorActions 
@@ -57,7 +57,7 @@ public class EditorActions
 			if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
 			{
 				lastDirectory = chooser.getSelectedFile().getAbsolutePath();
-				ChilayLayoutAnimationToolMain.getInstance().loadGraph(chooser.getSelectedFile().getAbsolutePath());
+				ChiLATMain.getInstance().loadGraph(chooser.getSelectedFile().getAbsolutePath());
 			} 
 		}
 	}
@@ -94,7 +94,7 @@ public class EditorActions
 		 */
 		public void actionPerformed(ActionEvent e)
 		{
-			ChilayLayoutAnimationToolMain.getInstance().performLayout();
+			ChiLATMain.getInstance().performLayout();
 		}
 	}
 	
@@ -111,7 +111,7 @@ public class EditorActions
 		 */
 		public void actionPerformed(ActionEvent e)
 		{
-			ChilayLayoutAnimationToolMain.getInstance().setAnimateOn(((JCheckBox)e.getSource()).isSelected());
+			ChiLATMain.getInstance().setAnimateOn(((JCheckBox)e.getSource()).isSelected());
 		}
 	}
 	
@@ -130,7 +130,7 @@ public class EditorActions
 		 */
 		public void actionPerformed(ActionEvent e)
 		{
-			ChilayLayoutAnimationToolMain.getInstance().resumeOrStartAnimation();
+			ChiLATMain.getInstance().resumeOrStartAnimation();
 		}
 	}
 	
@@ -149,7 +149,7 @@ public class EditorActions
 		 */
 		public void actionPerformed(ActionEvent e)
 		{
-			ChilayLayoutAnimationToolMain.getInstance().pauseAnimation();
+			ChiLATMain.getInstance().pauseAnimation();
 		}
 	}
 	
@@ -170,7 +170,7 @@ public class EditorActions
 		 */
 		public void actionPerformed(ActionEvent e)
 		{
-			ChilayLayoutAnimationToolMain.getInstance().fastForwardAnimation();
+			ChiLATMain.getInstance().fastForwardAnimation();
 		}
 	}
 	
@@ -189,7 +189,7 @@ public class EditorActions
 		 */
 		public void actionPerformed(ActionEvent e)
 		{
-			ChilayLayoutAnimationToolMain.getInstance().rewindAnimation();
+			ChiLATMain.getInstance().rewindAnimation();
 		}
 	}
 	
@@ -209,7 +209,7 @@ public class EditorActions
 		public void actionPerformed(ActionEvent e)
 		{
 			AnimationPlayBackPanel.getInstance().updateGUIAnimationEnd();
-			ChilayLayoutAnimationToolMain.getInstance().stopAnimation();
+			ChiLATMain.getInstance().stopAnimation();
 		}
 	}
 	
@@ -291,7 +291,7 @@ public class EditorActions
 		public void actionPerformed(ActionEvent e)
 		{
 			JCheckBox checkbox = (JCheckBox) e.getSource();
-			ChilayLayoutAnimationToolMain.getInstance().setAutoFitDuringLayout(checkbox.isSelected());
+			ChiLATMain.getInstance().setAutoFitDuringLayout(checkbox.isSelected());
 		}
 	}
 	
@@ -310,7 +310,7 @@ public class EditorActions
 		public void actionPerformed(ActionEvent e)
 		{
 			JCheckBox checkbox = (JCheckBox) e.getSource();
-			ChilayLayoutAnimationToolMain.getInstance().setForceDetailsVisible(checkbox.isSelected());
+			ChiLATMain.getInstance().setForceDetailsVisible(checkbox.isSelected());
 		}
 	}
 	
@@ -373,7 +373,7 @@ public class EditorActions
 		 */
 		public void actionPerformed(ActionEvent e)
 		{
-			ChilayLayoutAnimationToolMain chiLATMain = ChilayLayoutAnimationToolMain.getInstance();
+			ChiLATMain chiLATMain = ChiLATMain.getInstance();
 			if (zoomPolicy == ZOOM_IN) 
 			{
 				chiLATMain.zoomIn();

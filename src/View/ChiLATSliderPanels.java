@@ -10,9 +10,9 @@ import org.ivis.layout.LayoutOptionsPack;
 
 import View.ChiLATConstants.ForceTuningParameterName;
 
-public class ChiAnimSliderPanels 
+public class ChiLATSliderPanels 
 {
-	public static class AnimationSpeedSliderPanel extends ChiAnimSliderPanel implements ChangeListener
+	public static class AnimationSpeedSliderPanel extends ChiLATSliderPanel implements ChangeListener
 	{
 		public AnimationSpeedSliderPanel(String label, int minSlider,int maxSlider, int initialValue)
 		{
@@ -32,11 +32,11 @@ public class ChiAnimSliderPanels
 			DecimalFormat formatter = new DecimalFormat();
 			formatter.setMaximumFractionDigits(2);
 			this.textLabel.setText(""+ formatter.format(value));
-			ChilayLayoutAnimationToolMain.getInstance().setAnimationSpeed(value);
+			ChiLATMain.getInstance().setAnimationSpeed(value);
 		}
 	}
 	
-	public static class ForceTuningSliderPanel extends ChiAnimSliderPanel implements ChangeListener
+	public static class ForceTuningSliderPanel extends ChiLATSliderPanel implements ChangeListener
 	{
 		String label = "";
 		
@@ -56,12 +56,12 @@ public class ChiAnimSliderPanels
 			int value = this.slider.getValue();
 			this.slider.setToolTipText(label + value );
 			this.textLabel.setText(""+value);
-			ChilayLayoutAnimationToolMain.getInstance().setCoSEOption(chosenParameter, value);
+			ChiLATMain.getInstance().setCoSEOption(chosenParameter, value);
 		}
 	}
 	
 	@SuppressWarnings("serial")
-	public static class KeyframeCapturePeriodSliderPanel extends ChiAnimSliderPanel implements ChangeListener
+	public static class KeyframeCapturePeriodSliderPanel extends ChiLATSliderPanel implements ChangeListener
 	{
 		String label = "";
 		

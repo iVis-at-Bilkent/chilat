@@ -9,7 +9,8 @@ public class ChiLATConstants
 		GRAVITY_FORCE,
 		COMP_GRAVITY_FORCE,
 		GRAVITY_RANGE,
-		COMP_GRAVITY_RANGE
+		COMP_GRAVITY_RANGE,
+		IDEAL_EDGE_LENGTH
 	};
 	
 	public static enum LayoutQualityParameterName
