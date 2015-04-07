@@ -1,30 +1,20 @@
 package View;
 
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
-
 import org.ivis.layout.LayoutOptionsPack;
-
-import Controller.EditorActions;
-import Controller.EditorActions.IncrementalLayoutCheckboxAction;
-import Controller.EditorActions.LayoutQualityRadioButtonAction;
-import Controller.EditorActions.UniformLeafNodeSizesCheckboxAction;
 import View.ChiLATSliderPanels.ForceTuningSliderPanel;
 import View.ChiLATConstants.ForceTuningParameterName;
-import View.ChiLATConstants.LayoutQualityParameterName;
+import Controller.EditorActions.MultiLevelScalingCheckboxAction;
+import Controller.EditorActions.SmartEdgeLengthCalculationCheckboxAction;
+import Controller.EditorActions.SmartRepulsionRangeCheckboxAction;
+
+
 
 public class LayoutOptionsPane extends JTabbedPane
 {
@@ -60,14 +50,17 @@ public class LayoutOptionsPane extends JTabbedPane
 		JPanel otherOptionsPanel = new JPanel();
 		otherOptionsPanel.setLayout(new BoxLayout(otherOptionsPanel, BoxLayout.Y_AXIS));
 		otherOptionsPanel.setBorder(new TitledBorder("Miscellaneous "));
-		JCheckBox incrementalLayoutCheckBox = new JCheckBox(new IncrementalLayoutCheckboxAction());
-		incrementalLayoutCheckBox.setText("Smart Edge Length Calculation");
-		JCheckBox uniformLeafNodeSizesCheckBox = new JCheckBox(new UniformLeafNodeSizesCheckboxAction());
-		uniformLeafNodeSizesCheckBox.setText("Multi Level Scaling");
+		JCheckBox smartEdgeLengthCheckbox = new JCheckBox(new SmartEdgeLengthCalculationCheckboxAction());
+		smartEdgeLengthCheckbox.setText("Smart Edge Length Calculation");
+		JCheckBox multiLevelScalingCheckbox = new JCheckBox(new MultiLevelScalingCheckboxAction());
+		multiLevelScalingCheckbox.setText("Multi Level Scaling");
+		JCheckBox smartRepulsionRangeCalcCheckBox = new JCheckBox(new SmartRepulsionRangeCheckboxAction());
+		smartRepulsionRangeCalcCheckBox.setText("Smart Repulsion Range Calculation");
 		
 		
-		otherOptionsPanel.add(incrementalLayoutCheckBox);
-		otherOptionsPanel.add(uniformLeafNodeSizesCheckBox);
+		otherOptionsPanel.add(smartEdgeLengthCheckbox);
+		otherOptionsPanel.add(smartRepulsionRangeCalcCheckBox);
+		otherOptionsPanel.add(multiLevelScalingCheckbox);
 		otherOptionsPanel.add(Box.createHorizontalGlue());
 		otherOptionsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 	

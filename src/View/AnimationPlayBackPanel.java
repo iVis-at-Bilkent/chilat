@@ -71,12 +71,8 @@ public class AnimationPlayBackPanel extends JPanel implements ChangeListener
 		animationControlsPanel.add(animationTimeLine);
 		animationControlsPanel.add(layoutAnimationButtonsPanel);
 		animationControlsPanel.add(performLayoutPanel);
-		
-		ForceVisualizationPopUpWindow fVis = new ForceVisualizationPopUpWindow();
-		//this.add(fVis);
-		this.add(animationControlsPanel);
-		
 
+		this.add(animationControlsPanel);
 		this.setAlignmentX(LEFT_ALIGNMENT);
 	}
 	

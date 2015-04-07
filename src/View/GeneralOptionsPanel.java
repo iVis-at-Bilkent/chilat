@@ -65,10 +65,18 @@ public class GeneralOptionsPanel extends JPanel
 		JPanel otherOptionsPanel = new JPanel();
 		otherOptionsPanel.setLayout(new BoxLayout(otherOptionsPanel, BoxLayout.Y_AXIS));
 		otherOptionsPanel.setBorder(new TitledBorder("Miscellaneous "));
+		JPanel incrementalLayoutCheckboxPanel = new JPanel();
+		incrementalLayoutCheckboxPanel.setLayout(new BoxLayout(incrementalLayoutCheckboxPanel, BoxLayout.X_AXIS));
 		JCheckBox incrementalLayoutCheckBox = new JCheckBox(new IncrementalLayoutCheckboxAction());
 		incrementalLayoutCheckBox.setText("Incremental Layout");
+		incrementalLayoutCheckboxPanel.add(incrementalLayoutCheckBox);
+		incrementalLayoutCheckboxPanel.add(Box.createHorizontalGlue());
+		JPanel uniformLeafNodesSizesCheckboxPanel = new JPanel();
+		uniformLeafNodesSizesCheckboxPanel.setLayout(new BoxLayout(uniformLeafNodesSizesCheckboxPanel, BoxLayout.X_AXIS));
 		JCheckBox uniformLeafNodeSizesCheckBox = new JCheckBox(new UniformLeafNodeSizesCheckboxAction());
 		uniformLeafNodeSizesCheckBox.setText("Uniform Leaf Node Sizes");
+		uniformLeafNodesSizesCheckboxPanel.add(uniformLeafNodeSizesCheckBox);
+		uniformLeafNodesSizesCheckboxPanel.add(Box.createHorizontalGlue());
 		
 		ChiLATSpinner idealEdgeLengthSpinnerPanel = new ChiLATSpinner(
 				LayoutOptionsPack.getInstance().getCoSE().idealEdgeLength,
@@ -78,8 +86,8 @@ public class GeneralOptionsPanel extends JPanel
 				"Ideal Edge Length", 
 				ForceTuningParameterName.IDEAL_EDGE_LENGTH);
 		
-		otherOptionsPanel.add(incrementalLayoutCheckBox);
-		otherOptionsPanel.add(uniformLeafNodeSizesCheckBox);
+		otherOptionsPanel.add(incrementalLayoutCheckboxPanel);
+		otherOptionsPanel.add(uniformLeafNodesSizesCheckboxPanel);
 		otherOptionsPanel.add(idealEdgeLengthSpinnerPanel);
 		otherOptionsPanel.add(Box.createHorizontalGlue());
 		otherOptionsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);

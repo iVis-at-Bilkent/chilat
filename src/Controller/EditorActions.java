@@ -329,12 +329,67 @@ public class EditorActions
 		public void actionPerformed(ActionEvent e)
 		{
 			JCheckBox checkbox = (JCheckBox) e.getSource();
-			if (checkbox.isSelected()) 
-			{
-				LayoutOptionsPack.getInstance().getGeneral().uniformLeafNodeSizes = true;
-			}
-			else
-				LayoutOptionsPack.getInstance().getGeneral().uniformLeafNodeSizes = false;
+			LayoutOptionsPack.getInstance().getGeneral().uniformLeafNodeSizes = checkbox.isSelected();
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	public static class SmartEdgeLengthCalculationCheckboxAction extends AbstractAction
+	{		
+		public SmartEdgeLengthCalculationCheckboxAction()
+		{
+			//Initial icon and description
+			this.putValue(Action.SHORT_DESCRIPTION, "Smart Edge Length Calculation");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			JCheckBox checkbox = (JCheckBox) e.getSource();
+			LayoutOptionsPack.getInstance().getCoSE().smartEdgeLengthCalc = checkbox.isSelected();
+
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	public static class MultiLevelScalingCheckboxAction extends AbstractAction
+	{		
+		public MultiLevelScalingCheckboxAction()
+		{
+			//Initial icon and description
+			this.putValue(Action.SHORT_DESCRIPTION, "Multi Level Scaling");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			JCheckBox checkbox = (JCheckBox) e.getSource();
+			LayoutOptionsPack.getInstance().getCoSE().multiLevelScaling = checkbox.isSelected();
+
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	public static class SmartRepulsionRangeCheckboxAction extends AbstractAction
+	{		
+		public SmartRepulsionRangeCheckboxAction()
+		{
+			//Initial icon and description
+			this.putValue(Action.SHORT_DESCRIPTION, "Smart Repulsion Range Calculation");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			JCheckBox checkbox = (JCheckBox) e.getSource();
+			LayoutOptionsPack.getInstance().getCoSE().smartRepulsionRangeCalc = checkbox.isSelected();
+
 		}
 	}
 	
