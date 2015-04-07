@@ -22,6 +22,7 @@ import javax.swing.JSplitPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.TitledBorder;
 
 import org.ivis.util.RectangleD;
 
@@ -111,7 +112,7 @@ public class ChiLATMain extends JFrame implements ActionListener
 
 		this.nodeStyle = new HashMap<String, Object>();
 		nodeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CHILAT_NODE_SHAPE);
-		nodeStyle.put(mxConstants.STYLE_FILLCOLOR, mxUtils.getHexColorString(new Color(48, 175, 230)));
+		nodeStyle.put(mxConstants.STYLE_FILLCOLOR, mxUtils.getHexColorString(Color.LIGHT_GRAY));
 		nodeStyle.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(Color.BLACK));
 		nodeStyle.put(mxConstants.STYLE_STROKEWIDTH, 2);
 		
@@ -144,9 +145,9 @@ public class ChiLATMain extends JFrame implements ActionListener
 						
 		};
 		
-		final ForceVisualizationPopUpWindow	fVis = new ForceVisualizationPopUpWindow();
+		final ForceVisualizationPopUpWindow	fVis = new ForceVisualizationPopUpWindow(0,0);
 		fVis.setVisible(false);
-		//Mouse double click for node inspector
+		
 		graphComponent.getGraphControl().addMouseListener(new MouseAdapter() 
 		{
 			@Override      
@@ -165,7 +166,7 @@ public class ChiLATMain extends JFrame implements ActionListener
 						fVis.setLocation((int)(state.getX()+state.getWidth() + 5), (int)state.getY());
 						fVis.setSelectedCell((ChiLATCell) cell);
 						fVis.setVisible(true);
-						
+						fVis.setBorder(new TitledBorder(label));
 					}
 					else
 					{

@@ -94,7 +94,7 @@ public class ChiLATNodeShape extends mxRectangleShape
 					RenderingHints.VALUE_ANTIALIAS_ON);
 			g.setRenderingHints(renderingHints);
 			
-			g.setPaint(Color.red);
+			g.setPaint(Color.BLACK);
 			g.draw(triangle);
 			g.setPaint(redtowhite);
 			/*double totalForceScale = 1-cell.getNormalizedTotalForce();

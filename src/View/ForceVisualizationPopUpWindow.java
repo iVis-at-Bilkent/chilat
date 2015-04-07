@@ -47,10 +47,11 @@ public class ForceVisualizationPopUpWindow extends JPanel
         private ForceVisualizationCirclePanel circlePanel;
         private ChiLATCell selectedCell;
         
-        public ForceVisualizationPopUpWindow() 
+        public ForceVisualizationPopUpWindow(int x, int y) 
         {
                 super();        
                 
+                this.setLocation(x, y);
                 this.circlePanel = new ForceVisualizationCirclePanel();
                 this.labelsPanel = this.createForceLabelsPanel();
 
@@ -70,7 +71,6 @@ public class ForceVisualizationPopUpWindow extends JPanel
 
                 this.setSize(W,H);
                 this.setVisible(true);
-                this.selectedCell = new ChiLATCell(null, null, null);
 
         }
 
