@@ -12,7 +12,7 @@ import javax.swing.JRadioButton;
 
 import org.ivis.layout.LayoutOptionsPack;
 
-import View.AnimationPlayBackPanel;
+import View.AnimationControlsPane;
 import View.ChiLATConstants.LayoutQualityParameterName;
 import View.ChiLATMain;
 
@@ -208,7 +208,7 @@ public class EditorActions
 		 */
 		public void actionPerformed(ActionEvent e)
 		{
-			AnimationPlayBackPanel.getInstance().updateGUIAnimationEnd();
+			AnimationControlsPane.getInstance().updateGUIAnimationEnd();
 			ChiLATMain.getInstance().stopAnimation();
 		}
 	}

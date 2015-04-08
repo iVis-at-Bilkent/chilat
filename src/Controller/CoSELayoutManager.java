@@ -142,6 +142,11 @@ public class CoSELayoutManager
 		return this.l_To_v_Map.get(id).getAnimationStates().get(index).getGravityForceVector();
 	}
 	
+	public Vector2D getDisplVector(String id, int index)
+	{
+		return this.l_To_v_Map.get(id).getAnimationStates().get(index).getTotalDisplacementVector();
+	}
+	
 	public Vector2D getMinMaxTotalForceForKeyFrame(int keyFrameIndex)
 	{
 		return this.minMaxTotalForceList.get(keyFrameIndex)[TOTAL_FORCE_INDEX];

@@ -10,9 +10,14 @@ public class KeyFrameNodeState
 	private Vector2D springForceVector;
 	private Vector2D repulsionForceVector;
 	private Vector2D gravityForceVector;
+	private Vector2D totalDisplacementVector;
 	
 	
-	public KeyFrameNodeState(RectangleD nodeGeometry, Vector2D springForceVector, Vector2D repulsionForceVector, Vector2D gravityForceVector)
+	public KeyFrameNodeState(RectangleD nodeGeometry, 
+			Vector2D springForceVector, 
+			Vector2D repulsionForceVector, 
+			Vector2D gravityForceVector,
+			Vector2D totalDisplacementVector)
 	{
 		this.nodeGeometry = new RectangleD(nodeGeometry.x,
 				nodeGeometry.y, 
@@ -22,6 +27,7 @@ public class KeyFrameNodeState
 		this.springForceVector = springForceVector;
 		this.repulsionForceVector = repulsionForceVector;
 		this.gravityForceVector = gravityForceVector;
+		this.totalDisplacementVector = totalDisplacementVector;
 		
 	}
 
@@ -52,5 +58,13 @@ public class KeyFrameNodeState
 
 	public Vector2D getGravityForceVector() {
 		return this.gravityForceVector;
+	}
+	
+	public Vector2D getTotalDisplacementVector() {
+		return totalDisplacementVector;
+	}
+
+	public void setTotalDisplacementVector(Vector2D totalDisplacementVector) {
+		this.totalDisplacementVector = totalDisplacementVector;
 	}
 }

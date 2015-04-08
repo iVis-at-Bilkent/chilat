@@ -15,25 +15,25 @@ import javax.swing.event.ChangeListener;
 import Controller.EditorActions;
 
 @SuppressWarnings("serial")
-public class AnimationPlayBackPanel extends JPanel implements ChangeListener
+public class AnimationControlsPane extends JPanel implements ChangeListener
 {	
 	
 	private CircularAnimationControlButton stopButton, forwardButton, rewindButton;
 	private PlayPauseButton playPauseButton;
 	private JSlider animationTimeLine;
-	private static AnimationPlayBackPanel singletonInstance;
+	private static AnimationControlsPane singletonInstance;
 	
-	public static AnimationPlayBackPanel getInstance()
+	public static AnimationControlsPane getInstance()
 	{
 		if (singletonInstance == null) 
 		{
-			singletonInstance = new AnimationPlayBackPanel();
+			singletonInstance = new AnimationControlsPane();
 		}
 		return singletonInstance;
 	}
 	
 	
-	private AnimationPlayBackPanel()
+	private AnimationControlsPane()
 	{
 		super();
 		JPanel layoutAnimationButtonsPanel = new JPanel();
