@@ -1,5 +1,6 @@
 package com.mxgraph.shape;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics2D;
@@ -19,6 +20,8 @@ import com.mxgraph.view.mxCellState;
 
 public class ChiLATNodeShape extends mxRectangleShape 
 {
+	public static int FORCE_ARROW_STROKE_WIDTH = 2;
+
 	@Override
 	public Shape createShape(mxGraphics2DCanvas canvas, mxCellState state) 
 	{
@@ -94,6 +97,7 @@ public class ChiLATNodeShape extends mxRectangleShape
 					RenderingHints.VALUE_ANTIALIAS_ON);
 			g.setRenderingHints(renderingHints);
 			
+			g.setStroke(new BasicStroke(FORCE_ARROW_STROKE_WIDTH));
 			g.setPaint(Color.BLACK);
 			g.draw(triangle);
 			g.setPaint(redtowhite);

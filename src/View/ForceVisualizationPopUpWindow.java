@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -31,9 +32,9 @@ import com.mxgraph.model.ChiLATCell;
 
 public class ForceVisualizationPopUpWindow extends JPanel 
 {
-        final int W = 180;
+        final int W = 175;
         final int H = 260;
-        final int CIRCLE_RADIUS = 70;
+        final int CIRCLE_RADIUS = 60;
         final int ARROW_HEIGHT = 5;
         final int ARROW_WIDTH = 2;
         
@@ -41,11 +42,17 @@ public class ForceVisualizationPopUpWindow extends JPanel
         private JLabel springForceLabel;
         private JLabel repulsionForceLabel;
         private JLabel gravityForceLabel;
+        private JLabel displacementLabel;
         private JPanel labelsPanel;
         private JPanel mainContainerPanel;
         
         private ForceVisualizationCirclePanel circlePanel;
         private ChiLATCell selectedCell;
+        
+        private static Color totalForceColor = Color.RED.darker();
+        private static Color springForceColor = Color.BLUE.darker();
+        private static Color repulsionForceColor = Color.YELLOW.darker();
+        private static Color gravityForceColor = Color.GREEN.darker();
         
         public ForceVisualizationPopUpWindow(int x, int y) 
         {
@@ -80,11 +87,12 @@ public class ForceVisualizationPopUpWindow extends JPanel
         }
         public void updateContents() 
         {
-                DecimalFormat formatter = new DecimalFormat();
+                DecimalFormat formatter = new DecimalFormat("0.#");
                 this.totalForceLabel.setText(""+formatter.format(this.selectedCell.getTotalForce()));
                 this.repulsionForceLabel.setText(""+formatter.format(this.selectedCell.getRepulsionForce()));
                 this.springForceLabel.setText("" + formatter.format(this.selectedCell.getSpringForce()));
                 this.gravityForceLabel.setText("" + formatter.format(this.selectedCell.getGravityForce()));
+                this.displacementLabel.setText("" + formatter.format(this.selectedCell.getTotalDisplacement()));
                 this.circlePanel.updateContents(this.selectedCell);
                 this.revalidate();
         }
@@ -98,22 +106,31 @@ public class ForceVisualizationPopUpWindow extends JPanel
         public JPanel createForceLabelsPanel()
         {
                 this.totalForceLabel = new JLabel();
+                totalForceLabel.setForeground(totalForceColor);
                 this.springForceLabel = new JLabel();
+                springForceLabel.setForeground(springForceColor);
                 this.repulsionForceLabel = new JLabel();
+                repulsionForceLabel.setForeground(repulsionForceColor);
                 this.gravityForceLabel = new JLabel();
+                gravityForceLabel.setForeground(gravityForceColor);
+                this.displacementLabel = new JLabel();  
+
                 
                 JPanel labelPanel = new JPanel();
                 labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.Y_AXIS));
-                labelPanel.add(createLabelPanel("Total Force:", totalForceLabel));
-                labelPanel.add(createLabelPanel("Spring Force:", springForceLabel));
-                labelPanel.add(createLabelPanel("Repulsion Force:", repulsionForceLabel));
-                labelPanel.add(createLabelPanel("Gravity Force:", gravityForceLabel));
+                labelPanel.add(createLabelPanel("Spring Force:", springForceLabel, false));
+                labelPanel.add(createLabelPanel("Repulsion Force:", repulsionForceLabel, false));
+                labelPanel.add(createLabelPanel("Gravity Force:", gravityForceLabel, false));
+                labelPanel.add(createLabelPanel("Total Force:", totalForceLabel, true));
+                labelPanel.add(Box.createRigidArea(new Dimension(0,5)));
+                labelPanel.add(createLabelPanel("Total Displacement: ", displacementLabel, false));
+                
                 labelPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
                 return labelPanel;
         }
         
-        public JPanel createLabelPanel(String firstLabelText, JLabel secondLabel )
+        public JPanel createLabelPanel(String firstLabelText, JLabel secondLabel, boolean isFontsBold )
         {
                 JPanel newPanel = new JPanel();
                 newPanel.setLayout(new BoxLayout(newPanel, BoxLayout.X_AXIS));
@@ -122,6 +139,20 @@ public class ForceVisualizationPopUpWindow extends JPanel
                 newPanel.add(Box.createHorizontalGlue());
                 newPanel.add(secondLabel);
                 newPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+                
+                if (isFontsBold) 
+                {
+                    //Set  labels bold
+                    Font firstFont = firstLabel.getFont();
+                    Font newFirstFont = new Font(firstFont.getName(), Font.BOLD, firstFont.getSize());
+                    firstLabel.setFont(newFirstFont);
+                    
+                    Font secondFont = secondLabel.getFont();
+                    Font newSecondFont = new Font(secondFont.getName(), Font.BOLD, secondFont.getSize());
+                    secondLabel.setFont(newSecondFont);
+				}
+
+                
                 return newPanel;
         }
 
@@ -166,9 +197,9 @@ public class ForceVisualizationPopUpWindow extends JPanel
         			
         			g.drawOval(getWidth()/2 - CIRCLE_RADIUS, getHeight()/2 - CIRCLE_RADIUS, 2*CIRCLE_RADIUS, 2*CIRCLE_RADIUS);
         			g.setStroke(forceLineStroke);
-        			drawArrowAndLine(Color.BLUE, g, springForceVector, springForceScale);
-        			drawArrowAndLine(Color.YELLOW, g, repulsionForceVector, repulsionForceScale);
-        			drawArrowAndLine(Color.GREEN, g, gravityForceVector, gravityForceScale);
+        			drawArrowAndLine(springForceColor, g, springForceVector, springForceScale);
+        			drawArrowAndLine(repulsionForceColor, g, repulsionForceVector, repulsionForceScale);
+        			drawArrowAndLine(gravityForceColor, g, gravityForceVector, gravityForceScale);
         		}
         		
         		public void drawArrowAndLine(Color color, Graphics g, Vector2D direction, double forceScaleFactor)

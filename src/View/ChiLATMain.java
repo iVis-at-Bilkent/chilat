@@ -82,6 +82,7 @@ public class ChiLATMain extends JFrame implements ActionListener
 	
 	private boolean isForceDetailsVisible; 
 	private boolean isAutoFitDuringLayout; 
+	private boolean isShowActualDisplacement;
 
 	private Timer timer;
 	
@@ -203,7 +204,7 @@ public class ChiLATMain extends JFrame implements ActionListener
 		tabbedPanePanel.setLayout( new BorderLayout());
 		tabbedPanePanel.add(new EditorTabbedPane(), BorderLayout.PAGE_START);
 		
-		JSplitPane animationPanelSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, graphComponent, AnimationPlayBackPanel.getInstance());
+		JSplitPane animationPanelSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, graphComponent, AnimationControlsPane.getInstance());
 		JSplitPane verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPanePanel, graphOutline);
 		JSplitPane overViewWindowSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, verticalSplitPane, animationPanelSplitPane);
 		
@@ -268,7 +269,7 @@ public class ChiLATMain extends JFrame implements ActionListener
 	{	
 		this.resetAnimationState();
 		this.layoutManager.runLayout();
-		AnimationPlayBackPanel.getInstance().setAnimationTimelineBounds(this.layoutManager.getTotalKeyFrameCount());
+		AnimationControlsPane.getInstance().setAnimationTimelineBounds(this.layoutManager.getTotalKeyFrameCount());
 		
 		if (!isAnimateOn) 
 		{
@@ -276,8 +277,8 @@ public class ChiLATMain extends JFrame implements ActionListener
 		}
 		else
 		{
-			AnimationPlayBackPanel.getInstance().updateGUIAnimationStart();
-			AnimationPlayBackPanel.getInstance().getPlayPauseButton().changeToPauseButton();
+			AnimationControlsPane.getInstance().updateGUIAnimationStart();
+			AnimationControlsPane.getInstance().getPlayPauseButton().changeToPauseButton();
 			this.animate();
 		}
 	}
@@ -387,7 +388,7 @@ public class ChiLATMain extends JFrame implements ActionListener
 		if (this.isAnimateOn)
 		{
 			isAnimationRunning = true;
-			AnimationPlayBackPanel.getInstance().updateGUIAnimationStart();
+			AnimationControlsPane.getInstance().updateGUIAnimationStart();
 			this.timer = new Timer(1000/60, this);
 			this.timer.start();
 		}
@@ -432,6 +433,9 @@ public class ChiLATMain extends JFrame implements ActionListener
 				Vector2D currentGravityForceVector = new Vector2D(this.layoutManager.getGravityForceVector(tmpKey, this.currentKeyFrameNumber));
 				Vector2D nextGravityForceVector = new Vector2D(this.layoutManager.getGravityForceVector(tmpKey, this.currentKeyFrameNumber+1));
 				
+				Vector2D currentTotalDisplVector = new Vector2D(this.layoutManager.getDisplVector(tmpKey, this.currentKeyFrameNumber));
+				Vector2D nextTotalDisplVector = new Vector2D(this.layoutManager.getDisplVector(tmpKey, this.currentKeyFrameNumber+1));
+				
 				//Store magnitude of the force vectors
 				double currentTotalForce = currentTotalForceVector.length();
 				double currentRepulsionForce = currentRepulsionForceVector.length();
@@ -446,7 +450,7 @@ public class ChiLATMain extends JFrame implements ActionListener
 				currentSpringForceVector = currentSpringForceVector.normalize();
 				nextSpringForceVector = nextSpringForceVector.normalize();	
 				currentGravityForceVector = currentGravityForceVector.normalize();
-				nextGravityForceVector = nextGravityForceVector.normalize();
+				nextGravityForceVector = nextGravityForceVector.normalize();	
 
 				//Linear interpolation between total force vectors
 				Vector2D newTotalForceVector = Vector2D.lerp(currentTotalForceVector, nextTotalForceVector, interpolatedFrameRemainder);
@@ -465,6 +469,7 @@ public class ChiLATMain extends JFrame implements ActionListener
 				cell.setRepulsionForce(currentRepulsionForce);
 				cell.setSpringForce(currentSpringForce);
 				cell.setGravityForce(currentGravityForce);
+				cell.setTotalDisplacement(currentTotalDisplVector.length());
 			}
 				
 			
@@ -476,15 +481,15 @@ public class ChiLATMain extends JFrame implements ActionListener
 			ChiLATCell.MIN_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getX();
 			ChiLATCell.MAX_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getY();
 			
-			AnimationPlayBackPanel.getInstance().updateAnimationTimeLine(animationTotalTime);
+			AnimationControlsPane.getInstance().updateAnimationTimeLine(animationTotalTime);
 									
 			this.graph.refresh();
 			this.graphComponent.refresh();
 		}
 		else
 		{
-			AnimationPlayBackPanel.getInstance().updateGUIAnimationEnd();
-			AnimationPlayBackPanel.getInstance().updateAnimationTimeLine(this.layoutManager.getTotalKeyFrameCount());
+			AnimationControlsPane.getInstance().updateGUIAnimationEnd();
+			AnimationControlsPane.getInstance().updateAnimationTimeLine(this.layoutManager.getTotalKeyFrameCount());
 			this.resetAnimationState();
 			this.timer.stop();
 		}
@@ -550,8 +555,8 @@ public class ChiLATMain extends JFrame implements ActionListener
 		this.timer.stop();
 		//Draw the final geometries of the graph entities
 		drawFinalLayoutState();
-		AnimationPlayBackPanel.getInstance().updateGUIAnimationEnd();
-		AnimationPlayBackPanel.getInstance().updateAnimationTimeLine(this.layoutManager.getTotalKeyFrameCount());
+		AnimationControlsPane.getInstance().updateGUIAnimationEnd();
+		AnimationControlsPane.getInstance().updateAnimationTimeLine(this.layoutManager.getTotalKeyFrameCount());
 		this.resetAnimationState();
 
 	}

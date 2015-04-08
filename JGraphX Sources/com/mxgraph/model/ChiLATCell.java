@@ -34,6 +34,7 @@ public class ChiLATCell extends mxCell
 	private double springForce;
 	private double repulsionForce;
 	private double gravityForce;
+	private double totalDisplacement;
 	
 	public ChiLATCell(Object value, mxGeometry geometry, String style)
 	{
@@ -43,11 +44,6 @@ public class ChiLATCell extends mxCell
 		this.springForceVector = new Vector2D(0, 0);
 		this.repulsionForceVector = new Vector2D(0, 0);
 		this.gravityForceVector = new Vector2D(0, 0);
-		
-		this.totalForce = 0;
-		this.springForce = 0;
-		this.repulsionForce = 0;
-		this.gravityForce = 0;
 	}
 	
 	//Getter and Setters
@@ -113,6 +109,10 @@ public class ChiLATCell extends mxCell
 	public Vector2D getGravityForceVector() {
 		return gravityForceVector;
 	}
+	
+	public double getTotalDisplacement() {
+		return totalDisplacement;
+	}
 
 	public void setTotalForce(double totalForce) {
 		this.totalForce = totalForce;
@@ -142,6 +142,10 @@ public class ChiLATCell extends mxCell
 
 	public void setGravityForceVector(Vector2D gravityForceVector) {
 		this.gravityForceVector = gravityForceVector;
+	}
+
+	public void setTotalDisplacement(double totalDisplacement) {
+		this.totalDisplacement = totalDisplacement;
 	}
 
 }

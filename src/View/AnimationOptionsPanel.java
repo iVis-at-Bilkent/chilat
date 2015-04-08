@@ -96,8 +96,6 @@ public class AnimationOptionsPanel extends JPanel
 		realTimeAnimationPanel.add(simulationTimeStepPanel);
 		realTimeAnimationPanel.setAlignmentX(LEFT_ALIGNMENT);
 		
-
-		
 		//
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.add(duringAnimationOptionsPanel);
