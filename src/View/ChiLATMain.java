@@ -146,8 +146,8 @@ public class ChiLATMain extends JFrame implements ActionListener
 						
 		};
 		
-		final ForceVisualizationPopUpWindow	fVis = new ForceVisualizationPopUpWindow(0,0);
-		fVis.setVisible(false);
+		/*final ForceVisualizationPopUpWindow	fVis = new ForceVisualizationPopUpWindow(0,0);
+		fVis.setVisible(false);*/
 		
 		graphComponent.getGraphControl().addMouseListener(new MouseAdapter() 
 		{
@@ -156,26 +156,9 @@ public class ChiLATMain extends JFrame implements ActionListener
 			{
 				mxCell cell = (mxCell) graphComponent.getCellAt(e.getX(), e.getY());
 
-				if (isForceDetailsVisible) 
+				if (cell != null && cell.isVertex()) 
 				{
-					mxCellState state = graphComponent.getGraph().getView().getState(cell);
-					String label = graph.getLabel(cell);
-					
-					if (cell != null && cell.isVertex()) 
-					{
-						
-						graphComponent.getGraphControl().add(fVis);
-						fVis.setLocation((int)(state.getX()+state.getWidth() + 5), (int)state.getY());
-						fVis.setSelectedCell((ChiLATCell) cell);
-						fVis.setVisible(true);
-						fVis.setBorder(new TitledBorder(label));
-					}
-					else
-					{
-						fVis.setVisible(false);
-						graphComponent.getGraphControl().remove(fVis);
-					}
-					
+					AnimationControlsPane.getInstance().changeSelectedNodeForForceInspector((ChiLATCell) cell);
 				}
 				
 				//Highlight neighbouring edges during animation
@@ -236,7 +219,7 @@ public class ChiLATMain extends JFrame implements ActionListener
 		this.setVisible(true);
 		this.loadGraph(this.getClass().getResource("/SampleGraphs/badlayout2c.graphml").getPath());
 		
-		animationPanelSplitPane.setDividerLocation(0.8);
+		animationPanelSplitPane.setDividerLocation(0.739);
 		verticalSplitPane.setDividerLocation(0.6);
 		overViewWindowSplitPane.setDividerLocation(0.21);
 	}
@@ -500,6 +483,7 @@ public class ChiLATMain extends JFrame implements ActionListener
 			ChiLATCell.MAX_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getY();
 			
 			AnimationControlsPane.getInstance().updateAnimationTimeLine(animationTotalTime);
+			AnimationControlsPane.getInstance().updateForceInspector();
 									
 			this.graph.refresh();
 			this.graphComponent.refresh();
