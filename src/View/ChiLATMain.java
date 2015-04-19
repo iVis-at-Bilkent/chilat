@@ -154,9 +154,10 @@ public class ChiLATMain extends JFrame implements ActionListener
 			@Override      
 			public void mousePressed(MouseEvent e) 
 			{
+				mxCell cell = (mxCell) graphComponent.getCellAt(e.getX(), e.getY());
+
 				if (isForceDetailsVisible) 
 				{
-					mxCell cell = (mxCell) graphComponent.getCellAt(e.getX(), e.getY());
 					mxCellState state = graphComponent.getGraph().getView().getState(cell);
 					String label = graph.getLabel(cell);
 					
@@ -174,8 +175,25 @@ public class ChiLATMain extends JFrame implements ActionListener
 						fVis.setVisible(false);
 						graphComponent.getGraphControl().remove(fVis);
 					}
+					
 				}
-
+				
+				//Highlight neighbouring edges during animation
+				if (isAnimationRunning && cell != null && cell.isVertex()) 
+				{
+					
+					//Select neighboring edges also along with the selected node
+					mxCell [] cellsToBeSelected = new mxCell[cell.getEdgeCount()+1];
+					
+					for (int i = 0; i < cell.getEdgeCount(); i++)
+					{
+						cellsToBeSelected[i] = (mxCell) cell.getEdgeAt(i);
+					}
+					//Lastly add selected node to  array
+					cellsToBeSelected[cell.getEdgeCount()] = cell;
+					
+					graphComponent.selectCellsForEvent(cellsToBeSelected, e);
+				}
 			}
 		});
 		

@@ -58,7 +58,6 @@ public class AnimationControlsPane extends JPanel implements ChangeListener
 		layoutAnimationButtonsPanel.add(Box.createHorizontalGlue());
 		
 		JPanel performLayoutPanel = new JPanel();
-		//performLayoutPanel.setBorder(new TitledBorder(""));
 		performLayoutPanel.setLayout(new BoxLayout(performLayoutPanel, BoxLayout.Y_AXIS));
 		JButton performLayoutButton = new JButton(new EditorActions.PerformLayoutAction());
 		performLayoutButton.setText("Perform Layout");

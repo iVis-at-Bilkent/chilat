@@ -37,16 +37,15 @@ public class AnimationOptionsPanel extends JPanel
 		super();
 		
 		//
-		JPanel animationPanel = new JPanel();
+		/*JPanel animationPanel = new JPanel();
 		animationPanel.setLayout(new BoxLayout(animationPanel, BoxLayout.Y_AXIS));
 		animationPanel.setBorder(new TitledBorder("Animation"));
-		JCheckBox animationDuringLayoutCheckBox = new JCheckBox(new EditorActions.AnimateOnLayoutCheckBoxAction());		
-
 		
-		animationDuringLayoutCheckBox.setText("Animation During Layout");
 		animationPanel.add(animationDuringLayoutCheckBox);
 		animationPanel.add(Box.createHorizontalGlue());
-		animationPanel.setAlignmentX(LEFT_ALIGNMENT);
+		animationPanel.setAlignmentX(LEFT_ALIGNMENT);*/
+		
+
 		
 		//
 		JPanel duringAnimationOptionsPanel = new JPanel();
@@ -56,6 +55,9 @@ public class AnimationOptionsPanel extends JPanel
 		forceDetailsVisibleCheckbox.setText("Force Details Visible");
 		JCheckBox zoomToFitCheckbox = new JCheckBox(new EditorActions.AutoZoomToFitCheckboxAction());
 		zoomToFitCheckbox.setText("Zoom to Fit During Layout");
+		JCheckBox animationDuringLayoutCheckBox = new JCheckBox(new EditorActions.AnimateOnLayoutCheckBoxAction());		
+		animationDuringLayoutCheckBox.setText("Animate");
+		duringAnimationOptionsPanel.add(animationDuringLayoutCheckBox);
 		duringAnimationOptionsPanel.add(forceDetailsVisibleCheckbox);
 		duringAnimationOptionsPanel.add(zoomToFitCheckbox);
 		duringAnimationOptionsPanel.add(Box.createHorizontalGlue());
@@ -99,7 +101,6 @@ public class AnimationOptionsPanel extends JPanel
 		//
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.add(duringAnimationOptionsPanel);
-		this.add(animationPanel);
 		this.add(animationTypePanel);
 		this.add(keyFrameAnimationOptionsPanel);
 		this.add(realTimeAnimationPanel);
