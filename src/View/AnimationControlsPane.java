@@ -12,6 +12,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.mxgraph.model.ChiLATCell;
+
 import Controller.EditorActions;
 
 @SuppressWarnings("serial")
@@ -21,6 +23,7 @@ public class AnimationControlsPane extends JPanel implements ChangeListener
 	private CircularAnimationControlButton stopButton, forwardButton, rewindButton;
 	private PlayPauseButton playPauseButton;
 	private JSlider animationTimeLine;
+	private ForceVisualizationPopUpWindow fVis;
 	private static AnimationControlsPane singletonInstance;
 	
 	public static AnimationControlsPane getInstance()
@@ -70,9 +73,23 @@ public class AnimationControlsPane extends JPanel implements ChangeListener
 		animationControlsPanel.add(animationTimeLine);
 		animationControlsPanel.add(layoutAnimationButtonsPanel);
 		animationControlsPanel.add(performLayoutPanel);
+		
+		//
+		this.fVis = new ForceVisualizationPopUpWindow(new ChiLATCell(null, null, null));
 
 		this.add(animationControlsPanel);
+		this.add(fVis);
 		this.setAlignmentX(LEFT_ALIGNMENT);
+	}
+	
+	public void changeSelectedNodeForForceInspector(ChiLATCell selectedCell)
+	{
+		this.fVis.updateContents(selectedCell);
+	}
+	
+	public void updateForceInspector()
+	{
+		this.fVis.repaint();
 	}
 	
 	public void updateGUIAnimationEnd()
