@@ -87,14 +87,26 @@ public class ForceVisualizationPopUpWindow extends JPanel
         }
         public void updateContents() 
         {
-                DecimalFormat formatter = new DecimalFormat("0.#");
-                this.totalForceLabel.setText(""+formatter.format(this.selectedCell.getTotalForce()));
-                this.repulsionForceLabel.setText(""+formatter.format(this.selectedCell.getRepulsionForce()));
-                this.springForceLabel.setText("" + formatter.format(this.selectedCell.getSpringForce()));
-                this.gravityForceLabel.setText("" + formatter.format(this.selectedCell.getGravityForce()));
-                this.displacementLabel.setText("" + formatter.format(this.selectedCell.getTotalDisplacement()));
+                
+                this.totalForceLabel.setText(""+this.formatForceValue(this.selectedCell.getTotalForce()));
+                this.repulsionForceLabel.setText(""+this.formatForceValue(this.selectedCell.getRepulsionForce()));
+                this.springForceLabel.setText("" + this.formatForceValue(this.selectedCell.getSpringForce()));
+                this.gravityForceLabel.setText("" + this.formatForceValue(this.selectedCell.getGravityForce()));
+                this.displacementLabel.setText("" + this.formatForceValue(this.selectedCell.getTotalDisplacement()));
                 this.circlePanel.updateContents(this.selectedCell);
                 this.revalidate();
+        }
+        
+        public String formatForceValue(double forceValue)
+        {
+        	DecimalFormat formatter = new DecimalFormat("0.0");
+    
+        	if (forceValue == 0) 
+        	{
+				return "-";
+			}
+        	
+        	return formatter.format(forceValue);
         }
         
         @Override
@@ -123,7 +135,7 @@ public class ForceVisualizationPopUpWindow extends JPanel
                 labelPanel.add(createLabelPanel("Gravity Force:", gravityForceLabel, false));
                 labelPanel.add(createLabelPanel("Total Force:", totalForceLabel, true));
                 labelPanel.add(Box.createRigidArea(new Dimension(0,5)));
-                labelPanel.add(createLabelPanel("Total Displacement: ", displacementLabel, false));
+                labelPanel.add(createLabelPanel("Total Displacement: ", displacementLabel, true));
                 
                 labelPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
