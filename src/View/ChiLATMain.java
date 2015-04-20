@@ -130,6 +130,7 @@ public class ChiLATMain extends JFrame implements ActionListener
 		this.graph.setCellsDisconnectable(false);
 		this.graph.setLabelsVisible(true);	
 		this.graph.setKeepEdgesInBackground(true);
+		this.graph.setSplitEnabled(false);
 		
 		mxStylesheet styleSheet = this.graph.getStylesheet();
 		styleSheet.putCellStyle("CompoundStyle", compoundNodeStyle);
@@ -219,7 +220,7 @@ public class ChiLATMain extends JFrame implements ActionListener
 		this.setVisible(true);
 		this.loadGraph(this.getClass().getResource("/SampleGraphs/badlayout2c.graphml").getPath());
 		
-		animationPanelSplitPane.setDividerLocation(0.739);
+		animationPanelSplitPane.setDividerLocation(0.82);
 		verticalSplitPane.setDividerLocation(0.6);
 		overViewWindowSplitPane.setDividerLocation(0.21);
 	}

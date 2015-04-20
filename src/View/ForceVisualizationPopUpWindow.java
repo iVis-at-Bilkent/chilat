@@ -34,7 +34,7 @@ import com.mxgraph.model.mxCell;
 public class ForceVisualizationPopUpWindow extends JPanel 
 {
 	final int W = 0;
-	final int H = 275;
+	final int H = 0;
 	final int CIRCLE_RADIUS = 60;
 	final int ARROW_HEIGHT = 5;
 	final int ARROW_WIDTH = 2;
@@ -71,7 +71,7 @@ public class ForceVisualizationPopUpWindow extends JPanel
 		this.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		mainContainerPanel = new JPanel();
-		mainContainerPanel.setLayout(new BoxLayout(mainContainerPanel, BoxLayout.Y_AXIS));
+		mainContainerPanel.setLayout(new BoxLayout(mainContainerPanel, BoxLayout.X_AXIS));
 		mainContainerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		mainContainerPanel.add(labelsPanel);
