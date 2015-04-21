@@ -57,10 +57,13 @@ public class AnimationOptionsPanel extends JPanel
 		zoomToFitCheckbox.setText("Zoom to Fit During Layout");
 		JCheckBox animationDuringLayoutCheckBox = new JCheckBox(new EditorActions.AnimateOnLayoutCheckBoxAction());		
 		animationDuringLayoutCheckBox.setText("Animate");
+		JCheckBox showActualDisplacement = new JCheckBox(new EditorActions.ShowActualDisplacementCheckboxAction());
+		showActualDisplacement.setText("Show Actual Displacement");
 		duringAnimationOptionsPanel.add(animationDuringLayoutCheckBox);
 		duringAnimationOptionsPanel.add(forceDetailsVisibleCheckbox);
 		duringAnimationOptionsPanel.add(zoomToFitCheckbox);
 		duringAnimationOptionsPanel.add(Box.createHorizontalGlue());
+		duringAnimationOptionsPanel.add(showActualDisplacement);
 		duringAnimationOptionsPanel.setAlignmentX(LEFT_ALIGNMENT);
 
 		

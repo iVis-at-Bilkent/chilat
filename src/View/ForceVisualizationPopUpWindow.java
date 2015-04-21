@@ -182,7 +182,7 @@ public class ForceVisualizationPopUpWindow extends JPanel
 
 		ForceVisualizationCirclePanel(ChiLATCell selectedCell) 
 		{
-			this.setPreferredSize(new Dimension(200, 200));
+			this.setPreferredSize(new Dimension(0, 200));
 			this.setAlignmentX(Component.LEFT_ALIGNMENT);
 			this.selectedCell = selectedCell;
 		}

@@ -394,6 +394,24 @@ public class EditorActions
 	}
 	
 	@SuppressWarnings("serial")
+	public static class ShowActualDisplacementCheckboxAction extends AbstractAction
+	{
+		public ShowActualDisplacementCheckboxAction()
+		{
+			this.putValue(Action.SHORT_DESCRIPTION, "Visualize Actual Displacement");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			JCheckBox checkbox = (JCheckBox) e.getSource();
+			ChiLATMain.getInstance().setShowActualDisplacement(checkbox.isSelected());
+		}
+	}
+	
+	@SuppressWarnings("serial")
 	public static class ZoomAction extends AbstractAction
 	{
 		public static int ZOOM_IN = 0;
