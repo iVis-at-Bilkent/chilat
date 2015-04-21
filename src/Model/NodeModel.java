@@ -107,7 +107,11 @@ public class NodeModel extends BaseModel implements Updatable
         Vector2D gravityForceVector = new Vector2D(lNode.gravitationForceX, lNode.gravitationForceY);
         Vector2D totalDisplacementVector = new Vector2D(lNode.displacementX, lNode.displacementY);
         
-        RectangleD nodeGeometry = new RectangleD(lNode.getRect().getX(), lNode.getRect().getY(), lNode.getRect().getWidth(), lNode.getRect().getHeight());
+        RectangleD nodeGeometry = new RectangleD(lNode.getRect().getX(), 
+        		lNode.getRect().getY(), 
+        		lNode.getRect().getWidth(), 
+        		lNode.getRect().getHeight());
+        
         this.animationStates.add(new KeyFrameNodeState(nodeGeometry, 
         		springForceVector,
         		repulsionForceVector,

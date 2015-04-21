@@ -24,6 +24,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 
+import org.ivis.layout.cose.CoSEConstants;
 import org.ivis.util.RectangleD;
 
 import Controller.CoSELayoutManager;
@@ -475,13 +476,27 @@ public class ChiLATMain extends JFrame implements ActionListener
 			}
 				
 			
-			Vector2D minMaxTotalForceForThisKeyFrame = this.layoutManager.getMinMaxTotalForceForKeyFrame(currentKeyFrameNumber);
-			Vector2D minMaxAllOtherForces = this.layoutManager.getMinMaxOtherForceForKeyFrame(currentKeyFrameNumber);
-			
-			ChiLATCell.MIN_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame.getX();
-			ChiLATCell.MAX_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame.getY();
-			ChiLATCell.MIN_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getX();
-			ChiLATCell.MAX_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getY();
+	
+			if (isShowActualDisplacement) 
+			{
+				Vector2D minMaxAllOtherForces = this.layoutManager.getMinMaxOtherForceForKeyFrame(currentKeyFrameNumber);
+				
+				ChiLATCell.MIN_TOTAL_FORCE = 0;
+				ChiLATCell.MAX_TOTAL_FORCE = CoSEConstants.MAX_NODE_DISPLACEMENT;
+				
+				ChiLATCell.MIN_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getX();
+				ChiLATCell.MAX_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getY();
+			}
+			else
+			{
+				Vector2D minMaxTotalForceForThisKeyFrame = this.layoutManager.getMinMaxTotalForceForKeyFrame(currentKeyFrameNumber);
+				Vector2D minMaxAllOtherForces = this.layoutManager.getMinMaxOtherForceForKeyFrame(currentKeyFrameNumber);
+				
+				ChiLATCell.MIN_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame.getX();
+				ChiLATCell.MAX_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame.getY();
+				ChiLATCell.MIN_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getX();
+				ChiLATCell.MAX_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getY();
+			}
 			
 			AnimationControlsPane.getInstance().updateAnimationTimeLine(animationTotalTime);
 			AnimationControlsPane.getInstance().updateForceInspector();
@@ -682,6 +697,16 @@ public class ChiLATMain extends JFrame implements ActionListener
 		}
 	}
 	
+	public boolean isShowActualDisplacement() {
+		return isShowActualDisplacement;
+	}
+
+	public void setShowActualDisplacement(boolean isShowActualDisplacement) 
+	{
+		this.isShowActualDisplacement = isShowActualDisplacement;
+		ChiLATCell.IS_SHOW_ACTUAL_DISPLACEMENT = this.isShowActualDisplacement;
+	}
+
 	public class OpenButtonListener implements ActionListener
 	{
 		ChiLATMain animationToolMain;

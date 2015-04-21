@@ -22,7 +22,7 @@ public class ChiLATCell extends mxCell
 	public static double MAX_OF_ALL_OTHER_FORCES = 0;
 	
 	public static boolean IS_FORCE_DETAILS_VISIBLE = false;
-	
+	public static boolean IS_SHOW_ACTUAL_DISPLACEMENT = false;
 
 
 	private Vector2D totalForceVector;
@@ -49,7 +49,12 @@ public class ChiLATCell extends mxCell
 	//Getter and Setters
 	public double getNormalizedTotalForce()
 	{
-		return 	getNormalizedForce(this.totalForce, MIN_TOTAL_FORCE, MAX_TOTAL_FORCE);
+		if (IS_FORCE_DETAILS_VISIBLE) 
+		{
+			return 	getNormalizedForce(this.totalDisplacement, MIN_TOTAL_FORCE, MAX_TOTAL_FORCE);
+		}
+		else
+			return 	getNormalizedForce(this.totalForce, MIN_TOTAL_FORCE, MAX_TOTAL_FORCE);
 	}
 	
 	public double getNormalizedSpringForce()
