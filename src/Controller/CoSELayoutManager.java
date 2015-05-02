@@ -40,7 +40,8 @@ public class CoSELayoutManager
 	
 	//Index for maximum and minimum values of total force and other forces
 	private int TOTAL_FORCE_INDEX = 0;
-	private int OTHER_FORCE_INDEX = 1;
+	private int TOTAL_DISPLACEMENT_INDEX = 1;
+	private int OTHER_FORCE_INDEX = 2;
 
 	
 	public CoSELayoutManager()
@@ -152,6 +153,11 @@ public class CoSELayoutManager
 		return this.minMaxTotalForceList.get(keyFrameIndex)[TOTAL_FORCE_INDEX];
 	}
 	
+	public Vector2D getMinMaxTotalDisplacementForKeyFrame(int keyFrameIndex)
+	{
+		return this.minMaxTotalForceList.get(keyFrameIndex)[TOTAL_DISPLACEMENT_INDEX];
+	}
+	
 	public Vector2D getMinMaxOtherForceForKeyFrame(int keyFrameIndex)
 	{
 		return this.minMaxTotalForceList.get(keyFrameIndex)[OTHER_FORCE_INDEX];
@@ -228,14 +234,15 @@ public class CoSELayoutManager
 	{
 		for (int i = 0; i < this.getTotalKeyFrameCount(); i++) 
 		{
-			Vector2D [] minMax = new Vector2D[2];
-			minMax[TOTAL_FORCE_INDEX] = getMinMaxTotalForceValues(i);
-			minMax[OTHER_FORCE_INDEX] = getMinMaxOtherForces(i);
+			Vector2D [] minMax = new Vector2D[3];
+			minMax[TOTAL_FORCE_INDEX] = calculateMinMaxTotalForceValues(i);
+			minMax[TOTAL_DISPLACEMENT_INDEX] = calculateMinMaxTotalDisplacementValues(i);
+			minMax[OTHER_FORCE_INDEX] = calculateMinMaxOtherForces(i);
 			this.minMaxTotalForceList.add(minMax);
 		}
 	}
 	
-	public Vector2D getMinMaxTotalForceValues(int keyFrameIndex)
+	public Vector2D calculateMinMaxTotalForceValues(int keyFrameIndex)
 	{
 		//x attribute is minimum, y attribute is maximum
 		Vector2D minMax = new Vector2D(Integer.MAX_VALUE, Integer.MIN_VALUE);
@@ -259,7 +266,31 @@ public class CoSELayoutManager
 		return minMax;
 	}
 	
-	public Vector2D getMinMaxOtherForces(int keyFrameIndex)
+	public Vector2D calculateMinMaxTotalDisplacementValues(int keyFrameIndex)
+	{
+		//x attribute is minimum, y attribute is maximum
+		Vector2D minMax = new Vector2D(Integer.MAX_VALUE, Integer.MIN_VALUE);
+		
+		for (String key : this.l_To_v_Map.keySet()) 
+		{
+			KeyFrameNodeState tmpState = this.l_To_v_Map.get(key).getAnimationStates().get(keyFrameIndex);
+			
+			//Maximum
+			if (minMax.getY() < tmpState.getTotalDisplacementVector().length()) 
+			{
+				minMax.setY(tmpState.getTotalDisplacementVector().length());
+			}
+			
+			//Minimum
+			if (minMax.getX() > tmpState.getTotalDisplacementVector().length()) 
+			{
+				minMax.setX(tmpState.getTotalDisplacementVector().length());
+			}
+		}
+		return minMax;
+	}
+	
+	public Vector2D calculateMinMaxOtherForces(int keyFrameIndex)
 	{
 		//x attribute is minimum, y attribute is maximum
 		Vector2D minMax = new Vector2D(Integer.MAX_VALUE, Integer.MIN_VALUE);
