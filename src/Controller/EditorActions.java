@@ -412,6 +412,24 @@ public class EditorActions
 	}
 	
 	@SuppressWarnings("serial")
+	public static class NormalizeValuesCheckboxAction extends AbstractAction
+	{
+		public NormalizeValuesCheckboxAction()
+		{
+			this.putValue(Action.SHORT_DESCRIPTION, "Normalize Visualized Total Force or Displacement");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			JCheckBox checkbox = (JCheckBox) e.getSource();
+			ChiLATMain.getInstance().setShowNormalizedValues(checkbox.isSelected());
+		}
+	}
+	
+	@SuppressWarnings("serial")
 	public static class ZoomAction extends AbstractAction
 	{
 		public static int ZOOM_IN = 0;

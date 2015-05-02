@@ -84,6 +84,7 @@ public class ChiLATMain extends JFrame implements ActionListener
 	private boolean isForceDetailsVisible; 
 	private boolean isAutoFitDuringLayout; 
 	private boolean isShowActualDisplacement;
+	private boolean isShowNormalizedValues;
 
 	private Timer timer;
 	
@@ -477,25 +478,29 @@ public class ChiLATMain extends JFrame implements ActionListener
 				
 			
 	
+			Vector2D minMaxVisualizedVector;
+			Vector2D minMaxAllOtherForces = this.layoutManager.getMinMaxOtherForceForKeyFrame(currentKeyFrameNumber);
+			ChiLATCell.MIN_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getX();
+			ChiLATCell.MAX_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getY();
+			
 			if (isShowActualDisplacement) 
 			{
-				Vector2D minMaxAllOtherForces = this.layoutManager.getMinMaxOtherForceForKeyFrame(currentKeyFrameNumber);
-				
-				ChiLATCell.MIN_TOTAL_FORCE = 0;
-				ChiLATCell.MAX_TOTAL_FORCE = CoSEConstants.MAX_NODE_DISPLACEMENT;
-				
-				ChiLATCell.MIN_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getX();
-				ChiLATCell.MAX_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getY();
+				minMaxVisualizedVector = this.layoutManager.getMinMaxTotalDisplacementForKeyFrame(currentKeyFrameNumber);
 			}
 			else
 			{
-				Vector2D minMaxTotalForceForThisKeyFrame = this.layoutManager.getMinMaxTotalForceForKeyFrame(currentKeyFrameNumber);
-				Vector2D minMaxAllOtherForces = this.layoutManager.getMinMaxOtherForceForKeyFrame(currentKeyFrameNumber);
-				
-				ChiLATCell.MIN_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame.getX();
-				ChiLATCell.MAX_TOTAL_FORCE = minMaxTotalForceForThisKeyFrame.getY();
-				ChiLATCell.MIN_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getX();
-				ChiLATCell.MAX_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getY();
+				minMaxVisualizedVector = this.layoutManager.getMinMaxTotalForceForKeyFrame(currentKeyFrameNumber);
+			}
+			
+			if (isShowNormalizedValues) 
+			{
+				ChiLATCell.MIN_TOTAL_FORCE = minMaxVisualizedVector.getX();
+				ChiLATCell.MAX_TOTAL_FORCE = minMaxVisualizedVector.getY();
+			}
+			else
+			{
+				ChiLATCell.MIN_TOTAL_FORCE = 0;
+				ChiLATCell.MAX_TOTAL_FORCE = CoSEConstants.MAX_NODE_DISPLACEMENT;
 			}
 			
 			AnimationControlsPane.getInstance().updateAnimationTimeLine(animationTotalTime);
@@ -705,6 +710,14 @@ public class ChiLATMain extends JFrame implements ActionListener
 	{
 		this.isShowActualDisplacement = isShowActualDisplacement;
 		ChiLATCell.IS_SHOW_ACTUAL_DISPLACEMENT = this.isShowActualDisplacement;
+	}
+	
+	public boolean isShowNormalizedValues() {
+		return isShowNormalizedValues;
+	}
+
+	public void setShowNormalizedValues(boolean isShowNormalizedValues) {
+		this.isShowNormalizedValues = isShowNormalizedValues;
 	}
 
 	public class OpenButtonListener implements ActionListener

@@ -37,17 +37,6 @@ public class AnimationOptionsPanel extends JPanel
 		super();
 		
 		//
-		/*JPanel animationPanel = new JPanel();
-		animationPanel.setLayout(new BoxLayout(animationPanel, BoxLayout.Y_AXIS));
-		animationPanel.setBorder(new TitledBorder("Animation"));
-		
-		animationPanel.add(animationDuringLayoutCheckBox);
-		animationPanel.add(Box.createHorizontalGlue());
-		animationPanel.setAlignmentX(LEFT_ALIGNMENT);*/
-		
-
-		
-		//
 		JPanel duringAnimationOptionsPanel = new JPanel();
 		duringAnimationOptionsPanel.setLayout(new BoxLayout(duringAnimationOptionsPanel, BoxLayout.Y_AXIS));
 		duringAnimationOptionsPanel.setBorder(new TitledBorder("During Layout"));
@@ -59,11 +48,14 @@ public class AnimationOptionsPanel extends JPanel
 		animationDuringLayoutCheckBox.setText("Animate");
 		JCheckBox showActualDisplacement = new JCheckBox(new EditorActions.ShowActualDisplacementCheckboxAction());
 		showActualDisplacement.setText("Show Actual Displacement");
+		JCheckBox normalizeValuesCheckbox = new JCheckBox(new EditorActions.NormalizeValuesCheckboxAction());
+		normalizeValuesCheckbox.setText("Normalize Values to Show");
 		duringAnimationOptionsPanel.add(animationDuringLayoutCheckBox);
 		duringAnimationOptionsPanel.add(forceDetailsVisibleCheckbox);
 		duringAnimationOptionsPanel.add(zoomToFitCheckbox);
-		duringAnimationOptionsPanel.add(Box.createHorizontalGlue());
 		duringAnimationOptionsPanel.add(showActualDisplacement);
+		duringAnimationOptionsPanel.add(normalizeValuesCheckbox);
+		duringAnimationOptionsPanel.add(Box.createHorizontalGlue());
 		duringAnimationOptionsPanel.setAlignmentX(LEFT_ALIGNMENT);
 
 		
