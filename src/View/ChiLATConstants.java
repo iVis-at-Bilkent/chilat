@@ -19,4 +19,11 @@ public class ChiLATConstants
 		DEFAULT,
 		POOR
 	};
+	
+	public static enum ZoomPolicyDuringLayout
+	{
+		ZOOM_TO_FIT_DURING_LAYOUT,
+		ZOOM_TO_SELECTED_NODE_DURING_LAYOUT,
+		FREE_ZOOM_POLICY_DURING_LAYOUT
+	};
 }

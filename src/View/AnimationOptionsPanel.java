@@ -42,21 +42,51 @@ public class AnimationOptionsPanel extends JPanel
 		duringAnimationOptionsPanel.setBorder(new TitledBorder("During Layout"));
 		JCheckBox forceDetailsVisibleCheckbox = new JCheckBox(new EditorActions.ForceDetailsVisibleChecboxAction());
 		forceDetailsVisibleCheckbox.setText("Force Details Visible");
-		JCheckBox zoomToFitCheckbox = new JCheckBox(new EditorActions.AutoZoomToFitCheckboxAction());
-		zoomToFitCheckbox.setText("Zoom to Fit During Layout");
 		JCheckBox animationDuringLayoutCheckBox = new JCheckBox(new EditorActions.AnimateOnLayoutCheckBoxAction());		
 		animationDuringLayoutCheckBox.setText("Animate");
 		JCheckBox showActualDisplacement = new JCheckBox(new EditorActions.ShowActualDisplacementCheckboxAction());
 		showActualDisplacement.setText("Show Actual Displacement");
 		JCheckBox normalizeValuesCheckbox = new JCheckBox(new EditorActions.NormalizeValuesCheckboxAction());
 		normalizeValuesCheckbox.setText("Normalize Values to Show");
+		
+		
+		//Zoom policy panel
+		JPanel zoomPolicyPanel = new JPanel();
+		zoomPolicyPanel.setLayout(new BoxLayout(zoomPolicyPanel, BoxLayout.Y_AXIS));
+		zoomPolicyPanel.setBorder(new TitledBorder("Zoom Policy"));
+		
+		ButtonGroup zoomPolicyButtonGroup = new ButtonGroup();
+		JRadioButton zoomToFitDuringLayoutRadioButton = 
+				new JRadioButton(new EditorActions.ZoomToFitDuringLayoutRadioButtonAction());
+		zoomToFitDuringLayoutRadioButton.setText("Zoom to Fit During Layout");
+		
+		JRadioButton zoomToSelectedNodeRadioButton = 
+				new JRadioButton(new EditorActions.ZoomToSelectedNodeDuringLayoutRadioButtonAction());
+		zoomToSelectedNodeRadioButton.setText("Zoom to Selected Node");
+		
+		JRadioButton freeZoomPolicyRadioButton = 
+				new JRadioButton(new EditorActions.FreeZoomPolicyDuringLayoutRadioButtonAction());
+		freeZoomPolicyRadioButton.setText("Free Zoom Policy");
+		
+		zoomPolicyButtonGroup.add(zoomToFitDuringLayoutRadioButton);
+		zoomPolicyButtonGroup.add(zoomToSelectedNodeRadioButton);
+		zoomPolicyButtonGroup.add(freeZoomPolicyRadioButton);
+		
+		zoomPolicyPanel.add(zoomToFitDuringLayoutRadioButton);
+		zoomPolicyPanel.add(zoomToSelectedNodeRadioButton);
+		zoomPolicyPanel.add(freeZoomPolicyRadioButton);
+		zoomPolicyPanel.add(Box.createHorizontalGlue());
+
+		
 		duringAnimationOptionsPanel.add(animationDuringLayoutCheckBox);
 		duringAnimationOptionsPanel.add(forceDetailsVisibleCheckbox);
-		duringAnimationOptionsPanel.add(zoomToFitCheckbox);
 		duringAnimationOptionsPanel.add(showActualDisplacement);
 		duringAnimationOptionsPanel.add(normalizeValuesCheckbox);
+		duringAnimationOptionsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+		duringAnimationOptionsPanel.add(zoomPolicyPanel);
 		duringAnimationOptionsPanel.add(Box.createHorizontalGlue());
 		duringAnimationOptionsPanel.setAlignmentX(LEFT_ALIGNMENT);
+		
 
 		
 		//
