@@ -14,6 +14,7 @@ import org.ivis.layout.LayoutOptionsPack;
 
 import View.AnimationControlsPane;
 import View.ChiLATConstants.LayoutQualityParameterName;
+import View.ChiLATConstants.ZoomPolicyDuringLayout;
 import View.ChiLATMain;
 
 
@@ -277,9 +278,9 @@ public class EditorActions
 	}
 	
 	@SuppressWarnings("serial")
-	public static class AutoZoomToFitCheckboxAction extends AbstractAction
+	public static class ZoomToFitDuringLayoutRadioButtonAction extends AbstractAction
 	{		
-		public AutoZoomToFitCheckboxAction()
+		public ZoomToFitDuringLayoutRadioButtonAction()
 		{
 			//Initial icon and description
 			this.putValue(Action.SHORT_DESCRIPTION, "Automatically zoom to fit during layout");
@@ -290,8 +291,52 @@ public class EditorActions
 		 */
 		public void actionPerformed(ActionEvent e)
 		{
-			JCheckBox checkbox = (JCheckBox) e.getSource();
-			ChiLATMain.getInstance().setAutoFitDuringLayout(checkbox.isSelected());
+			JRadioButton radioButton = (JRadioButton) e.getSource();
+			if (radioButton.isSelected()) {
+				ChiLATMain.getInstance().setZoomPolicyDuringLayout(ZoomPolicyDuringLayout.ZOOM_TO_FIT_DURING_LAYOUT);	
+			}
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	public static class ZoomToSelectedNodeDuringLayoutRadioButtonAction extends AbstractAction
+	{		
+		public ZoomToSelectedNodeDuringLayoutRadioButtonAction()
+		{
+			//Initial icon and description
+			this.putValue(Action.SHORT_DESCRIPTION, "Automatically zoom to selected node and its close neighborhood");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			JRadioButton radioButton = (JRadioButton) e.getSource();
+			if (radioButton.isSelected()) {
+				ChiLATMain.getInstance().setZoomPolicyDuringLayout(ZoomPolicyDuringLayout.ZOOM_TO_SELECTED_NODE_DURING_LAYOUT);
+			}
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	public static class FreeZoomPolicyDuringLayoutRadioButtonAction extends AbstractAction
+	{		
+		public FreeZoomPolicyDuringLayoutRadioButtonAction()
+		{
+			//Initial icon and description
+			this.putValue(Action.SHORT_DESCRIPTION, "Free zoom policy");
+		}
+		
+		/**
+		 * 
+		 */
+		public void actionPerformed(ActionEvent e)
+		{
+			JRadioButton radioButton = (JRadioButton) e.getSource();
+			if (radioButton.isSelected()) {
+				ChiLATMain.getInstance().setZoomPolicyDuringLayout(ZoomPolicyDuringLayout.FREE_ZOOM_POLICY_DURING_LAYOUT);
+			}
 		}
 	}
 	
@@ -479,5 +524,4 @@ public class EditorActions
 			}
 		}
 	}
-	
 }

@@ -34,6 +34,7 @@ import Model.GraphMLParser;
 import Model.NodeModel;
 import Util.Vector2D;
 import View.ChiLATConstants.ForceTuningParameterName;
+import View.ChiLATConstants.ZoomPolicyDuringLayout;
 
 import com.mxgraph.model.ChiLATCell;
 import com.mxgraph.model.mxCell;
@@ -44,6 +45,7 @@ import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
 import com.mxgraph.swing.handler.mxRubberband;
 import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxRectangle;
 
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.view.mxCellState;
@@ -66,10 +68,11 @@ public class ChiLATMain extends JFrame implements ActionListener
 	private mxRubberband rubberBand;
 	private mxGraphOutline graphOutline;
 	
+	private mxCell selectedCell;
+	
 	private HashMap<String, ChiLATCell> idToViewNode;
 	private CoSELayoutManager layoutManager;
 	private GraphMLParser parser;
-	
 
 	//Animation specific consants
 	int currentKeyFrameNumber = 0;
@@ -82,9 +85,10 @@ public class ChiLATMain extends JFrame implements ActionListener
 	private boolean isAnimationRunning; 
 	
 	private boolean isForceDetailsVisible; 
-	private boolean isAutoFitDuringLayout; 
 	private boolean isShowActualDisplacement;
 	private boolean isShowNormalizedValues;
+	
+	private ZoomPolicyDuringLayout zoomPolicyDuringLayout; 
 
 	private Timer timer;
 	
@@ -162,12 +166,13 @@ public class ChiLATMain extends JFrame implements ActionListener
 				if (cell != null && cell.isVertex()) 
 				{
 					AnimationControlsPane.getInstance().changeSelectedNodeForForceInspector((ChiLATCell) cell);
+					selectedCell = cell;
+					zoomToSelectedNode();
 				}
 				
 				//Highlight neighbouring edges during animation
 				if (isAnimationRunning && cell != null && cell.isVertex()) 
-				{
-					
+				{	
 					//Select neighboring edges also along with the selected node
 					mxCell [] cellsToBeSelected = new mxCell[cell.getEdgeCount()+1];
 					
@@ -179,6 +184,7 @@ public class ChiLATMain extends JFrame implements ActionListener
 					cellsToBeSelected[cell.getEdgeCount()] = cell;
 					
 					graphComponent.selectCellsForEvent(cellsToBeSelected, e);
+					
 				}
 			}
 		});
@@ -381,6 +387,22 @@ public class ChiLATMain extends JFrame implements ActionListener
 		double actualHeight = this.graph.getGraphBounds().getHeight();
 		view.setScale(Math.min(viewWidth/actualWidth, viewHeight/actualHeight) * view.getScale()*0.95);
 	}
+	
+	public void zoomToSelectedNode()
+	{	
+		double viewWidth = graphComponent.getViewport().getWidth();
+		double viewHeight = graphComponent.getViewport().getHeight();
+		
+		double newScale = Math.min(viewWidth/100, viewHeight/100);
+		graphComponent.zoom(newScale);
+		
+		mxRectangle bounds = this.selectedCell.getGeometry();
+		this.graphComponent.getGraphControl().scrollRectToVisible(new Rectangle(
+				(int)(bounds.getX()*newScale), 
+				(int)(bounds.getY()*newScale),
+				(int)(100*newScale), 
+				(int)(100*newScale)));
+	}
 
 	public void animate() 
 	{	
@@ -529,10 +551,19 @@ public class ChiLATMain extends JFrame implements ActionListener
 				this.zoomToFit();
 			}*/
 		}
-		if (isAutoFitDuringLayout) {
-			this.zoomToFit();
+		
+		if (this.zoomPolicyDuringLayout != ZoomPolicyDuringLayout.FREE_ZOOM_POLICY_DURING_LAYOUT) 
+		{
+			if (this.zoomPolicyDuringLayout == ZoomPolicyDuringLayout.ZOOM_TO_FIT_DURING_LAYOUT) 
+			{
+				this.zoomToFit();
+			}
+			
+			/*if (this.zoomPolicyDuringLayout == ZoomPolicyDuringLayout.ZOOM_TO_SELECTED_NODE_DURING_LAYOUT) 
+			{
+				this.zoomToSelectedNode();
+			}*/
 		}
-	
 	}
 	
 	public boolean isAnimateOn() {
@@ -748,18 +779,20 @@ public class ChiLATMain extends JFrame implements ActionListener
 		return isForceDetailsVisible;
 	}
 
-	public boolean isAutoFitDuringLayout() {
-		return isAutoFitDuringLayout;
-	}
-
 	public void setForceDetailsVisible(boolean isForceDetailsVisible) {
 		this.isForceDetailsVisible = isForceDetailsVisible;
 		ChiLATCell.IS_FORCE_DETAILS_VISIBLE = isForceDetailsVisible;
 	}
-
-	public void setAutoFitDuringLayout(boolean isAutoFitDuringLayout) {
-		this.isAutoFitDuringLayout = isAutoFitDuringLayout;
+	
+	public ZoomPolicyDuringLayout getZoomPolicyDuringLayout() {
+		return zoomPolicyDuringLayout;
 	}
+
+	public void setZoomPolicyDuringLayout(
+			ZoomPolicyDuringLayout zoomPolicyDuringLayout) {
+		this.zoomPolicyDuringLayout = zoomPolicyDuringLayout;
+	}
+
 	
 }
 
