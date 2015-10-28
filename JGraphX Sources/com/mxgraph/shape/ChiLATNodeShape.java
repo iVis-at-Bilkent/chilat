@@ -9,6 +9,8 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 
+import javax.tools.ToolProvider;
+
 import Util.Vector2D;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;

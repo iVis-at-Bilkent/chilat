@@ -167,7 +167,7 @@ public class ChiLATMain extends JFrame implements ActionListener
 				{
 					AnimationControlsPane.getInstance().changeSelectedNodeForForceInspector((ChiLATCell) cell);
 					selectedCell = cell;
-					zoomToSelectedNode();
+					//zoomToSelectedNode();
 				}
 				
 				//Highlight neighbouring edges during animation
@@ -479,10 +479,10 @@ public class ChiLATMain extends JFrame implements ActionListener
 				nextGravityForceVector = nextGravityForceVector.normalize();	
 
 				//Linear interpolation between total force vectors
-				Vector2D newTotalForceVector = Vector2D.lerp(currentTotalForceVector, nextTotalForceVector, interpolatedFrameRemainder);
-				Vector2D newSpringForceVector = Vector2D.lerp(currentSpringForceVector, nextSpringForceVector, interpolatedFrameRemainder);
-				Vector2D newRepulsionForceVector = Vector2D.lerp(currentRepulsionForceVector, nextRepulsionForceVector, interpolatedFrameRemainder);
-				Vector2D newGravityForceVector = Vector2D.lerp(currentGravityForceVector, nextGravityForceVector, interpolatedFrameRemainder);
+				Vector2D newTotalForceVector = Vector2D.lerp(currentTotalForceVector, nextTotalForceVector, interpolatedFrameRemainder).normalize();
+				Vector2D newSpringForceVector = Vector2D.lerp(currentSpringForceVector, nextSpringForceVector, interpolatedFrameRemainder).normalize();
+				Vector2D newRepulsionForceVector = Vector2D.lerp(currentRepulsionForceVector, nextRepulsionForceVector, interpolatedFrameRemainder).normalize();
+				Vector2D newGravityForceVector = Vector2D.lerp(currentGravityForceVector, nextGravityForceVector, interpolatedFrameRemainder).normalize();
 				
 				//Finally set new geometry and new force vectors and their magnitudes
 				cell.setGeometry(new mxGeometry(newPositionVector.getX(), newPositionVector.getY(), newSizeVector.getX(), newSizeVector.getY()));
