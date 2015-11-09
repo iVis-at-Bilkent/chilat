@@ -447,57 +447,56 @@ public class ChiLATMain extends JFrame implements ActionListener
 						interpolatedFrameRemainder);
 				
 				//Fetch total force vectors for current key frame and next keyframe
-				Vector2D currentTotalForceVector = new Vector2D(this.layoutManager.getTotalForceVector(tmpKey, this.currentKeyFrameNumber));
-				Vector2D nextTotalForceVector = new Vector2D(this.layoutManager.getTotalForceVector(tmpKey, this.currentKeyFrameNumber+1));
-				
-				Vector2D currentRepulsionForceVector = new Vector2D(this.layoutManager.getRepulsionForceVector(tmpKey, this.currentKeyFrameNumber));
-				Vector2D nextRepulsionForceVector = new Vector2D(this.layoutManager.getRepulsionForceVector(tmpKey, this.currentKeyFrameNumber+1));
-				
-				Vector2D currentSpringForceVector = new Vector2D(this.layoutManager.getSpringForceVector(tmpKey, this.currentKeyFrameNumber));
-				Vector2D nextSpringForceVector = new Vector2D(this.layoutManager.getSpringForceVector(tmpKey, this.currentKeyFrameNumber+1));
-				
-				Vector2D currentGravityForceVector = new Vector2D(this.layoutManager.getGravityForceVector(tmpKey, this.currentKeyFrameNumber));
-				Vector2D nextGravityForceVector = new Vector2D(this.layoutManager.getGravityForceVector(tmpKey, this.currentKeyFrameNumber+1));
-				
-				Vector2D currentTotalDisplVector = new Vector2D(this.layoutManager.getDisplVector(tmpKey, this.currentKeyFrameNumber));
+				Vector2D nextTotalForceVector = new Vector2D(this.layoutManager.getTotalForceVector(tmpKey, this.currentKeyFrameNumber+1));				
+				Vector2D nextRepulsionForceVector = new Vector2D(this.layoutManager.getRepulsionForceVector(tmpKey, this.currentKeyFrameNumber+1));				
+				Vector2D nextSpringForceVector = new Vector2D(this.layoutManager.getSpringForceVector(tmpKey, this.currentKeyFrameNumber+1));				
+				Vector2D nextGravityForceVector = new Vector2D(this.layoutManager.getGravityForceVector(tmpKey, this.currentKeyFrameNumber+1));				
 				Vector2D nextTotalDisplVector = new Vector2D(this.layoutManager.getDisplVector(tmpKey, this.currentKeyFrameNumber+1));
 				
+				/*Vector2D currentTotalForceVector = new Vector2D(this.layoutManager.getTotalForceVector(tmpKey, this.currentKeyFrameNumber));
+				Vector2D currentRepulsionForceVector = new Vector2D(this.layoutManager.getRepulsionForceVector(tmpKey, this.currentKeyFrameNumber));
+				Vector2D currentSpringForceVector = new Vector2D(this.layoutManager.getSpringForceVector(tmpKey, this.currentKeyFrameNumber));
+				Vector2D currentGravityForceVector = new Vector2D(this.layoutManager.getGravityForceVector(tmpKey, this.currentKeyFrameNumber));
+				Vector2D currentTotalDisplVector = new Vector2D(this.layoutManager.getDisplVector(tmpKey, this.currentKeyFrameNumber));*/
+	
 				//Store magnitude of the force vectors
-				double currentTotalForce = currentTotalForceVector.length();
-				double currentRepulsionForce = currentRepulsionForceVector.length();
-				double currentSpringForce = currentSpringForceVector.length();
-				double currentGravityForce = currentGravityForceVector.length();
+				double nextTotalForce = nextTotalForceVector.length();
+				double nextRepulsionForce = nextRepulsionForceVector.length();
+				double nextSpringForce = nextSpringForceVector.length();
+				double nextGravityForce = nextGravityForceVector.length();
 				
 				//Normalize force vectors
-				currentTotalForceVector = currentTotalForceVector.normalize();
 				nextTotalForceVector = nextTotalForceVector.normalize();
-				currentRepulsionForceVector = currentRepulsionForceVector.normalize();
 				nextRepulsionForceVector = nextRepulsionForceVector.normalize();
-				currentSpringForceVector = currentSpringForceVector.normalize();
 				nextSpringForceVector = nextSpringForceVector.normalize();	
-				currentGravityForceVector = currentGravityForceVector.normalize();
 				nextGravityForceVector = nextGravityForceVector.normalize();	
+				
+				/*currentTotalForceVector = currentTotalForceVector.normalize();
+				currentRepulsionForceVector = currentRepulsionForceVector.normalize();
+				currentSpringForceVector = currentSpringForceVector.normalize();
+				currentGravityForceVector = currentGravityForceVector.normalize();*/
+
 
 				//Linear interpolation between total force vectors
-				Vector2D newTotalForceVector = Vector2D.lerp(currentTotalForceVector, nextTotalForceVector, interpolatedFrameRemainder).normalize();
+				// SEEMS NOT NECESSARY ! Because it becomes misleading
+				/*Vector2D newTotalForceVector = Vector2D.lerp(currentTotalForceVector, nextTotalForceVector, interpolatedFrameRemainder).normalize();
 				Vector2D newSpringForceVector = Vector2D.lerp(currentSpringForceVector, nextSpringForceVector, interpolatedFrameRemainder).normalize();
 				Vector2D newRepulsionForceVector = Vector2D.lerp(currentRepulsionForceVector, nextRepulsionForceVector, interpolatedFrameRemainder).normalize();
-				Vector2D newGravityForceVector = Vector2D.lerp(currentGravityForceVector, nextGravityForceVector, interpolatedFrameRemainder).normalize();
+				Vector2D newGravityForceVector = Vector2D.lerp(currentGravityForceVector, nextGravityForceVector, interpolatedFrameRemainder).normalize();*/
 				
 				//Finally set new geometry and new force vectors and their magnitudes
 				cell.setGeometry(new mxGeometry(newPositionVector.getX(), newPositionVector.getY(), newSizeVector.getX(), newSizeVector.getY()));
-				cell.setTotalForceVector(newTotalForceVector);
-				cell.setRepulsionForceVector(newRepulsionForceVector);
-				cell.setSpringForceVector(newSpringForceVector);
-				cell.setGravityForceVector(newGravityForceVector);
+				cell.setTotalForceVector(nextTotalForceVector);
+				cell.setRepulsionForceVector(nextRepulsionForceVector);
+				cell.setSpringForceVector(nextSpringForceVector);
+				cell.setGravityForceVector(nextGravityForceVector);
 				
-				cell.setTotalForce(currentTotalForce);
-				cell.setRepulsionForce(currentRepulsionForce);
-				cell.setSpringForce(currentSpringForce);
-				cell.setGravityForce(currentGravityForce);
-				cell.setTotalDisplacement(currentTotalDisplVector.length());
-			}
-				
+				cell.setTotalForce(nextTotalForce);
+				cell.setRepulsionForce(nextRepulsionForce);
+				cell.setSpringForce(nextSpringForce);
+				cell.setGravityForce(nextGravityForce);
+				cell.setTotalDisplacement(nextTotalDisplVector.length());
+			}				
 			
 	
 			Vector2D minMaxVisualizedVector;
