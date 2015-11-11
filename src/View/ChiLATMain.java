@@ -497,20 +497,19 @@ public class ChiLATMain extends JFrame implements ActionListener
 				cell.setGravityForce(nextGravityForce);
 				cell.setTotalDisplacement(nextTotalDisplVector.length());
 			}				
-			
 	
 			Vector2D minMaxVisualizedVector;
-			Vector2D minMaxAllOtherForces = this.layoutManager.getMinMaxOtherForceForKeyFrame(currentKeyFrameNumber);
+			Vector2D minMaxAllOtherForces = this.layoutManager.getMinMaxOtherForceForKeyFrame(currentKeyFrameNumber+1);
 			ChiLATCell.MIN_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getX();
 			ChiLATCell.MAX_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getY();
 			
 			if (isShowActualDisplacement) 
 			{
-				minMaxVisualizedVector = this.layoutManager.getMinMaxTotalDisplacementForKeyFrame(currentKeyFrameNumber);
+				minMaxVisualizedVector = this.layoutManager.getMinMaxTotalDisplacementForKeyFrame(currentKeyFrameNumber+1);
 			}
 			else
 			{
-				minMaxVisualizedVector = this.layoutManager.getMinMaxTotalForceForKeyFrame(currentKeyFrameNumber);
+				minMaxVisualizedVector = this.layoutManager.getMinMaxTotalForceForKeyFrame(currentKeyFrameNumber+1);
 			}
 			
 			if (isShowNormalizedValues) 

@@ -56,7 +56,6 @@ public class ForceVisualizationPopUpWindow extends JPanel
 	
 	private ChiLATCell selectedCell;
 
-	
 
 	public ForceVisualizationPopUpWindow(ChiLATCell selectedCell) 
 	{                
@@ -92,6 +91,9 @@ public class ForceVisualizationPopUpWindow extends JPanel
 		this.gravityForceLabel.setText("" + this.formatForceValue(this.selectedCell.getGravityForce()));
 		this.displacementLabel.setText("" + this.formatForceValue(this.selectedCell.getTotalDisplacement()));
 		this.circlePanel.updateContents(this.selectedCell);
+		
+		//System.out.println(this.selectedCell.getSpringForce() + " " + this.selectedCell.getRepulsionForce() + " " + this.selectedCell.getGravityForce());
+
 		
 		if (this.selectedCell.getValue()!= null) 
 		{
@@ -213,7 +215,7 @@ public class ForceVisualizationPopUpWindow extends JPanel
 			double springForceScale = selectedCell.getNormalizedSpringForce() * CIRCLE_RADIUS;
 			double repulsionForceScale = selectedCell.getNormalizedRepulsionForce() * CIRCLE_RADIUS;
 			double gravityForceScale = selectedCell.getNormalizedGravityForce() * CIRCLE_RADIUS;
-
+			
 			final float [] dash_line = {8.0f};
 			Stroke forceLineStroke = new BasicStroke(2.0f,BasicStroke.CAP_SQUARE,BasicStroke.JOIN_ROUND);
 

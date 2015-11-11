@@ -56,6 +56,8 @@ public class ChiLATNodeShape extends mxRectangleShape
 			Vector2D totalForceVector = cell.getTotalForceVector();
 			Vector2D topVertex = new Vector2D(totalForceVector);
 			
+			System.out.println("Total Force " + cell.getNormalizedTotalForce());
+			
 			//Translate the total force vector to the center of the node
 			Vector2D vertexB = topVertex.rotateVector(Math.PI/2);
 			vertexB = vertexB.scale(ChiLATCell.WIDTH_SCALE/2);
@@ -75,9 +77,15 @@ public class ChiLATNodeShape extends mxRectangleShape
 					
 			double fillEndX = fillStartX + (topVertex.getX()+x+w/2 - fillStartX) * normalizedForce;
 			double fillEndY = fillStartY + (topVertex.getY()+y+h/2 - fillStartY) * normalizedForce;
+			
+			double distanceBtwTwoEndPoints = Math.sqrt(Math.pow((fillEndX - fillStartX),2) + Math.pow((fillEndY - fillStartY),2));
+			
 			GradientPaint redtowhite;
-		
-			if (Math.floor(fillEndX) == fillStartX && Math.floor(fillEndY) == fillStartY)
+			
+			System.out.print("Start coordinates: " + (int)fillStartX + " " + (int)fillStartY + " ");
+			System.out.println("End coordinates: " + (int)fillEndX + " " + (int)fillEndY);
+
+			if (distanceBtwTwoEndPoints < 1)
 			{
 				redtowhite = new GradientPaint((float)fillStartX,(float)fillStartY,Color.WHITE,
 						(float)fillEndX,
