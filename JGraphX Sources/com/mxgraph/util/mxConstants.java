@@ -1043,6 +1043,11 @@ public class mxConstants
 	 * Chilay Animation Tool node shape
 	 */
 	public static final String SHAPE_CHILAT_NODE_SHAPE = "chilatNode";
+	
+	/**
+	 * Chilay Animation Tool node shape
+	 */
+	public static final String SHAPE_CHILAT_NODE_SHAPE2 = "chilatNode2";
 
 	/**
 	 * ARROW_CLASSIC

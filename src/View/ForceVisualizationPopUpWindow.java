@@ -85,10 +85,10 @@ public class ForceVisualizationPopUpWindow extends JPanel
 	public void updateContents(ChiLATCell selectedCell)
 	{
 		this.selectedCell = selectedCell;
-		this.totalForceLabel.setText(""+this.formatForceValue(this.selectedCell.getTotalForce()));
-		this.repulsionForceLabel.setText(""+this.formatForceValue(this.selectedCell.getRepulsionForce()));
-		this.springForceLabel.setText("" + this.formatForceValue(this.selectedCell.getSpringForce()));
-		this.gravityForceLabel.setText("" + this.formatForceValue(this.selectedCell.getGravityForce()));
+		this.totalForceLabel.setText(""+this.selectedCell.getTotalForceVector());
+		this.repulsionForceLabel.setText(""+this.selectedCell.getRepulsionForceVector());
+		this.springForceLabel.setText("" + this.selectedCell.getSpringForceVector());
+		this.gravityForceLabel.setText("" + this.selectedCell.getGravityForceVector());
 		this.displacementLabel.setText("" + this.formatForceValue(this.selectedCell.getTotalDisplacement()));
 		this.circlePanel.updateContents(this.selectedCell);
 		

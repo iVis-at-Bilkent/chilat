@@ -111,14 +111,14 @@ public class ChiLATMain extends JFrame implements ActionListener
 		this.setLayout(new BorderLayout());
 		
 		this.compoundNodeStyle = new HashMap<String, Object>();
-		compoundNodeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CHILAT_NODE_SHAPE);
+		compoundNodeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CHILAT_NODE_SHAPE2);
 		compoundNodeStyle.put(mxConstants.STYLE_FILLCOLOR, mxUtils.getHexColorString(Color.WHITE));
 		compoundNodeStyle.put(mxConstants.STYLE_OPACITY, 50);
 		compoundNodeStyle.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(Color.BLACK));
 		compoundNodeStyle.put(mxConstants.STYLE_STROKEWIDTH, 3);
 
 		this.nodeStyle = new HashMap<String, Object>();
-		nodeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CHILAT_NODE_SHAPE);
+		nodeStyle.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CHILAT_NODE_SHAPE2);
 		nodeStyle.put(mxConstants.STYLE_FILLCOLOR, mxUtils.getHexColorString(Color.LIGHT_GRAY));
 		nodeStyle.put(mxConstants.STYLE_STROKECOLOR, mxUtils.getHexColorString(Color.BLACK));
 		nodeStyle.put(mxConstants.STYLE_STROKEWIDTH, 2);
@@ -430,13 +430,24 @@ public class ChiLATMain extends JFrame implements ActionListener
 	{	
 		Set<String> keys = this.idToViewNode.keySet();
 		
-		if (currentKeyFrameNumber < this.layoutManager.getTotalKeyFrameCount()-1) 
+		if (currentKeyFrameNumber < this.layoutManager.getTotalKeyFrameCount()) 
 		{
 			for (String tmpKey : keys)
 			{
 				ChiLATCell cell = idToViewNode.get(tmpKey);
-				RectangleD currentRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber);
-				RectangleD nextRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber+1);
+				RectangleD currentRect;
+				RectangleD nextRect;
+				
+				if (currentKeyFrameNumber != this.layoutManager.getTotalKeyFrameCount()-1) 
+				{
+					 currentRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber);
+					 nextRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber+1);
+				}
+				else
+				{
+					 currentRect = this.layoutManager.getKeyFrameGeometry(tmpKey, this.currentKeyFrameNumber);
+					 nextRect = currentRect;
+				}
 				
 				//Linear interpolation of sizes and positions
 				Vector2D newPositionVector = Vector2D.lerp(new Vector2D(currentRect.getX(), currentRect.getY()), 
@@ -447,69 +458,50 @@ public class ChiLATMain extends JFrame implements ActionListener
 						interpolatedFrameRemainder);
 				
 				//Fetch total force vectors for current key frame and next keyframe
-				Vector2D nextTotalForceVector = new Vector2D(this.layoutManager.getTotalForceVector(tmpKey, this.currentKeyFrameNumber+1));				
-				Vector2D nextRepulsionForceVector = new Vector2D(this.layoutManager.getRepulsionForceVector(tmpKey, this.currentKeyFrameNumber+1));				
-				Vector2D nextSpringForceVector = new Vector2D(this.layoutManager.getSpringForceVector(tmpKey, this.currentKeyFrameNumber+1));				
-				Vector2D nextGravityForceVector = new Vector2D(this.layoutManager.getGravityForceVector(tmpKey, this.currentKeyFrameNumber+1));				
-				Vector2D nextTotalDisplVector = new Vector2D(this.layoutManager.getDisplVector(tmpKey, this.currentKeyFrameNumber+1));
-				
-				/*Vector2D currentTotalForceVector = new Vector2D(this.layoutManager.getTotalForceVector(tmpKey, this.currentKeyFrameNumber));
+				Vector2D currentTotalForceVector = new Vector2D(this.layoutManager.getTotalForceVector(tmpKey, this.currentKeyFrameNumber));
 				Vector2D currentRepulsionForceVector = new Vector2D(this.layoutManager.getRepulsionForceVector(tmpKey, this.currentKeyFrameNumber));
 				Vector2D currentSpringForceVector = new Vector2D(this.layoutManager.getSpringForceVector(tmpKey, this.currentKeyFrameNumber));
 				Vector2D currentGravityForceVector = new Vector2D(this.layoutManager.getGravityForceVector(tmpKey, this.currentKeyFrameNumber));
-				Vector2D currentTotalDisplVector = new Vector2D(this.layoutManager.getDisplVector(tmpKey, this.currentKeyFrameNumber));*/
+				Vector2D currentTotalDisplVector = new Vector2D(this.layoutManager.getDisplVector(tmpKey, this.currentKeyFrameNumber));
 	
 				//Store magnitude of the force vectors
-				double nextTotalForce = nextTotalForceVector.length();
-				double nextRepulsionForce = nextRepulsionForceVector.length();
-				double nextSpringForce = nextSpringForceVector.length();
-				double nextGravityForce = nextGravityForceVector.length();
+				double currentTotalForce = currentTotalForceVector.length();
+				double currentRepulsionForce = currentRepulsionForceVector.length();
+				double currentSpringForce = currentSpringForceVector.length();
+				double currentGravityForce = currentGravityForceVector.length();
 				
-				//Normalize force vectors
-				nextTotalForceVector = nextTotalForceVector.normalize();
-				nextRepulsionForceVector = nextRepulsionForceVector.normalize();
-				nextSpringForceVector = nextSpringForceVector.normalize();	
-				nextGravityForceVector = nextGravityForceVector.normalize();	
-				
-				/*currentTotalForceVector = currentTotalForceVector.normalize();
+				//Normalize force vectors	
+				currentTotalForceVector = currentTotalForceVector.normalize();
 				currentRepulsionForceVector = currentRepulsionForceVector.normalize();
 				currentSpringForceVector = currentSpringForceVector.normalize();
-				currentGravityForceVector = currentGravityForceVector.normalize();*/
+				currentGravityForceVector = currentGravityForceVector.normalize();
 
-
-				//Linear interpolation between total force vectors
-				// SEEMS NOT NECESSARY ! Because it becomes misleading
-				/*Vector2D newTotalForceVector = Vector2D.lerp(currentTotalForceVector, nextTotalForceVector, interpolatedFrameRemainder).normalize();
-				Vector2D newSpringForceVector = Vector2D.lerp(currentSpringForceVector, nextSpringForceVector, interpolatedFrameRemainder).normalize();
-				Vector2D newRepulsionForceVector = Vector2D.lerp(currentRepulsionForceVector, nextRepulsionForceVector, interpolatedFrameRemainder).normalize();
-				Vector2D newGravityForceVector = Vector2D.lerp(currentGravityForceVector, nextGravityForceVector, interpolatedFrameRemainder).normalize();*/
-				
 				//Finally set new geometry and new force vectors and their magnitudes
 				cell.setGeometry(new mxGeometry(newPositionVector.getX(), newPositionVector.getY(), newSizeVector.getX(), newSizeVector.getY()));
-				cell.setTotalForceVector(nextTotalForceVector);
-				cell.setRepulsionForceVector(nextRepulsionForceVector);
-				cell.setSpringForceVector(nextSpringForceVector);
-				cell.setGravityForceVector(nextGravityForceVector);
+				cell.setTotalForceVector(currentTotalForceVector);
+				cell.setRepulsionForceVector(currentRepulsionForceVector);
+				cell.setSpringForceVector(currentSpringForceVector);
+				cell.setGravityForceVector(currentGravityForceVector);
 				
-				cell.setTotalForce(nextTotalForce);
-				cell.setRepulsionForce(nextRepulsionForce);
-				cell.setSpringForce(nextSpringForce);
-				cell.setGravityForce(nextGravityForce);
-				cell.setTotalDisplacement(nextTotalDisplVector.length());
+				cell.setTotalForce(currentTotalForce);
+				cell.setRepulsionForce(currentRepulsionForce);
+				cell.setSpringForce(currentSpringForce);
+				cell.setGravityForce(currentGravityForce);
+				cell.setTotalDisplacement(currentTotalDisplVector.length());
 			}				
 	
 			Vector2D minMaxVisualizedVector;
-			Vector2D minMaxAllOtherForces = this.layoutManager.getMinMaxOtherForceForKeyFrame(currentKeyFrameNumber+1);
+			Vector2D minMaxAllOtherForces = this.layoutManager.getMinMaxOtherForceForKeyFrame(currentKeyFrameNumber);
 			ChiLATCell.MIN_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getX();
 			ChiLATCell.MAX_OF_ALL_OTHER_FORCES = minMaxAllOtherForces.getY();
 			
 			if (isShowActualDisplacement) 
 			{
-				minMaxVisualizedVector = this.layoutManager.getMinMaxTotalDisplacementForKeyFrame(currentKeyFrameNumber+1);
+				minMaxVisualizedVector = this.layoutManager.getMinMaxTotalDisplacementForKeyFrame(currentKeyFrameNumber);
 			}
 			else
 			{
-				minMaxVisualizedVector = this.layoutManager.getMinMaxTotalForceForKeyFrame(currentKeyFrameNumber+1);
+				minMaxVisualizedVector = this.layoutManager.getMinMaxTotalForceForKeyFrame(currentKeyFrameNumber);
 			}
 			
 			if (isShowNormalizedValues) 
